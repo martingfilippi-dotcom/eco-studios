@@ -1,3 +1,36 @@
+
+/* Visible navigation back to the Paraguayan artists community */
+.community-return-bar{
+  position:relative;
+  z-index:60;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  width:100%;
+  min-height:48px;
+  padding:10px max(20px,calc((100vw - 1240px)/2));
+  background:#1d1d19;
+  border-bottom:1px solid rgba(255,255,255,.18);
+}
+.community-return-bar a{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  color:#f4b17e;
+  font-family:"DM Sans",Arial,sans-serif;
+  font-size:11px;
+  line-height:1.4;
+  font-weight:700;
+  letter-spacing:.045em;
+  text-decoration:none;
+}
+.community-return-bar a span{font-size:18px;line-height:1}
+.community-return-bar a:hover{color:#fff}
+@media(max-width:600px){
+  .community-return-bar{min-height:46px;padding:10px 16px}
+  .community-return-bar a{font-size:10px;letter-spacing:.015em}
+}
+
 :root{--bg:#10100f;--panel:#191917;--panel-2:#20201d;--text:#f5f3ed;--muted:#a8a69e;--line:rgba(245,243,237,.15);--orange:#ff6a2b;--orange-2:#ff8b50;--max:1240px}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:88px}
