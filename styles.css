@@ -207,3 +207,10 @@ h2{font-size:clamp(38px,5vw,64px);line-height:1.02;letter-spacing:-.065em;font-w
 .indie-profile-layout .artist-social-link{width:44px;height:44px}
 .indie-profile-layout .artist-social-link svg{width:21px;height:21px}
 @media(max-width:640px){.artist-socials{gap:7px}.artist-social-link{width:36px;height:36px}.artist-social-link svg{width:17px;height:17px}.profile-row .artist-socials{margin-top:12px}.indie-profile-layout .artist-social-link{width:40px;height:40px}}
+
+
+/* Persistent return path from ECO Studios to the Paraguayan artists community */
+#eco-studios-site .community-return-bar{display:flex;align-items:center;justify-content:flex-start;padding:11px clamp(18px,5vw,72px);background:#191815;border-bottom:1px solid rgba(215,166,108,.28)}
+#eco-studios-site .community-return-bar a{display:inline-flex;align-items:center;gap:9px;color:#e4b77d;font-size:10px;font-weight:700;letter-spacing:.09em;text-decoration:none;transition:color .18s ease,transform .18s ease}
+#eco-studios-site .community-return-bar a:hover,#eco-studios-site .community-return-bar a:focus-visible{color:#fff1d9;transform:translateX(-2px);outline:none}
+@media(max-width:640px){#eco-studios-site .community-return-bar{padding:10px 16px}#eco-studios-site .community-return-bar a{font-size:9px;letter-spacing:.045em}}
