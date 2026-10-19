@@ -109,6 +109,12 @@
   <div class="story-grid"><article class="story-card"><span class="story-label">EL ORIGEN</span><span class="story-symbol">◉</span><h3>Un nombre que llegó en un sueño</h3><p>Según la historia que compartió el equipo, Ascarza soñó con el nombre ECO. La idea terminó convirtiéndose en una identidad que conecta distintas voces.</p></article><article class="story-card"><span class="story-label">LAS CONEXIONES</span><span class="story-symbol">↗</span><h3>Una escena hecha en conjunto</h3><p>En Eco Live At Black Mango, las colaboraciones se cruzan entre artistas. Las canciones dejan un registro de esa comunidad creativa.</p><a class="text-link" href="https://music.apple.com/us/album/eco-live-at-black-mango-live/1822286569" target="_blank" rel="noopener noreferrer">Descubrir las colaboraciones ↗</a></article><article class="story-card story-pending"><span class="story-label">UNA HISTORIA POR CONTAR</span><span class="story-symbol">✳</span><h3>El saltamontes verde</h3><p>El equipo mencionó una anécdota sobre un saltamontes verde relacionada con personas involucradas en una canción. La historia completa se añadirá cuando tengamos el relato exacto.</p></article></div>
 </section>
 
+<section class="managed-content section-pad" id="contenido-eco" hidden>
+  <div class="section-kicker"><span>CONTENIDO DEL ESTUDIO</span><span>ACTUALIZACIONES APROBADAS</span></div>
+  <div class="section-heading"><div><h2>Lo nuevo en<br><span>ECO Studios.</span></h2></div><p>Artistas, lanzamientos, noticias y proyectos publicados por el equipo de ECO Studios.</p></div>
+  <div class="managed-content-grid" id="managed-content-grid" aria-live="polite"></div>
+</section>
+
 <section class="team section-pad" id="equipo">
   <div class="section-kicker"><span>07 / EL EQUIPO</span><span>DETRÁS DE LA IDEA</span></div>
   <div class="team-grid"><div><h2>Un colectivo<br><span>se construye juntos.</span></h2><p>ECO crece gracias a artistas, productores y personas que aportan su oficio, su tiempo y su visión.</p></div><div class="team-member"><div class="team-avatar">A</div><div><h3>ASCARZA</h3><p>Fundador · Artista · Productor</p></div><a href="#perfil-ascarza" aria-label="Ver perfil de Ascarza">↗</a></div><div class="team-member"><a class="team-avatar" href="https://www.instagram.com/gcardus/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Gastón OV">G</a><div><h3>GASTÓN OV</h3><p>Equipo audiovisual · Fotografía · Videoclips</p><a class="mini-link" href="https://www.instagram.com/gcardus/" target="_blank" rel="noopener noreferrer">INSTAGRAM ↗</a></div><span class="team-role">AUDIOVISUAL</span></div></div>
@@ -129,6 +135,35 @@
    nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){btn.setAttribute('aria-expanded','false');nav.classList.remove('is-open');});});
  }
  document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){const target=document.querySelector(a.getAttribute('href'));if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'',a.getAttribute('href'));}});});
+ async function loadManagedContent(){
+   const section=document.getElementById('contenido-eco');
+   const grid=document.getElementById('managed-content-grid');
+   if(!section||!grid)return;
+   try{
+     const response=await fetch('data/eco-content.json',{cache:'no-store'});
+     if(!response.ok)return;
+     const payload=await response.json();
+     const items=Array.isArray(payload.items)?payload.items:[];
+     const published=items.filter(function(item){return item&&item.name&&item.status==='Publicado';})
+       .sort(function(a,b){return (Number(a.order)||9999)-(Number(b.order)||9999);});
+     if(!published.length)return;
+     published.forEach(function(item){
+       const card=document.createElement('article');card.className='managed-content-card';
+       if(typeof item.imageUrl==='string'&&/^https:\/\//i.test(item.imageUrl)){
+         const image=document.createElement('img');image.src=item.imageUrl;image.alt=item.name;image.loading='lazy';card.appendChild(image);
+       }
+       const type=document.createElement('span');type.className='managed-content-type';type.textContent=String(item.type||'ECO STUDIOS');card.appendChild(type);
+       const title=document.createElement('h3');title.textContent=String(item.name);card.appendChild(title);
+       if(item.description){const desc=document.createElement('p');desc.textContent=String(item.description);card.appendChild(desc);}
+       if(typeof item.externalUrl==='string'&&/^https:\/\//i.test(item.externalUrl)){
+         const link=document.createElement('a');link.className='text-link';link.href=item.externalUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Ver más ↗';card.appendChild(link);
+       }
+       grid.appendChild(card);
+     });
+     section.hidden=false;
+   }catch(error){console.warn('No se pudo cargar el contenido de ECO Studios.',error);}
+ }
+ loadManagedContent();
 })();
 </script>
 </body>
