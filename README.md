@@ -39,6 +39,7 @@ Cada elemento puede incluir:
 - `imageUrl`: URL HTTPS válida, opcional
 - `externalUrl`: URL HTTPS válida, opcional
 - `status`: debe ser `Publicado` para mostrarse
+- `permissionVerified`: booleano; debe ser `true` para mostrarse, y solo se mapea cuando «Derechos de uso verificados» está marcado en Notion
 - `order`: orden numérico
 
 Antes de publicar, verificar permisos y derechos de uso. Nunca cambiar automáticamente un borrador a publicado para probar la automatización.
