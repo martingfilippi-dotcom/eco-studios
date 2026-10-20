@@ -2,49 +2,64 @@
 
 Sitio independiente de ECO Studios: música, identidad creativa y producción audiovisual.
 
-## Sitios y administración
+## Accesos oficiales
 
 - **Web pública:** https://martingfilippi-dotcom.github.io/eco-studios/
 - **Panel editorial de Ascarza:** https://app.notion.com/p/3fe76919699081beb77cc3658f1edc29
-- **Base de contenido en Notion:** https://app.notion.com/p/c7ef2fdcfdb9439d96da9ded39d42b5a
-- **Archivo editorial consumido por la web:** [data/eco-content.json](data/eco-content.json)
-- **Guía de automatización prevista:** https://app.notion.com/p/3fe769196990818f96a7d69c59373634
+- **Base editorial en Notion:** https://app.notion.com/p/c7ef2fdcfdb9439d96da9ded39d42b5a
+- **Guía operativa de Make (fuente vigente):** https://app.notion.com/p/3fe769196990818f96a7d69c59373634
+- **Datos consumidos por la web:** [data/eco-content.json](data/eco-content.json)
 
-## Cómo funciona el contenido administrado
+## Límites entre proyectos
 
-La página principal lee `data/eco-content.json`. Solo muestra los elementos que tengan `status: "Publicado"`, un `name` válido y los campos opcionales correspondientes. Los elementos se ordenan por `order`.
+Este repositorio es exclusivo de **ECO Studios**. No sincronizar desde ni hacia el repositorio de **Comunidad de Artistas Paraguayos**. Los dos sitios se despliegan por separado. El repositorio legado `eco-music-web` todavía puede contener recursos visuales referenciados; no eliminarlo hasta migrar y verificar esos recursos.
 
-Formato de cada elemento:
+## Arquitectura editorial
 
-```json
-{
-  "name": "Nombre público",
-  "type": "Artista",
-  "description": "Descripción pública y revisada.",
-  "imageUrl": "https://example.com/imagen.jpg",
-  "externalUrl": "https://example.com/recurso",
-  "status": "Publicado",
-  "order": 10
-}
+```text
+Notion — 📦 Contenido de ECO Studios
+             |
+             | Make (configuración y prueba pendientes)
+             v
+GitHub — data/eco-content.json
+             |
+             v
+Web pública — GitHub Pages
 ```
 
-El archivo actual puede tener `items: []`, por lo que no se mostrarán tarjetas editoriales adicionales hasta que se agreguen elementos válidos.
+La web muestra elementos de `items` con `status: "Publicado"` y un `name` válido. El orden se controla con `order`. Las fichas no se publican por el mero hecho de existir en Notion.
 
-## Estado de la automatización
+## Esquema de contenido
 
-**Notion → Make → GitHub todavía no está conectado ni probado de extremo a extremo.** Crear o editar una ficha en Notion no actualiza automáticamente este JSON por ahora. No se debe presentar la automatización como activa hasta que se configure Make, se limite su acceso a este repositorio y se verifique una prueba real.
+Cada elemento puede incluir:
 
-Cuando se active, el escenario deberá:
-1. Detectar nuevas fichas y cambios en Notion.
-2. Validar el contenido y los derechos de uso antes de publicar.
-3. Transformar los campos de Notion al formato JSON que consume la web.
-4. Actualizar este archivo sin duplicar registros ni sobrescribir el diseño.
-5. Confirmar el resultado en Notion y registrar errores de sincronización.
+- `name`: nombre público
+- `type`: Artista, Lanzamiento, Noticia, Evento, Producción audiovisual o Equipo
+- `description`: descripción revisada
+- `imageUrl`: URL HTTPS válida, opcional
+- `externalUrl`: URL HTTPS válida, opcional
+- `status`: debe ser `Publicado` para mostrarse
+- `order`: orden numérico
 
-## Publicación de la web
+Antes de publicar, verificar permisos y derechos de uso. Nunca cambiar automáticamente un borrador a publicado para probar la automatización.
 
-Este repositorio usa GitHub Actions para publicar el contenido estático de la raíz en GitHub Pages. En **Settings → Pages**, la fuente debe ser **GitHub Actions**.
+## Estado verificado — 20 de octubre de 2026
 
-## Recursos visuales
+- El repositorio y la ruta del JSON están identificados.
+- `data/eco-content.json` mantiene `items: []` y `lastSync: null`.
+- No hay fichas editoriales publicadas en la base consultada; por eso el resultado vacío es esperado.
+- La automatización Notion → Make → GitHub no se considera activa ni validada de extremo a extremo.
+- El escenario de Make debe apuntar únicamente a este repositorio y leer el SHA actual antes de actualizar el archivo.
+- No se hicieron cambios a la web pública ni se publicó contenido editorial durante esta auditoría.
 
-Algunos recursos iniciales se cargan desde el repositorio público existente `eco-music-web`. Para hacer el sitio completamente independiente, se pueden copiar los recursos necesarios a este repositorio después de revisar las rutas y los derechos de uso.
+## Publicación del sitio
+
+Este repositorio utiliza GitHub Actions para desplegar el contenido estático de la raíz. En GitHub, comprobar **Settings → Pages → Source: GitHub Actions** si el despliegue deja de funcionar.
+
+## Mantenimiento
+
+1. Editar y revisar el contenido en Notion.
+2. Marcar `Publicado` solo cuando esté aprobado y tenga derechos de uso verificados.
+3. Probar la sincronización en Make antes de activar ejecuciones recurrentes.
+4. Validar el JSON y comprobar la web tras un cambio.
+5. No borrar repositorios o recursos antiguos hasta confirmar que no quedan referencias activas.
