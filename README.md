@@ -12,7 +12,7 @@ Sitio independiente de ECO Studios: música, identidad creativa y producción au
 
 ## Límites entre proyectos
 
-Este repositorio es exclusivo de **ECO Studios**. No sincronizar desde ni hacia el repositorio de **Comunidad de Artistas Paraguayos**. Los dos sitios se despliegan por separado. El repositorio legado `eco-music-web` todavía puede contener recursos visuales referenciados; no eliminarlo hasta migrar y verificar esos recursos.
+Este repositorio es exclusivo de **ECO Studios**. No sincronizar desde ni hacia el repositorio de **Comunidad de Artistas Paraguayos**. Los dos sitios se despliegan por separado. Los recursos visuales usados por esta web se sirven desde este mismo repositorio. `eco-music-web` se conserva como respaldo histórico, pero el HTML actual ya no depende de sus imágenes.
 
 ## Arquitectura editorial
 
