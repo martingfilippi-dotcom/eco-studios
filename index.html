@@ -144,7 +144,7 @@
      if(!response.ok)return;
      const payload=await response.json();
      const items=Array.isArray(payload.items)?payload.items:[];
-     const published=items.filter(function(item){return item&&item.name&&item.status==='Publicado';})
+     const published=items.filter(function(item){return item&&item.name&&item.status==='Publicado'&&item.permissionVerified===true;})
        .sort(function(a,b){return (Number(a.order)||9999)-(Number(b.order)||9999);});
      if(!published.length)return;
      published.forEach(function(item){
