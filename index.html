@@ -150,7 +150,7 @@
      published.forEach(function(item){
        const card=document.createElement('article');card.className='managed-content-card';
        if(typeof item.imageUrl==='string'&&/^https:\/\//i.test(item.imageUrl)){
-         const image=document.createElement('img');image.src=item.imageUrl;image.alt=item.name;image.loading='lazy';card.appendChild(image);
+         const image=document.createElement('img');image.alt=item.name;image.loading='lazy';image.onerror=function(){image.remove();};image.src=item.imageUrl;card.appendChild(image);
        }
        const type=document.createElement('span');type.className='managed-content-type';type.textContent=String(item.type||'ECO STUDIOS');card.appendChild(type);
        const title=document.createElement('h3');title.textContent=String(item.name);card.appendChild(title);
