@@ -2,5 +2,5 @@
   "schemaVersion": 1,
   "description": "Datos editoriales exclusivos de ECO Studios. Preparado como destino de automatización; no se sincroniza con Comunidad de Artistas Paraguayos.",
   "items": [{"name":"LK","type":"Artista","order":70,"status":"Publicado","imageUrl":null,"notionId":"40076919-6990-8008-a12c-fa536623426b","description":"Luis Fernando Nuñez Keim desde pequeño siempre una persona caracterizada por su disciplina y constancia en lo que le gusta, tuvo una carrera en la calistenia antes de incursionar en la música, siempre con esa esencia de trap og y letras que marcan el sentimiento en cada canción que lo hace único ","externalUrl":"https://on.soundcloud.com/RF9oVQCTxXzvPlsq3Y","permissionVerified":true}],
-  "lastSync": "2026-10-21T21:11:42Z"
+  "lastSync": "2026-10-21T21:26:41Z"
 }
