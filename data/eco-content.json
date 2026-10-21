@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "description": "Datos editoriales exclusivos de ECO Studios. Preparado como destino de automatización; no se sincroniza con Comunidad de Artistas Paraguayos.",
-  "items": [{"type":null,"order":null,"status":"Publicado","content":null,"imageUrl":"https://www.instagram.com/luisferkeim?mdxt=MTlzNXFtd3U2M2xsYQ==","notionId":"40076919-6990-8008-a12c-fa536623426b","description":"Luis Fernando Nuñez Keim desde pequeño siempre una persona caracterizada por su disciplina y constancia en lo que le gusta, tuvo una carrera en la calistenia antes de incursionar en la música, siempre con esa esencia de trap og y letras que marcan el sentimiento en cada canción que lo hace único ","externalLink":null}],
-  "lastSync": "2026-10-21T15:31:07Z"
+  "items": [{"name":"LK","type":null,"order":null,"status":"Publicado","imageUrl":"https://www.instagram.com/luisferkeim?mdxt=MTlzNXFtd3U2M2xsYQ==","notionId":"40076919-6990-8008-a12c-fa536623426b","description":"Luis Fernando Nuñez Keim desde pequeño siempre una persona caracterizada por su disciplina y constancia en lo que le gusta, tuvo una carrera en la calistenia antes de incursionar en la música, siempre con esa esencia de trap og y letras que marcan el sentimiento en cada canción que lo hace único ","externalUrl":"https://on.soundcloud.com/RF9oVQCTxXzvPlsq3Y","permissionVerified":true}],
+  "lastSync": "2026-10-21T15:32:36Z"
 }
