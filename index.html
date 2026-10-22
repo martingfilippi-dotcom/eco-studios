@@ -373,6 +373,8 @@
      const story=Array.from(document.querySelectorAll('.story-card')).find(function(card){return normalize(card.querySelector('h3')&&card.querySelector('h3').textContent)==='unaescenahechaenconjunto';});if(story)story.hidden=true;
      const gaston=Array.from(document.querySelectorAll('#equipo .team-member')).find(function(el){return normalize(el.querySelector('h3')&&el.querySelector('h3').textContent)==='gastonov';});if(gaston)gaston.hidden=true;
      const gastonCopy=Array.from(document.querySelectorAll('.av-grid p')).find(function(p){return normalize(p.textContent).includes('gastonovgcardus');});if(gastonCopy)gastonCopy.hidden=true;
+     document.querySelectorAll('a[href]').forEach(function(a){if(String(a.getAttribute('href')||'').indexOf('music.apple.com/us/album/eco-live-at-black-mango-live/1822286569')!==-1)a.hidden=true;});
+     const albumContact=document.querySelector('.contact-links > a[href*="eco-live-at-black-mango-live"]');if(albumContact)albumContact.hidden=true;
      document.documentElement.classList.remove('eco-cms-pending');
    }
    if(!section||!grid||!roster||!profiles){failClosed();return;}
