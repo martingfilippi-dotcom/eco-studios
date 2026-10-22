@@ -2,5 +2,5 @@
   "schemaVersion": 1,
   "description": "Datos editoriales exclusivos de ECO Studios. Preparado como destino de automatización; no se sincroniza con Comunidad de Artistas Paraguayos.",
   "items": [{"name":"LILMARTINCHO","type":"Artista","order":20,"status":"Publicado","imageUrl":"https://martingfilippi-dotcom.github.io/eco-studios/youtube-lilmartincho.jpg","description":"Martin Raphael Gonzalez Filippi mejor conocido como Lilmartincho, freestyler, cantautor y elprimer artista paraguayo con raíces muy marcadas en el perreo de la mata boricua, el papá del bellakeo como le dicen muchos, sencillos como Fino y Fernet, Localizarte y Nubes negras resaltan su versatilidad musical a la hora de componer","externalUrl":"https://www.youtube.com/@lilmartincho","permissionVerified":true},{"name":"LK","type":"Artista","order":70,"status":"Publicado","imageUrl":null,"description":"Luis Fernando Nuñez Keim desde pequeño siempre una persona caracterizada por su disciplina y constancia en lo que le gusta, tuvo una carrera en la calistenia antes de incursionar en la música, siempre con esa esencia de trap og y letras que marcan el sentimiento en cada canción que lo hace único ","externalUrl":"https://on.soundcloud.com/RF9oVQCTxXzvPlsq3Y","permissionVerified":true}],
-  "lastSync": "2026-10-22T02:41:43Z"
+  "lastSync": "2026-10-22T02:56:41Z"
 }
