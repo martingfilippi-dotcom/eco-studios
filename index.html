@@ -148,6 +148,46 @@
        .sort(function(a,b){return (Number(a.order)||9999)-(Number(b.order)||9999);});
      if(!published.length)return;
      published.forEach(function(item){
+       const kind=String(item.type||'').trim().toLocaleLowerCase('es');
+       const name=String(item.name||'').trim();
+       const safeUrl=typeof item.externalUrl==='string'&&/^https:\/\//i.test(item.externalUrl)?item.externalUrl:'';
+       // Si el artista ya existe en el roster estático, actualizar esa misma ficha en lugar de crear un duplicado.
+       if(kind==='artista'){
+         const roster=document.querySelector('.artist-grid');
+         const existing=Array.from(document.querySelectorAll('.artist-card')).find(function(card){
+           const heading=card.querySelector('.artist-meta h3');
+           return heading&&heading.textContent.trim().toLocaleLowerCase('es')===name.toLocaleLowerCase('es');
+         });
+         if(existing){
+           const meta=existing.querySelector('.artist-meta');
+           const description=meta&&meta.querySelector('.artist-meta > div p');
+           if(description&&item.description)description.textContent=String(item.description);
+           const link=meta&&meta.querySelector('.mini-link');
+           if(link&&safeUrl){link.href=safeUrl;link.textContent='ESCUCHAR ↗';link.setAttribute('aria-label','Escuchar a '+name);link.target='_blank';link.rel='noopener noreferrer';}
+           const photo=existing.querySelector('.artist-photo img');
+           if(photo&&typeof item.imageUrl==='string'&&/^https:\/\//i.test(item.imageUrl)){photo.src=item.imageUrl;photo.alt='Imagen de '+name;}
+           const profile=document.querySelector('#perfil-'+name.toLocaleLowerCase('es').replace(/[^a-z0-9]+/g,''));
+           if(profile){
+             const p=profile.querySelector('div > p');
+             if(p&&item.description)p.textContent=String(item.description);
+             const socials=profile.querySelector('.artist-socials');
+             if(socials&&safeUrl){
+               socials.replaceChildren();
+               const a=document.createElement('a');a.className='text-link';a.href=safeUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Escuchar a '+name+' ↗';socials.appendChild(a);
+             }
+           }
+           return;
+         }
+         if(roster){
+           const card=document.createElement('article');card.className='artist-card';
+           const photoLink=document.createElement('a');photoLink.className='artist-photo';photoLink.href=safeUrl||'#artistas';photoLink.setAttribute('aria-label','Abrir contenido de '+name);
+           if(typeof item.imageUrl==='string'&&/^https:\/\//i.test(item.imageUrl)){const img=document.createElement('img');img.src=item.imageUrl;img.alt='Imagen de '+name;img.loading='lazy';photoLink.appendChild(img);}
+           const index=document.createElement('span');index.className='photo-index';index.textContent=String(item.order||'');photoLink.appendChild(index);card.appendChild(photoLink);
+           const meta=document.createElement('div');meta.className='artist-meta';const info=document.createElement('div');const h=document.createElement('h3');h.textContent=name;info.appendChild(h);
+           if(item.description){const p=document.createElement('p');p.textContent=String(item.description);info.appendChild(p);}meta.appendChild(info);
+           if(safeUrl){const a=document.createElement('a');a.className='mini-link';a.href=safeUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='ESCUCHAR ↗';meta.appendChild(a);}card.appendChild(meta);roster.appendChild(card);return;
+         }
+       }
        const card=document.createElement('article');card.className='managed-content-card';
        if(typeof item.imageUrl==='string'&&/^https:\/\//i.test(item.imageUrl)){
          const image=document.createElement('img');image.alt=item.name;image.loading='lazy';image.onerror=function(){image.remove();};image.src=item.imageUrl;card.appendChild(image);
@@ -155,12 +195,10 @@
        const type=document.createElement('span');type.className='managed-content-type';type.textContent=String(item.type||'ECO STUDIOS');card.appendChild(type);
        const title=document.createElement('h3');title.textContent=String(item.name);card.appendChild(title);
        if(item.description){const desc=document.createElement('p');desc.textContent=String(item.description);card.appendChild(desc);}
-       if(typeof item.externalUrl==='string'&&/^https:\/\//i.test(item.externalUrl)){
-         const link=document.createElement('a');link.className='text-link';link.href=item.externalUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Ver más ↗';card.appendChild(link);
-       }
+       if(safeUrl){const link=document.createElement('a');link.className='text-link';link.href=safeUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Ver más ↗';card.appendChild(link);}
        grid.appendChild(card);
      });
-     section.hidden=false;
+     section.hidden=grid.children.length>0;
    }catch(error){console.warn('No se pudo cargar el contenido de ECO Studios.',error);}
  }
  loadManagedContent();
