@@ -7,7 +7,7 @@ Sitio independiente de ECO Studios: música, artistas, lanzamientos, eventos y p
 
 ## Arquitectura
 
-La web estática se despliega con GitHub Pages. El contenido editorial público se prepara en Notion, se sincroniza mediante un escenario de Make dedicado a ECO Studios y se guarda en `data/eco-content.json`.
+La web estática se despliega con GitHub Pages. El contenido editorial se prepara en Notion y está en migración a GitHub Actions, que consultará la fuente de datos, aplicará el filtro de publicación y actualizará `data/eco-content.json`. El flujo solo se debe activar después de guardar y probar el secreto `NOTION_TOKEN`. Make se conserva como respaldo hasta validar la sincronización nueva de extremo a extremo.
 
 Este repositorio no debe sincronizarse con la web ni con la base editorial de Comunidad de Artistas Paraguayos. Son proyectos separados con repositorios y flujos independientes.
 
@@ -28,7 +28,9 @@ La web muestra únicamente elementos con nombre, estado `Publicado` y `permissio
 
 ## Seguridad y mantenimiento
 
-- Guardar las credenciales únicamente en conexiones seguras del proveedor de automatización; nunca en este repositorio.
+- Guardar `NOTION_TOKEN` únicamente en GitHub Actions repository secrets; nunca en este repositorio, en Notion público ni en chats.
+- La integración de Notion debe tener acceso compartido explícito a `📦 Contenido de ECO Studios`.
+- El workflow de sincronización queda manual hasta configurar y probar las credenciales; luego se puede reactivar su horario.
 - No publicar borradores ni contenido sin derechos verificados.
 - Validar el JSON y comprobar la web pública tras cambios editoriales.
 - No eliminar repositorios históricos o recursos hasta confirmar sus dependencias externas.
