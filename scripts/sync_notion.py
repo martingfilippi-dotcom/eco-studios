@@ -123,23 +123,26 @@ def main():
         }
         # Include supported public social/profile URLs when populated.
         social_fields = {
-            "instagramUrl": ("Instagram", "Instagram URL"),
-            "tiktokUrl": ("TikTok", "TikTok URL"),
-            "spotifyUrl": ("Spotify", "Spotify URL"),
-            "youtubeUrl": ("YouTube", "YouTube URL"),
-            "appleMusicUrl": ("Apple Music", "Apple Music URL"),
-            "deezerUrl": ("Deezer", "Deezer URL"),
-            "bandcampUrl": ("Bandcamp", "Bandcamp URL"),
-            "soundcloudUrl": ("SoundCloud", "SoundCloud URL"),
-            "twitchUrl": ("Twitch", "Twitch URL"),
-            "tidalUrl": ("TIDAL", "TIDAL URL"),
-            "threadsUrl": ("Threads", "Threads URL"),
-            "facebookUrl": ("Facebook", "Facebook URL"),
-            "xUrl": ("X", "X URL"),
-            "amazonMusicUrl": ("Amazon Music", "Amazon Music URL"),
+            "instagramUrl": ("Instagram URL",),
+            "tiktokUrl": ("TikTok URL",),
+            "spotifyUrl": ("Spotify URL",),
+            "youtubeUrl": ("YouTube URL",),
+            "appleMusicUrl": ("Apple Music URL",),
+            "deezerUrl": ("Deezer URL",),
+            "bandcampUrl": ("Bandcamp URL",),
+            "soundcloudUrl": ("SoundCloud URL",),
+            "twitchUrl": ("Twitch URL",),
+            "tidalUrl": ("TIDAL URL",),
+            "threadsUrl": ("Threads URL",),
+            "facebookUrl": ("Facebook URL",),
+            "xUrl": ("X URL",),
+            "amazonMusicUrl": ("Amazon Music URL",),
+            "websiteUrl": ("Web oficial URL",),
         }
         for output_key, candidates in social_fields.items():
             value = get_text(props, *candidates)
+            if isinstance(value, str):
+                value = value.strip()
             if isinstance(value, str) and value.startswith("https://"):
                 item[output_key] = value
         items.append(item)
