@@ -17,7 +17,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,3 +31,56 @@ jobs:
           node --check scripts/artist-profile-sync.js
           node --check scripts/artist-directory-sync.js
           python scripts/validate_site.py
+
+      # Browser gate for this verification PR only; ordinary production pushes stay lightweight.
+      - name: Set up Node for artist sync verification
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Cache Playwright browser
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.55.0
+
+      - name: Install Playwright
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        run: npm install --no-save playwright@1.55.0
+
+      - name: Install Chromium
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        run: npx playwright install --with-deps chromium
+
+      - name: Start local site
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        run: |
+          python -m http.server 4173 --directory . > /tmp/eco-site-smoke-http.log 2>&1 &
+          echo $! > /tmp/eco-site-smoke-http.pid
+          python - <<'PY'
+          import time
+          from urllib.request import urlopen
+          for attempt in range(30):
+              try:
+                  with urlopen("http://127.0.0.1:4173/artistas/lilmartincho/", timeout=2):
+                      print("Local profile server is ready.")
+                      break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("Local profile server did not start.")
+          PY
+
+      - name: Verify live artist profile refresh and fallback
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        run: node scripts/browser_profile_smoke.mjs
+
+      - name: Upload browser smoke screenshots
+        if: always() && github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        uses: actions/upload-artifact@v4
+        with:
+          name: eco-profile-sync-verification
+          path: artifacts/profile-sync-*.png
+          if-no-files-found: warn
