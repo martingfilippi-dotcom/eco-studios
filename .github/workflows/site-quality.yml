@@ -39,6 +39,13 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Cache Playwright browser
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.55.0
+
       - name: Install Playwright
         if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
         run: npm install --no-save playwright@1.55.0
