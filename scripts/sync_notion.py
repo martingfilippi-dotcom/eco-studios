@@ -7,7 +7,6 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -81,8 +80,6 @@ def get_text(props, *names):
     return value.strip() if isinstance(value, str) else value
 
 
-YOUTUBE_ATOM_NS = "{http://www.w3.org/2005/Atom}"
-YOUTUBE_NS = "{http://www.youtube.com/xml/schemas/2015}"
 CHANNEL_ID_RE = re.compile(r"UC[A-Za-z0-9_-]{22}")
 
 
@@ -138,8 +135,8 @@ def youtube_channel_id(channel_url):
     patterns = (
         r"""<meta[^>]*itemprop=["']channelId["'][^>]*content=["'](UC[A-Za-z0-9_-]{22})""",
         r"""<meta[^>]*content=["'](UC[A-Za-z0-9_-]{22})["'][^>]*itemprop=["']channelId["']""",
-        r'"channelId"\s*:\s*"(UC[A-Za-z0-9_-]{22})"',
         r'"externalId"\s*:\s*"(UC[A-Za-z0-9_-]{22})"',
+        r'"channelId"\s*:\s*"(UC[A-Za-z0-9_-]{22})"',
     )
     for pattern in patterns:
         match = re.search(pattern, page_html)
@@ -149,49 +146,14 @@ def youtube_channel_id(channel_url):
     return None
 
 
-def youtube_recent_uploads(channel_url, limit=12):
-    """Return recent public upload IDs/titles from the channel's official RSS feed."""
+def youtube_uploads_playlist_id(channel_url):
+    """Derive the channel's public uploads playlist from its stable channel ID."""
     channel_id = youtube_channel_id(channel_url)
     if not channel_id:
-        return []
-    feed_url = "https://www.youtube.com/feeds/videos.xml?channel_id=" + channel_id
-    feed_xml = fetch_public_text(feed_url)
-    if not feed_xml:
-        return []
-    try:
-        root = ET.fromstring(feed_xml)
-    except ET.ParseError as exc:
-        print(f"Could not parse YouTube RSS for {channel_url}: {exc}", file=sys.stderr)
-        return []
-
-    videos = []
-    seen = set()
-    for entry in root.findall(f"{YOUTUBE_ATOM_NS}entry"):
-        video_id = (entry.findtext(f"{YOUTUBE_NS}videoId") or "").strip()
-        if not re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id) or video_id in seen:
-            continue
-        title = (entry.findtext(f"{YOUTUBE_ATOM_NS}title") or "").strip()
-        published = (entry.findtext(f"{YOUTUBE_ATOM_NS}published") or "").strip()
-        videos.append({"id": video_id, "title": title, "published": published})
-        seen.add(video_id)
-        if len(videos) >= limit:
-            break
-    return videos
-
-def query_all():
-    results = []
-    cursor = None
-    while True:
-        payload = {"page_size": 100}
-        if cursor:
-            payload["start_cursor"] = cursor
-        data = request_json(f"https://api.notion.com/v1/data_sources/{DATA_SOURCE_ID}/query", payload)
-        results.extend(data.get("results", []))
-        if not data.get("has_more"):
-            return results
-        cursor = data.get("next_cursor")
-        if not cursor:
-            return results
+        return None
+    # YouTube's public uploads playlist uses the same 22-character suffix,
+    # replacing the channel prefix UC with the playlist prefix UU.
+    return "UU" + channel_id[2:]
 
 def main():
     pages = query_all()
@@ -247,17 +209,17 @@ def main():
             if isinstance(value, str) and value.startswith("https://"):
                 item[output_key] = value
 
-        # Resolve channel uploads only for published, rights-verified artists. This
-        # is best-effort: a YouTube lookup failure must not block editorial sync.
+        # Resolve the channel's public uploads playlist only for approved artists.
+        # Failure to resolve YouTube must never block the editorial data sync.
         if str(item.get("type") or "").strip().casefold() == "artista":
             youtube_url = item.get("youtubeUrl")
             if youtube_url:
-                videos = youtube_recent_uploads(youtube_url)
-                if videos:
-                    item["youtubeVideos"] = videos
-                    print(f"Found {len(videos)} recent YouTube video(s) for {name}.")
+                uploads_playlist_id = youtube_uploads_playlist_id(youtube_url)
+                if uploads_playlist_id:
+                    item["youtubeUploadsPlaylistId"] = uploads_playlist_id
+                    print(f"Resolved YouTube uploads playlist for {name}: {uploads_playlist_id}.")
                 else:
-                    print(f"No embeddable upload list found for {name}; keeping channel link.")
+                    print(f"Could not resolve a YouTube uploads playlist for {name}; keeping channel link.")
         items.append(item)
 
     items.sort(key=lambda item: (item["order"], item["name"].casefold()))
