@@ -102,7 +102,7 @@ def main() -> int:
             unchanged += 1
             continue
         try:
-            time.sleep(0.35)
+            time.sleep(0.4)
             request_json(f"https://api.notion.com/v1/pages/{page_id}", {"properties": updates}, method="PATCH")
             if publishable:
                 synced += 1
