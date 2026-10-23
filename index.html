@@ -371,33 +371,26 @@
    const grid=document.getElementById('managed-content-grid');
    const roster=document.querySelector('.artist-grid');
    const profiles=document.querySelector('.profile-list');
-   const artistsSection=document.getElementById('artistas');
-   const profilesSection=document.getElementById('perfiles');
-   function failClosed(){
-     if(artistsSection)artistsSection.hidden=true;
-     if(profilesSection)profilesSection.hidden=true;
-     if(section)section.hidden=true;
-     const release=document.querySelector('.release-card.release-main');if(release)release.hidden=true;
-     const note=document.querySelector('.music-note');if(note)note.hidden=true;
-     const live=document.querySelector('.live-show');if(live){live.hidden=true;const frame=live.querySelector('iframe');if(frame)frame.removeAttribute('src');}
-     const story=Array.from(document.querySelectorAll('.story-card')).find(function(card){return normalize(card.querySelector('h3')&&card.querySelector('h3').textContent)==='unaescenahechaenconjunto';});if(story)story.hidden=true;
-     const gaston=Array.from(document.querySelectorAll('#equipo .team-member')).find(function(el){return normalize(el.querySelector('h3')&&el.querySelector('h3').textContent)==='gastonov';});if(gaston)gaston.hidden=true;
-     const gastonCopy=Array.from(document.querySelectorAll('.av-grid p')).find(function(p){return normalize(p.textContent).includes('gastonovgcardus');});if(gastonCopy)gastonCopy.hidden=true;
-     document.querySelectorAll('a[href]').forEach(function(a){if(String(a.getAttribute('href')||'').indexOf('music.apple.com/us/album/eco-live-at-black-mango-live/1822286569')!==-1)a.hidden=true;});
-     const albumContact=document.querySelector('.contact-links > a[href*="eco-live-at-black-mango-live"]');if(albumContact)albumContact.hidden=true;
+   function preserveStaticCatalog(){
      document.documentElement.classList.remove('eco-cms-pending');
+     if(section)section.hidden=true;
+     if(grid)grid.replaceChildren();
+     const album=document.querySelector('.release-card.release-main');if(album)album.hidden=false;
+     const note=document.querySelector('.music-note');if(note)note.hidden=false;
+     const live=document.querySelector('.live-show');if(live)live.hidden=false;
+     const frame=live&&live.querySelector('iframe');
+     if(frame&&!frame.getAttribute('src'))frame.src='https://www.youtube-nocookie.com/embed/4ZPvP7OEnhs?playsinline=1&rel=0';
+     document.querySelectorAll('a[href*="music.apple.com/us/album/eco-live-at-black-mango-live/1822286569"]').forEach(function(a){a.hidden=false;});
    }
-   if(!section||!grid||!roster||!profiles){failClosed();return;}
+   if(!section||!grid||!roster||!profiles){preserveStaticCatalog();return;}
    try{
      const response=await fetch('data/eco-content.json',{cache:'no-store'});
      if(!response.ok)throw new Error('No se pudo leer data/eco-content.json ('+response.status+').');
      const payload=await response.json();
      if(!payload||!Array.isArray(payload.items))throw new Error('El JSON de ECO Studios no contiene una lista items válida.');
-     const published=payload.items.filter(function(item){return item&&typeof item.name==='string'&&item.name.trim()&&item.status==='Publicado'&&item.permissionVerified===true;})
-       .sort(function(a,b){return orderNumber(a)-orderNumber(b);});
+     const published=payload.items.filter(function(item){return item&&typeof item.name==='string'&&item.name.trim()&&item.status==='Publicado'&&item.permissionVerified===true;}).sort(function(a,b){return orderNumber(a)-orderNumber(b);});
      const publishedByName=new Map(published.map(function(item){return [normalize(item.name),item];}));
      const publishedArtists=published.filter(function(item){return String(item.type||'').trim().toLocaleLowerCase('es')==='artista';});
-     const allowedArtistNames=new Set(publishedArtists.map(function(item){return normalize(item.name);}));
      const existingCards=new Map();
      Array.from(roster.querySelectorAll('.artist-card')).forEach(function(card){
        const heading=card.querySelector('.artist-meta h3');
@@ -420,9 +413,8 @@
        if(!existingProfiles.has(key)){const profile=createProfile(item);profiles.appendChild(profile);existingProfiles.set(key,profile);}
      });
      sortByOrder(roster,'.artist-card');sortByOrder(profiles,'.profile-row');
-     if(artistsSection)artistsSection.hidden=publishedArtists.length===0;
-     if(profilesSection)profilesSection.hidden=publishedArtists.length===0;
-
+     document.getElementById('artistas').hidden=roster.querySelectorAll('.artist-card').length===0;
+     document.getElementById('perfiles').hidden=profiles.querySelectorAll('.profile-row').length===0;
      grid.replaceChildren();
      published.filter(function(item){return String(item.type||'').trim().toLocaleLowerCase('es')!=='artista';}).forEach(function(item){
        const card=document.createElement('article');card.className='managed-content-card';card.dataset.ecoOrder=String(orderNumber(item));
@@ -438,11 +430,18 @@
      });
      sortByOrder(grid,'.managed-content-card');
      section.hidden=grid.children.length===0;
+     // El video y la ficha de Black Mango son contenido estático y siguen visibles, aunque Notion aún no lo publique.
      applyApprovedStaticContent(published,publishedByName);
+     const album=document.querySelector('.release-card.release-main');if(album)album.hidden=false;
+     const note=document.querySelector('.music-note');if(note)note.hidden=false;
+     const live=document.querySelector('.live-show');if(live)live.hidden=false;
+     const frame=live&&live.querySelector('iframe');
+     if(frame&&!frame.getAttribute('src'))frame.src='https://www.youtube-nocookie.com/embed/4ZPvP7OEnhs?playsinline=1&rel=0';
+     document.querySelectorAll('a[href*="music.apple.com/us/album/eco-live-at-black-mango-live/1822286569"]').forEach(function(a){a.hidden=false;});
      document.documentElement.classList.remove('eco-cms-pending');
    }catch(error){
-     console.warn('No se pudo cargar el contenido autorizado de ECO Studios.',error);
-     failClosed();
+     console.warn('No se pudo cargar el contenido editorial gestionado de ECO Studios; se conserva el catálogo estático.',error);
+     preserveStaticCatalog();
    }
  }
  loadManagedContent();
