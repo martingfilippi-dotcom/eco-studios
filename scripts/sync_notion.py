@@ -136,10 +136,10 @@ def youtube_channel_id(channel_url):
         return None
 
     patterns = (
-        r'<meta[^>]*itemprop=["\\']channelId["\\'][^>]*content=["\\'](UC[A-Za-z0-9_-]{22})',
-        r'<meta[^>]*content=["\\'](UC[A-Za-z0-9_-]{22})["\\'][^>]*itemprop=["\\']channelId["\\']',
-        r'"channelId"\\s*:\\s*"(UC[A-Za-z0-9_-]{22})"',
-        r'"externalId"\\s*:\\s*"(UC[A-Za-z0-9_-]{22})"',
+        r"""<meta[^>]*itemprop=["']channelId["'][^>]*content=["'](UC[A-Za-z0-9_-]{22})""",
+        r"""<meta[^>]*content=["'](UC[A-Za-z0-9_-]{22})["'][^>]*itemprop=["']channelId["']""",
+        r""""channelId"\s*:\s*"(UC[A-Za-z0-9_-]{22})""",
+        r""""externalId"\s*:\s*"(UC[A-Za-z0-9_-]{22})""",
     )
     for pattern in patterns:
         match = re.search(pattern, page_html)
