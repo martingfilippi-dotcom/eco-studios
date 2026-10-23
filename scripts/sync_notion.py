@@ -203,6 +203,11 @@ def main():
             "externalUrl": external_url if isinstance(external_url, str) and external_url.startswith("https://") else None,
             "permissionVerified": True,
         }
+        # Use the official LK links supplied by the ECO team.
+        if name.strip().casefold() == "lk":
+            item["instagramUrl"] = "https://www.instagram.com/luisferkeim?xtok=MTlzNXFtd3U2M2xsYQ=="
+            item["soundCloudUrl"] = "https://on.soundcloud.com/syICozVXOKxCjTPpwj"
+            item["externalUrl"] = "https://on.soundcloud.com/syICozVXOKxCjTPpwj"
         # Include supported public social/profile URLs when populated.
         social_fields = {
             "instagramUrl": ("Instagram URL",),
