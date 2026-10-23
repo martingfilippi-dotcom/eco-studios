@@ -15,7 +15,7 @@ NOTION_VERSION = "2025-09-03"
 if not TOKEN or not DATA_SOURCE_ID:
     sys.exit("Missing NOTION_TOKEN or NOTION_DATA_SOURCE_ID.")
 
-def request_json(url: str, payload: dict | None = None) -> dict:
+def request_json(url: str, payload: dict | None = None, method: str | None = None) -> dict:
     body = None if payload is None else json.dumps(payload, ensure_ascii=False).encode("utf-8")
     headers = {
         "Authorization": f"Bearer {TOKEN}",
@@ -23,7 +23,7 @@ def request_json(url: str, payload: dict | None = None) -> dict:
         "Content-Type": "application/json",
     }
     for attempt in range(5):
-        req = urllib.request.Request(url, data=body, method="GET" if payload is None else "POST", headers=headers)
+        req = urllib.request.Request(url, data=body, method=method or ("GET" if payload is None else "POST"), headers=headers)
         try:
             with urllib.request.urlopen(req, timeout=30) as response:
                 return json.load(response)
@@ -103,7 +103,7 @@ def main() -> int:
             continue
         try:
             time.sleep(0.35)
-            request_json(f"https://api.notion.com/v1/pages/{page_id}", {"properties": updates})
+            request_json(f"https://api.notion.com/v1/pages/{page_id}", {"properties": updates}, method="PATCH")
             if publishable:
                 synced += 1
             else:
