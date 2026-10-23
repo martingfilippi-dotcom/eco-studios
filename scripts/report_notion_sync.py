@@ -12,8 +12,25 @@ from datetime import datetime, timezone
 TOKEN = os.environ.get("NOTION_TOKEN")
 DATA_SOURCE_ID = os.environ.get("NOTION_DATA_SOURCE_ID")
 NOTION_VERSION = "2025-09-03"
+SYNC_OUTCOME = os.environ.get("SYNC_OUTCOME", "unknown")
+PUBLISH_OUTCOME = os.environ.get("PUBLISH_OUTCOME", "unknown")
+LIVE_VERIFY_OUTCOME = os.environ.get("LIVE_VERIFY_OUTCOME", "unknown")
+SYNC_CONFIRMED = (
+    SYNC_OUTCOME == "success"
+    and PUBLISH_OUTCOME == "success"
+    and LIVE_VERIFY_OUTCOME == "success"
+)
 if not TOKEN or not DATA_SOURCE_ID:
     sys.exit("Missing NOTION_TOKEN or NOTION_DATA_SOURCE_ID.")
+
+def published_result_text() -> str:
+    if SYNC_OUTCOME != "success":
+        return "Error de sincronización; no se confirmó la lectura de Notion. Revisar GitHub Actions."
+    if PUBLISH_OUTCOME != "success":
+        return "Contenido leído, pero no se confirmó su publicación en GitHub. Revisar GitHub Actions."
+    if LIVE_VERIFY_OUTCOME != "success":
+        return "Contenido guardado en GitHub; la versión pública no pudo verificarse. Revisar GitHub Actions."
+    return "Sincronización completada: JSON público de ECO Studios verificado."
 
 def request_json(url: str, payload: dict | None = None, method: str | None = None) -> dict:
     body = None if payload is None else json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -85,7 +102,7 @@ def main() -> int:
         rights = read_property(props, "Derechos de uso verificados") is True
         publishable = status == "Publicado" and rights
         if publishable:
-            result_text = "Sincronizado con GitHub; comprobar el despliegue de Pages."
+            result_text = published_result_text()
         elif name.strip().casefold() == "prueba de sincronización eco":
             result_text = "Prueba técnica conservada como borrador; excluida de producción."
         elif status != "Publicado":
@@ -95,8 +112,8 @@ def main() -> int:
         updates = {}
         if (read_property(props, "Último resultado") or "") != result_text:
             updates["Último resultado"] = {"rich_text": [{"type": "text", "text": {"content": result_text}}]}
-        # This timestamp records inclusion in the JSON sync, not an independently verified browser test.
-        if publishable:
+        # Advance the timestamp only after the public JSON is verified against the repository copy.
+        if publishable and SYNC_CONFIRMED:
             updates["Última sincronización"] = {"date": {"start": now}}
         if not updates:
             unchanged += 1
