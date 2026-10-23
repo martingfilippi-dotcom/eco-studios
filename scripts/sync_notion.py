@@ -276,11 +276,20 @@ def main():
             existing = json.loads(OUTPUT.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             sys.exit("Existing data/eco-content.json is invalid JSON; refusing to overwrite.")
+    # Do not rewrite the repository on every poll just to change a timestamp.
+    # Keep lastSync stable unless the editorial payload really changed; the exact
+    # polling timestamp is recorded in Notion by report_notion_sync.py.
+    content_changed = existing.get("items") != items
+    last_sync = (
+        datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+        if content_changed or not existing.get("lastSync")
+        else existing["lastSync"]
+    )
     output = {
         "schemaVersion": existing.get("schemaVersion", 1),
         "description": existing.get("description", "Datos editoriales públicos de ECO Studios."),
         "items": items,
-        "lastSync": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+        "lastSync": last_sync,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
