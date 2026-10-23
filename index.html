@@ -278,7 +278,7 @@
    card.dataset.ecoOrder=String(orderNumber(item));
    const photo=card.querySelector('.artist-photo');
    if(photo){
-     photo.href='#perfil-'+getSlug(item);
+     photo.href='artistas/'+getSlug(item)+'/';photo.setAttribute('aria-label','Abrir página de '+item.name);
      const href=safeUrl(item.imageUrl);
      let img=photo.querySelector('img');
      if(href){
@@ -290,7 +290,7 @@
    }
    const meta=card.querySelector('.artist-meta');
    if(meta){
-     const h=meta.querySelector('h3');if(h)h.textContent=String(item.name||'');
+     const h=meta.querySelector('h3');if(h){h.replaceChildren();const artistPage=document.createElement('a');artistPage.href='artistas/'+getSlug(item)+'/';artistPage.textContent=String(item.name||'');artistPage.setAttribute('aria-label','Abrir página de '+item.name);artistPage.style.color='inherit';artistPage.style.textDecoration='none';h.appendChild(artistPage);}
      const textWrap=meta.querySelector(':scope > div');
      let p=textWrap&&textWrap.querySelector('p');
      const description=String(item.description||'').trim();
