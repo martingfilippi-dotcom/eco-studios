@@ -17,7 +17,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,3 +31,52 @@ jobs:
           node --check scripts/artist-profile-sync.js
           node --check scripts/artist-directory-sync.js
           python scripts/validate_site.py
+
+      # Temporary PR-only browser gate for the first profile integration.
+      # This condition is scoped to the isolated test branch; normal production
+      # pushes do not install browsers or change the website.
+      - name: Set up Node for isolated profile smoke test
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright for isolated profile smoke test
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        run: npm install --no-save playwright@1.55.0
+
+      - name: Install Chromium for isolated profile smoke test
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        run: npx playwright install --with-deps chromium
+
+      - name: Start local site for isolated profile smoke test
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        run: |
+          python -m http.server 4173 --directory . > /tmp/eco-site-smoke-http.log 2>&1 &
+          echo $! > /tmp/eco-site-smoke-http.pid
+          python - <<'PY'
+          import time
+          from urllib.request import urlopen
+
+          for attempt in range(30):
+              try:
+                  with urlopen("http://127.0.0.1:4173/artistas/lilmartincho/", timeout=2):
+                      print("Local profile server is ready.")
+                      break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("Local profile server did not start.")
+          PY
+
+      - name: Verify Notion profile refresh and static fallback in Chromium
+        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        run: node scripts/browser_profile_smoke.mjs
+
+      - name: Upload isolated profile screenshots
+        if: always() && github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        uses: actions/upload-artifact@v4
+        with:
+          name: eco-profile-sync-smoke
+          path: artifacts/profile-sync-*.png
+          if-no-files-found: warn
