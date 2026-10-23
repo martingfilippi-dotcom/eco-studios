@@ -94,12 +94,18 @@
       "order": 80,
       "status": "Publicado",
       "imageUrl": "https://martingfilippi-dotcom.github.io/eco-studios/youtube-colki.jpg",
-      "description": "Artista de ECO con canal de YouTube propio. Desde aquí se podrá acceder directamente a sus publicaciones y descubrir su música.",
+      "description": "COLKI es un artista paraguayo que transforma la ambición en sonido y las emociones en identidad. A través de versos que hablan de superación, hambre de crecimiento, amor, nostalgia y familia, busca conectar con lo que cada persona vive, siente y sueña. Su música nace de la dualidad entre querer llegar más lejos y no olvidar aquello que lo hace humano.",
       "externalUrl": "https://youtube.com/@colki642",
       "permissionVerified": true,
       "youtubeUrl": "https://youtube.com/@colki642",
-      "appleMusicUrl": "https://music.apple.com/us/artist/colki/1664963478"
+      "appleMusicUrl": "https://music.apple.com/us/artist/colki/1664963478",
+      "tags": [
+        "Urbano",
+        "Colectivo"
+      ],
+      "instagramUrl": "https://www.instagram.com/cccolki/",
+      "spotifyUrl": "https://open.spotify.com/artist/4CJE9CkbdigT7y4cGSFS9Z"
     }
   ],
-  "lastSync": "2026-10-23T04:50:17Z"
+  "lastSync": "2026-10-23T05:02:33.432Z"
 }
