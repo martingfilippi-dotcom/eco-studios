@@ -26,6 +26,16 @@
 .artist-social-link.social-text.network-youtube { color:#ffdedf; }
 .artist-social-link.social-text.network-spotify { color:#d8ffe3; }
 .artist-social-link.social-text.network-apple { color:#eee5ff; }
+.artist-player{grid-column:2 / -1;width:100%;margin-top:12px;padding:14px;border:1px solid var(--line,rgba(255,255,255,.14));border-radius:12px;background:rgba(255,255,255,.025)}
+.artist-player-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.artist-player-heading strong{font-size:10px;letter-spacing:.12em}
+.artist-player-heading span{font-size:11px;opacity:.68}
+.artist-player iframe{display:block;width:100%;aspect-ratio:16/9;min-height:180px;border:0;border-radius:8px;background:#080808}
+.artist-player-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}
+.artist-player-controls button,.artist-player-controls a{font:inherit;font-size:11px;font-weight:700;color:var(--text,#fff);text-decoration:none;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:transparent;padding:9px 12px;cursor:pointer}
+.artist-player-controls a{border-color:transparent}
+@media(max-width:640px){.artist-player{grid-column:1 / -1}.artist-player-heading{align-items:flex-start;flex-direction:column;gap:4px}.artist-player iframe{min-height:190px}}
+
 </style>
 </head>
 <body>
@@ -297,13 +307,52 @@
    const main=primaryLink(item);if(main){const link=document.createElement('a');link.className='mini-link';setLink(link,main.href,main.label,'Abrir enlace oficial de '+item.name);meta.appendChild(link);}
    card.appendChild(meta);return card;
  }
+ function youtubeChannelSlug(item){
+   const raw=String(item.youtubeUrl||item.externalUrl||'').trim();
+   if(!raw)return '';
+   try{
+     const url=new URL(raw);
+     if(!/(^|\\.)youtube\\.com$|(^|\\.)youtu\\.be$/.test(url.hostname))return '';
+     const parts=url.pathname.split('/').filter(Boolean);
+     if(!parts.length)return '';
+     if(parts[0]==='@')return '';
+     if(parts[0].startsWith('@'))return parts[0].slice(1);
+     if(parts[0]==='channel'||parts[0]==='c'||parts[0]==='user')return parts[1]||'';
+     return parts[0];
+   }catch(e){return '';}
+ }
+ function updateArtistPlayer(profile,item){
+   if(!profile)return;
+   let player=profile.querySelector('.artist-player');
+   const channel=youtubeChannelSlug(item);
+   if(!channel){if(player)player.remove();return;}
+   if(!player){player=document.createElement('div');player.className='artist-player';profile.appendChild(player);}
+   player.replaceChildren();
+   const heading=document.createElement('div');heading.className='artist-player-heading';
+   const title=document.createElement('strong');title.textContent='ESCUCHA A '+String(item.name||'').toLocaleUpperCase('es');heading.appendChild(title);
+   const note=document.createElement('span');note.textContent='Videos del canal oficial';heading.appendChild(note);player.appendChild(heading);
+   const frame=document.createElement('iframe');frame.title='Reproductor de YouTube de '+String(item.name||'');
+   frame.loading='lazy';frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+   frame.referrerPolicy='strict-origin-when-cross-origin';frame.allowFullscreen=true;
+   frame.src='https://www.youtube-nocookie.com/embed?listType=user_uploads&list='+encodeURIComponent(channel)+'&playsinline=1&rel=0&enablejsapi=1';
+   player.appendChild(frame);
+   const controls=document.createElement('div');controls.className='artist-player-controls';
+   const shuffle=document.createElement('button');shuffle.type='button';shuffle.className='artist-shuffle';shuffle.textContent='⤨ Mezclar temas';
+   shuffle.addEventListener('click',function(){
+     try{frame.contentWindow.postMessage(JSON.stringify({event:'command',func:'setShuffle',args:[true]}),'https://www.youtube-nocookie.com');}catch(e){}
+     shuffle.textContent='⤨ Mezcla activada';
+   });
+   controls.appendChild(shuffle);
+   const open=document.createElement('a');open.href=String(item.youtubeUrl||item.externalUrl);open.target='_blank';open.rel='noopener noreferrer';open.textContent='Abrir canal ↗';controls.appendChild(open);
+   player.appendChild(controls);
+ }
  function createProfile(item){
    const profile=document.createElement('article');profile.className='profile-row';profile.id='perfil-'+getSlug(item);profile.dataset.ecoOrder=String(orderNumber(item));
    const number=document.createElement('span');number.className='profile-number';number.textContent=displayNumber(item);profile.appendChild(number);
    const copy=document.createElement('div');const h=document.createElement('h3');h.textContent=String(item.name||'');copy.appendChild(h);
    const description=String(item.description||'').trim();if(description){const p=document.createElement('p');p.textContent=description;copy.appendChild(p);}
    profile.appendChild(copy);const socials=document.createElement('div');socials.className='artist-socials';socials.setAttribute('aria-label','Plataformas oficiales de '+item.name);profile.appendChild(socials);
-   updateTags(profile,item);updateSocials(socials,item,String(item.name||''));return profile;
+   updateTags(profile,item);updateSocials(socials,item,String(item.name||''));updateArtistPlayer(profile,item);return profile;
  }
  function updateProfile(profile,item){
    profile.dataset.ecoOrder=String(orderNumber(item));
@@ -315,6 +364,7 @@
    const socials=profile.querySelector('.artist-socials');
    if(socials)updateSocials(socials,item,String(item.name||''));
    updateTags(profile,item);
+   updateArtistPlayer(profile,item);
    profile.id='perfil-'+getSlug(item);
    const number=profile.querySelector(':scope > .profile-number');if(number)number.textContent=displayNumber(item);
  }
