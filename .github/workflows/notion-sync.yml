@@ -10,7 +10,7 @@ on:
       - ".github/workflows/notion-sync.yml"
   workflow_dispatch:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "0,30 * * * *"
 
 permissions:
   contents: write
@@ -60,34 +60,96 @@ jobs:
         run: python -m py_compile scripts/sync_notion.py
 
       - name: Sync approved Notion content
+        id: sync
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DATA_SOURCE_ID: "22641827-d2c0-4d3b-bdb2-927b76b08b5b"
         run: python scripts/sync_notion.py
 
       - name: Commit updated content and locally cached image if changed
-        run: |
-          if [[ -z "$(git status --porcelain -- data/eco-content.json assets/colki.jpg)" ]]; then
-            echo "No content changes to publish."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- data/eco-content.json
-          if [ -s assets/colki.jpg ]; then git add -- assets/colki.jpg; fi
-          if git diff --cached --quiet; then
-            echo "No staged changes to publish."
-            exit 0
-          fi
-          git commit -m "chore: sync ECO content and cache COLKI portrait"
-          # Rebase this content commit if a manual code commit landed after checkout.
-          # Never force-push; a genuine same-file conflict must remain visible.
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
-
-      - name: Report successful sync result to Notion
+        id: publish
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DATA_SOURCE_ID: "22641827-d2c0-4d3b-bdb2-927b76b08b5b"
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # A content commit can race with another main-branch update. Re-read Notion
+          # against the newest main, then try a normal fast-forward push up to 3 times.
+          # Never force-push and never resolve a content conflict by overwriting main.
+          for attempt in 1 2 3; do
+            echo "Publish attempt ${attempt}/3"
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/sync_notion.py
+
+            git add -- data/eco-content.json
+            if [ -s assets/colki.jpg ]; then git add -- assets/colki.jpg; fi
+
+            if git diff --cached --quiet; then
+              echo "No content changes to publish."
+              exit 0
+            fi
+
+            git commit -m "chore: sync ECO content and cache COLKI portrait"
+            if git push origin HEAD:main; then
+              echo "Updated editorial content pushed to main."
+              exit 0
+            fi
+
+            echo "::warning::main moved during publish attempt ${attempt}; retrying from latest main."
+            git reset --hard origin/main
+            sleep $((attempt * 3))
+          done
+
+          echo "::error::Could not publish after 3 safe attempts; no force push was attempted."
+          exit 1
+
+      - name: Verify public JSON matches synchronized content
+        id: verify_live
+        if: steps.sync.outcome == 'success' && steps.publish.outcome == 'success'
+        env:
+          PUBLIC_JSON_URL: "https://martingfilippi-dotcom.github.io/eco-studios/data/eco-content.json"
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import sys
+          import time
+          from urllib.request import Request, urlopen
+          from pathlib import Path
+
+          expected = json.loads(Path("data/eco-content.json").read_text(encoding="utf-8"))
+          base_url = os.environ["PUBLIC_JSON_URL"]
+          last_error = "public JSON did not match the repository copy"
+          for attempt in range(1, 11):
+              request_url = f"{base_url}?sync_check={time.time_ns()}_{attempt}"
+              request = Request(request_url, headers={"Cache-Control": "no-cache", "Pragma": "no-cache"})
+              try:
+                  with urlopen(request, timeout=15) as response:
+                      actual = json.load(response)
+                  if actual == expected:
+                      print(f"Public JSON verified and matches repository content (attempt {attempt}/10).")
+                      sys.exit(0)
+                  last_error = "public JSON is reachable but differs from the expected JSON"
+                  print(f"Public JSON not current yet (attempt {attempt}/10).")
+              except Exception as exc:
+                  last_error = str(exc)
+                  print(f"Public JSON check attempt {attempt}/10 did not pass: {exc}")
+              if attempt < 10:
+                  time.sleep(12)
+          print(f"::error::Public JSON could not be verified: {last_error}")
+          sys.exit(1)
+          PY
+
+      - name: Report actual sync result to Notion
+        if: always()
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATA_SOURCE_ID: "22641827-d2c0-4d3b-bdb2-927b76b08b5b"
+          SYNC_OUTCOME: ${{ steps.sync.outcome }}
+          PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
+          LIVE_VERIFY_OUTCOME: ${{ steps.verify_live.outcome }}
         run: python scripts/report_notion_sync.py
