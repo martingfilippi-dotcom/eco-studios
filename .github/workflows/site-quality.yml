@@ -26,4 +26,8 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run static site and editorial-data checks
-        run: python scripts/validate_site.py
+        run: |
+          python -m py_compile scripts/sync_notion.py scripts/report_notion_sync.py scripts/validate_site.py
+          node --check scripts/artist-profile-sync.js
+          node --check scripts/artist-directory-sync.js
+          python scripts/validate_site.py
