@@ -69,9 +69,12 @@
 .official-contact{display:flex;flex-direction:column;gap:8px;padding:20px 0;border-bottom:1px solid rgba(0,0,0,.22);color:inherit;text-decoration:none;overflow-wrap:anywhere}
 .official-contact:hover strong{text-decoration:underline;text-underline-offset:4px}
 .contact-label{font-size:10px;font-weight:800;letter-spacing:.16em}
-.official-contact strong{font-size:clamp(16px,2vw,22px);font-weight:750}
-.contact-grid{display:grid;grid-template-columns:minmax(0,1fr);max-width:760px}
-@media(max-width:760px){.official-contact strong{font-size:16px}}
+.official-contact strong{display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:clamp(16px,2vw,22px);font-weight:750}
+.official-contact strong>span{flex:1;min-width:0;overflow-wrap:anywhere}
+.contact-brand-icon{display:block;flex:0 0 28px;width:28px;height:28px}
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr);max-width:760px;padding-top:30px}
+.official-contact-list{margin-top:0}
+@media(max-width:760px){.official-contact strong{font-size:16px}.contact-grid{padding-top:24px}.contact-brand-icon{flex-basis:25px;width:25px;height:25px}}
 </style>
 </head>
 <body>
@@ -191,15 +194,26 @@
 <section class="contact section-pad" id="contacto">
   <div class="section-kicker"><span>08 / CONTACTO</span><span>CANALES OFICIALES · ECO STUDIOS</span></div>
   <div class="contact-grid">
-    <div>
-      <h2>Hablemos de<br><span>tu propuesta.</span></h2>
-      <p>¿Querés trabajar con ECO Studios, colaborar en una producción o acercarnos tu proyecto? Escribinos directamente por WhatsApp o correo. Estamos abiertos a nuevas ideas y colaboraciones.</p>
-      <div class="official-contact-list">
-        <a class="official-contact" href="mailto:ecostudiosparaguay@gmail.com"><span class="contact-label">CORREO OFICIAL</span><strong>ecostudiosparaguay@gmail.com ↗</strong></a>
-        <a class="official-contact" href="https://wa.me/595994562633" target="_blank" rel="noopener noreferrer"><span class="contact-label">WHATSAPP OFICIAL</span><strong>+595 994 562 633 ↗</strong></a>
-      </div>
+    <div class="official-contact-list">
+      <a class="official-contact" href="mailto:ecostudiosparaguay@gmail.com" aria-label="Enviar correo a ECO Studios">
+        <span class="contact-label">CORREO OFICIAL</span>
+        <strong><span>ecostudiosparaguay@gmail.com</span><svg class="contact-brand-icon gmail-icon" viewBox="0 0 24 24" role="img" aria-label="Gmail">
+          <path fill="#4285F4" d="M1.8 6.1v12.1c0 .9.7 1.6 1.6 1.6h2.9V9.4L1.8 6.1Z"/>
+          <path fill="#34A853" d="M17.7 9.4v10.4h2.9c.9 0 1.6-.7 1.6-1.6V6.1l-4.5 3.3Z"/>
+          <path fill="#EA4335" d="M3.4 4.1c-.9-.7-1.6-.1-1.6 1v1l10.2 7.7L22.2 6.1v-1c0-1.1-.8-1.7-1.6-1L12 10.5 3.4 4.1Z"/>
+          <path fill="#C5221F" d="M1.8 6.1 6.3 9.4V20H3.4c-.9 0-1.6-.7-1.6-1.6V6.1Z"/>
+          <path fill="#FBBC04" d="M17.7 9.4 22.2 6.1v12.3c0 .9-.7 1.6-1.6 1.6h-2.9V9.4Z"/>
+        </svg></strong>
+      </a>
+      <a class="official-contact" href="https://wa.me/595994562633" target="_blank" rel="noopener noreferrer" aria-label="Contactar a ECO Studios por WhatsApp">
+        <span class="contact-label">WHATSAPP OFICIAL</span>
+        <strong><span>+595 994 562 633</span><svg class="contact-brand-icon whatsapp-icon" viewBox="0 0 24 24" role="img" aria-label="WhatsApp">
+          <circle cx="12" cy="12" r="11" fill="#25D366"/>
+          <path fill="#fff" d="M17.45 14.15c-.25-.12-1.47-.72-1.7-.8-.23-.09-.4-.13-.57.12-.17.25-.65.8-.8.97-.15.17-.3.19-.54.06-.25-.12-1.03-.38-1.96-1.2-.73-.64-1.22-1.43-1.36-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.19-.46-.39-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.59 4.12 3.63.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.07 1.42-.58 1.62-1.15.2-.57.2-1.06.14-1.15-.06-.1-.22-.16-.46-.28Z"/>
+          <path fill="#fff" d="M12 2.8a9.1 9.1 0 0 0-7.8 13.8L3 21l4.55-1.19A9.2 9.2 0 1 0 12 2.8Zm0 16.55a7.3 7.3 0 0 1-3.72-1.02l-.27-.16-2.7.71.72-2.63-.18-.28A7.25 7.25 0 1 1 12 19.35Z"/>
+        </svg></strong>
+      </a>
     </div>
-
   </div>
 </section>
 </main>
