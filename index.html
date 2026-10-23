@@ -260,11 +260,7 @@
    const n=Number(item.order);
    return Number.isFinite(n)&&n>0?n:9999;
  }
- function displayNumber(item){
-   const n=Number(item.order);
-   const value=Number.isFinite(n)&&n>=10&&n%10===0?n/10:(Number.isFinite(n)&&n>0?n:'');
-   return String(value).padStart(2,'0');
- }
+ function displayNumber(item){return '';}
  function primaryLink(item){
    const external=safeUrl(item.externalUrl);
    if(external){
@@ -347,8 +343,6 @@
        if(!img){img=document.createElement('img');img.loading='lazy';photo.insertBefore(img,photo.querySelector('.photo-index'));}
        img.src=href;img.alt='Imagen de '+item.name;
      }
-     const index=photo.querySelector('.photo-index');
-     if(index)index.textContent=displayNumber(item);
    }
    const meta=card.querySelector('.artist-meta');
    if(meta){
@@ -367,7 +361,6 @@
    const photo=document.createElement('a');photo.className='artist-photo';photo.href='artistas/'+getSlug(item)+'/';photo.setAttribute('aria-label','Abrir página de '+item.name);
    const imageUrl=safeUrl(item.imageUrl);
    if(imageUrl){const img=document.createElement('img');img.src=imageUrl;img.alt='Imagen de '+item.name;img.loading='lazy';photo.appendChild(img);}
-   const index=document.createElement('span');index.className='photo-index';index.textContent=displayNumber(item);photo.appendChild(index);
    const arrow=document.createElement('span');arrow.className='photo-arrow';arrow.textContent='↗';photo.appendChild(arrow);card.appendChild(photo);
    const meta=document.createElement('div');meta.className='artist-meta';
    const info=document.createElement('div');const h=document.createElement('h3');const artistPage=document.createElement('a');artistPage.href='artistas/'+getSlug(item)+'/';artistPage.textContent=String(item.name||'');artistPage.setAttribute('aria-label','Abrir página de '+item.name);artistPage.style.color='inherit';artistPage.style.textDecoration='none';h.appendChild(artistPage);info.appendChild(h);
@@ -435,7 +428,6 @@
  }
  function createProfile(item){
    const profile=document.createElement('article');profile.className='profile-row';profile.id='perfil-'+getSlug(item);profile.dataset.ecoOrder=String(orderNumber(item));
-   const number=document.createElement('span');number.className='profile-number';number.textContent=displayNumber(item);profile.appendChild(number);
    const copy=document.createElement('div');const h=document.createElement('h3');h.textContent=String(item.name||'');copy.appendChild(h);
    const description=String(item.description||'').trim();if(description){const p=document.createElement('p');p.textContent=description;copy.appendChild(p);}
    profile.appendChild(copy);const socials=document.createElement('div');socials.className='artist-socials';socials.setAttribute('aria-label','Plataformas oficiales de '+item.name);profile.appendChild(socials);
@@ -453,7 +445,6 @@
    updateTags(profile,item);
    updateArtistPlayer(profile,item);
    profile.id='perfil-'+getSlug(item);
-   const number=profile.querySelector(':scope > .profile-number');if(number)number.textContent=displayNumber(item);
  }
  function sortByOrder(container,selector){
    if(!container)return;
