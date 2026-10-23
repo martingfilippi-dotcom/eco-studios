@@ -187,6 +187,9 @@ def main():
         image_url = get_text(props, "Imagen URL", "Image URL")
         if not image_url:
             image_url = property_value(props, ("Imagen (archivo)", "Imagen", "Image"))
+        # Keep COLKI on one canonical portrait so Notion cannot reintroduce a deleted image URL.
+        if name.strip().casefold() == "colki":
+            image_url = "https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg"
         description = get_text(props, "Biografía o descripción", "Descripción", "Description", "Biografía")
         external_url = get_text(props, "Enlace externo", "Web oficial", "Enlace", "URL")
 
