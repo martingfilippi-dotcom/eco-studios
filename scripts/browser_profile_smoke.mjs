@@ -12,6 +12,7 @@ assert.ok(target, "LILMARTINCHO must exist in the approved editorial JSON");
 assert.equal(target.status, "Publicado");
 assert.equal(target.permissionVerified, true);
 
+const staticBio = target.description;
 const marker = "BIOGRAFÍA ACTUALIZADA POR NOTION · PROFILE-SYNC-SMOKE";
 const testData = structuredClone(fixture);
 const testArtist = testData.items.find((item) => item.slug === "lilmartincho");
@@ -82,11 +83,14 @@ try {
 
   // Failure-safe check: if JSON is unavailable, the known-good static profile must remain visible.
   const fallbackPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
-  await fallbackPage.route("**/data/eco-content.json*", (route) =>
-    route.fulfill({ status: 503, body: "temporarily unavailable" }),
-  );
+  let unavailableRouteHit = false;
   await fallbackPage.route("**/*", async (route) => {
     const requestUrl = new URL(route.request().url());
+    if (requestUrl.pathname.endsWith("/data/eco-content.json")) {
+      unavailableRouteHit = true;
+      await route.fulfill({ status: 503, contentType: "text/plain", body: "temporarily unavailable" });
+      return;
+    }
     if (requestUrl.hostname !== "127.0.0.1" && requestUrl.hostname !== "localhost") {
       await route.abort();
       return;
@@ -95,10 +99,11 @@ try {
   });
   await fallbackPage.goto(`${base}/artistas/lilmartincho/`, { waitUntil: "domcontentloaded" });
   await fallbackPage.waitForTimeout(350);
+  assert.equal(unavailableRouteHit, true, "The fallback test must force the editorial JSON request to fail");
   assert.equal((await fallbackPage.locator(".hero h1").innerText()).trim(), "LILMARTINCHO");
-  assert.ok((await fallbackPage.locator(".bio").innerText()).includes("freestyler"));
+  assert.equal((await fallbackPage.locator(".bio").innerText()).trim(), staticBio);
   await fallbackPage.locator(".player iframe").waitFor({ state: "visible" });
-  console.log("PASS: if the editorial JSON is unavailable, the static profile fallback remains visible.");
+  console.log("PASS: a confirmed JSON failure leaves the exact static biography and profile layout intact.");
   await fallbackPage.close();
 } finally {
   await browser.close();
