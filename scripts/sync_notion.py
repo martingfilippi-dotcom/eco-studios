@@ -187,9 +187,13 @@ def main():
         image_url = get_text(props, "Imagen URL", "Image URL")
         if not image_url:
             image_url = property_value(props, ("Imagen (archivo)", "Imagen", "Image"))
-        # Keep COLKI on one canonical portrait so Notion cannot reintroduce a deleted image URL.
+        # Keep COLKI on one canonical portrait. Prefer the repository copy after the workflow caches it.
         if name.strip().casefold() == "colki":
-            image_url = "https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg"
+            local_portrait = Path("assets/colki.jpg")
+            if local_portrait.is_file() and local_portrait.stat().st_size > 10_000:
+                image_url = "https://martingfilippi-dotcom.github.io/eco-studios/assets/colki.jpg"
+            else:
+                image_url = "https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg"
         description = get_text(props, "Biografía o descripción", "Descripción", "Description", "Biografía")
         external_url = get_text(props, "Enlace externo", "Web oficial", "Enlace", "URL")
 
@@ -244,6 +248,10 @@ def main():
                     print(f"Resolved YouTube uploads playlist for {name}: {uploads_playlist_id}.")
                 else:
                     print(f"Could not resolve a YouTube uploads playlist for {name}; keeping channel link.")
+        # Normalize COLKI's Spotify link; the Notion field currently contains an Instagram redirect wrapper.
+        if name.strip().casefold() == "colki":
+            item["spotifyUrl"] = "https://open.spotify.com/artist/4CJE9CkbdigT7y4cGSFS9Z"
+
         items.append(item)
 
     items.sort(key=lambda item: (item["order"], item["name"].casefold()))
