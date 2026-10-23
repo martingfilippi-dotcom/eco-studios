@@ -2,9 +2,12 @@
 """Sync only published, rights-verified ECO Studios records from Notion."""
 import json
 import os
+import re
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -77,6 +80,104 @@ def get_text(props, *names):
     value = property_value(props, names)
     return value.strip() if isinstance(value, str) else value
 
+
+YOUTUBE_ATOM_NS = "{http://www.w3.org/2005/Atom}"
+YOUTUBE_NS = "{http://www.youtube.com/xml/schemas/2015}"
+CHANNEL_ID_RE = re.compile(r"UC[A-Za-z0-9_-]{22}")
+
+
+def fetch_public_text(url, timeout=12):
+    """Read a small public YouTube response without needing credentials."""
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": (
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+            ),
+            "Accept-Language": "en-US,en;q=0.8",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            return response.read(3_000_000).decode("utf-8", "replace")
+    except (urllib.error.URLError, TimeoutError, ValueError) as exc:
+        print(f"YouTube lookup skipped for {url}: {exc}", file=sys.stderr)
+        return None
+
+
+def youtube_channel_id(channel_url):
+    """Resolve a public channel URL/handle to its stable UC channel ID."""
+    if not isinstance(channel_url, str) or not channel_url.startswith("https://"):
+        return None
+    try:
+        parsed = urllib.parse.urlparse(channel_url)
+    except ValueError:
+        return None
+    host = (parsed.hostname or "").lower()
+    if host != "youtube.com" and not host.endswith(".youtube.com"):
+        return None
+
+    path_parts = [part for part in parsed.path.split("/") if part]
+    if not path_parts:
+        return None
+    if path_parts[0] == "channel" and len(path_parts) > 1:
+        match = CHANNEL_ID_RE.fullmatch(path_parts[1])
+        return match.group(0) if match else None
+
+    # The public handle page exposes the stable channel ID in its metadata.
+    handle = path_parts[0]
+    if not handle.startswith("@"):
+        # Legacy /user/ URLs may still work with YouTube's RSS username route,
+        # but do not guess an ID for /c/ URLs.
+        return None
+    page_html = fetch_public_text("https://www.youtube.com/" + urllib.parse.quote(handle, safe="@_-"))
+    if not page_html:
+        return None
+
+    patterns = (
+        r'<meta[^>]*itemprop=["\\']channelId["\\'][^>]*content=["\\'](UC[A-Za-z0-9_-]{22})',
+        r'<meta[^>]*content=["\\'](UC[A-Za-z0-9_-]{22})["\\'][^>]*itemprop=["\\']channelId["\\']',
+        r'"channelId"\\s*:\\s*"(UC[A-Za-z0-9_-]{22})"',
+        r'"externalId"\\s*:\\s*"(UC[A-Za-z0-9_-]{22})"',
+    )
+    for pattern in patterns:
+        match = re.search(pattern, page_html)
+        if match:
+            return match.group(1)
+    print(f"Could not resolve YouTube channel ID for {channel_url}.", file=sys.stderr)
+    return None
+
+
+def youtube_recent_uploads(channel_url, limit=12):
+    """Return recent public upload IDs/titles from the channel's official RSS feed."""
+    channel_id = youtube_channel_id(channel_url)
+    if not channel_id:
+        return []
+    feed_url = "https://www.youtube.com/feeds/videos.xml?channel_id=" + channel_id
+    feed_xml = fetch_public_text(feed_url)
+    if not feed_xml:
+        return []
+    try:
+        root = ET.fromstring(feed_xml)
+    except ET.ParseError as exc:
+        print(f"Could not parse YouTube RSS for {channel_url}: {exc}", file=sys.stderr)
+        return []
+
+    videos = []
+    seen = set()
+    for entry in root.findall(f"{YOUTUBE_ATOM_NS}entry"):
+        video_id = (entry.findtext(f"{YOUTUBE_NS}videoId") or "").strip()
+        if not re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id) or video_id in seen:
+            continue
+        title = (entry.findtext(f"{YOUTUBE_ATOM_NS}title") or "").strip()
+        published = (entry.findtext(f"{YOUTUBE_ATOM_NS}published") or "").strip()
+        videos.append({"id": video_id, "title": title, "published": published})
+        seen.add(video_id)
+        if len(videos) >= limit:
+            break
+    return videos
+
 def query_all():
     results = []
     cursor = None
@@ -145,6 +246,18 @@ def main():
                 value = value.strip()
             if isinstance(value, str) and value.startswith("https://"):
                 item[output_key] = value
+
+        # Resolve channel uploads only for published, rights-verified artists. This
+        # is best-effort: a YouTube lookup failure must not block editorial sync.
+        if str(item.get("type") or "").strip().casefold() == "artista":
+            youtube_url = item.get("youtubeUrl")
+            if youtube_url:
+                videos = youtube_recent_uploads(youtube_url)
+                if videos:
+                    item["youtubeVideos"] = videos
+                    print(f"Found {len(videos)} recent YouTube video(s) for {name}.")
+                else:
+                    print(f"No embeddable upload list found for {name}; keeping channel link.")
         items.append(item)
 
     items.sort(key=lambda item: (item["order"], item["name"].casefold()))
