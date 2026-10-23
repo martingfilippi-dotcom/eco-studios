@@ -37,7 +37,7 @@
         <a class="social" href="https://on.soundcloud.com/syICozVXOKxCjTPpwj" target="_blank" rel="noopener noreferrer">SoundCloud ↗</a>
       </div>
     </div>
-    <img class="portrait" id="lk-portrait" src="../../eco-colectivo-03.jpg" alt="Imagen de LK" loading="eager">
+    <img class="portrait" id="lk-portrait" src="../../eco-colectivo-03.jpg?v=20261023-2" alt="Imagen de LK" loading="eager" onerror="this.onerror=null;this.src='../../eco-colectivo-03.jpg?v=20261023-2'">
   </section>
   <section class="player">
     <div class="eyebrow">MÚSICA DE LK</div>
@@ -59,6 +59,7 @@
     .then(function(response){ if(!response.ok) throw new Error("SoundCloud oEmbed unavailable"); return response.json(); })
     .then(function(data){
       if(data && data.thumbnail_url && image) {
+        image.onerror = function(){ this.onerror=null; this.src="../../eco-colectivo-03.jpg?v=20261023-2"; this.alt="Imagen de LK en ECO Studios"; };
         image.src = data.thumbnail_url;
         image.alt = "Imagen de perfil o portada pública de LK en SoundCloud";
       }
