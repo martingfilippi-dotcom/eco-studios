@@ -327,45 +327,43 @@
    let player=profile.querySelector('.artist-player');
    const channelUrl=youtubeChannelUrl(item);
    if(!channelUrl){if(player)player.remove();return;}
-   const videos=Array.isArray(item.youtubeVideos)?item.youtubeVideos.filter(function(video){
-     return video&&/^[A-Za-z0-9_-]{11}$/.test(String(video.id||''));
-   }):[];
+   const uploadsId=String(item.youtubeUploadsPlaylistId||'').trim();
+   const hasPlaylist=/^UU[A-Za-z0-9_-]{22}$/.test(uploadsId);
    if(!player){player=document.createElement('div');player.className='artist-player';profile.appendChild(player);}
    player.replaceChildren();
 
    const heading=document.createElement('div');heading.className='artist-player-heading';
    const title=document.createElement('strong');title.textContent='ESCUCHA A '+String(item.name||'').toLocaleUpperCase('es');heading.appendChild(title);
-   const note=document.createElement('span');note.textContent=videos.length?'Selección aleatoria del canal oficial':'Canal oficial de YouTube';heading.appendChild(note);player.appendChild(heading);
+   const note=document.createElement('span');note.textContent=hasPlaylist?'Videos del canal oficial · modo aleatorio':'Canal oficial de YouTube';heading.appendChild(note);player.appendChild(heading);
 
-   if(videos.length){
+   if(hasPlaylist){
      const frame=document.createElement('iframe');
      frame.title='Reproductor de YouTube de '+String(item.name||'');
      frame.loading='lazy';
      frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
      frame.referrerPolicy='strict-origin-when-cross-origin';
      frame.allowFullscreen=true;
-     let currentIndex=-1;
-     const nowPlaying=document.createElement('p');nowPlaying.className='artist-player-track';nowPlaying.setAttribute('aria-live','polite');
-     function playRandomUpload(){
-       const candidates=videos.length>1?videos.filter(function(video){return videos.indexOf(video)!==currentIndex;}):videos;
-       const chosen=candidates[Math.floor(Math.random()*candidates.length)];
-       if(!chosen)return;
-       currentIndex=videos.indexOf(chosen);
-       frame.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(chosen.id)+'?playsinline=1&rel=0';
-       nowPlaying.textContent=chosen.title||'Tema del canal oficial';
+     frame.src='https://www.youtube-nocookie.com/embed/videoseries?list='+encodeURIComponent(uploadsId)+'&playsinline=1&rel=0&enablejsapi=1&origin='+encodeURIComponent(window.location.origin);
+     function playerCommand(func,args){
+       try{frame.contentWindow.postMessage(JSON.stringify({event:'command',func:func,args:args||[]}), 'https://www.youtube-nocookie.com');}catch(e){}
      }
-     playRandomUpload();
+     frame.addEventListener('load',function(){
+       // Shuffle upcoming uploads without autoplaying audio on page load.
+       window.setTimeout(function(){playerCommand('setShuffle',[true]);},900);
+     });
      player.appendChild(frame);
-     player.appendChild(nowPlaying);
      const controls=document.createElement('div');controls.className='artist-player-controls';
-     const next=document.createElement('button');next.type='button';next.className='artist-shuffle';next.textContent='↻ Otra canción';next.setAttribute('aria-label','Reproducir otra canción aleatoria de '+String(item.name||''));
-     next.addEventListener('click',playRandomUpload);
-     controls.appendChild(next);
+     const shuffle=document.createElement('button');shuffle.type='button';shuffle.className='artist-shuffle';shuffle.textContent='⤨ Tema aleatorio';shuffle.setAttribute('aria-label','Elegir una canción aleatoria de '+String(item.name||''));
+     shuffle.addEventListener('click',function(){
+       playerCommand('setShuffle',[true]);
+       window.setTimeout(function(){playerCommand('nextVideo',[]);},250);
+     });
+     controls.appendChild(shuffle);
      const open=document.createElement('a');open.href=channelUrl;open.target='_blank';open.rel='noopener noreferrer';open.textContent='Abrir canal ↗';controls.appendChild(open);
      player.appendChild(controls);
    }else{
      const noteText=document.createElement('p');noteText.className='artist-player-track';
-     noteText.textContent='El reproductor se activará cuando la sincronización encuentre videos públicos de este canal.';
+     noteText.textContent='El reproductor se activará cuando la sincronización pueda identificar la lista pública de este canal.';
      player.appendChild(noteText);
      const open=document.createElement('a');open.className='artist-player-open';open.href=channelUrl;open.target='_blank';open.rel='noopener noreferrer';open.textContent='▶ Abrir canal oficial en YouTube ↗';
      player.appendChild(open);
