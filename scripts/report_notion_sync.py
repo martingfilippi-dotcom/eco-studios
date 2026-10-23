@@ -27,7 +27,7 @@ def published_result_text() -> str:
     if SYNC_OUTCOME != "success":
         return "Error de sincronización; no se confirmó la lectura de Notion. Revisar GitHub Actions."
     if PUBLISH_OUTCOME != "success":
-        return "Contenido leído, pero no se confirmó su publicación en GitHub. Revisar GitHub Actions."
+        return "No se pudo completar el paso final de publicación en GitHub. Revisar GitHub Actions."
     if LIVE_VERIFY_OUTCOME != "success":
         return "Contenido guardado en GitHub; la versión pública no pudo verificarse. Revisar GitHub Actions."
     return "Sincronización completada: JSON público de ECO Studios verificado."
