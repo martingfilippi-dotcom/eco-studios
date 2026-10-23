@@ -325,7 +325,8 @@
    nodes.forEach(function(node){container.appendChild(node);});
  }
  function applyApprovedStaticContent(items,approvedByName){
-   // Black Mango remains available as a curated public landing section; editorial CMS approval still governs managed catalogue cards.\n   const album=approvedByName.get(normalize('ECO LIVE AT BLACK MANGO'));
+   // Black Mango remains available as a curated public landing section; editorial CMS approval still governs managed catalogue cards.
+   const album=approvedByName.get(normalize('ECO LIVE AT BLACK MANGO'));
    const albumCard=document.querySelector('.release-card.release-main');
    if(albumCard){
      albumCard.hidden=!album;
