@@ -1,0 +1,79 @@
+name: ECO Studios — Artist sync browser smoke
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "artistas/**"
+      - "scripts/artist-profile-sync.js"
+      - "scripts/artist-directory-sync.js"
+      - "scripts/browser_profile_smoke.mjs"
+      - "data/eco-content.json"
+      - ".github/workflows/artist-profile-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eco-artist-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  profile-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Cache Playwright browser
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.55.0
+
+      - name: Install Playwright
+        run: npm install --no-save playwright@1.55.0
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start local site
+        run: |
+          python -m http.server 4173 --directory . > /tmp/eco-site-smoke-http.log 2>&1 &
+          echo $! > /tmp/eco-site-smoke-http.pid
+          python - <<'PY'
+          import time
+          from urllib.request import urlopen
+          for attempt in range(30):
+              try:
+                  with urlopen("http://127.0.0.1:4173/artistas/lilmartincho/", timeout=2):
+                      print("Local profile server is ready.")
+                      break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("Local profile server did not start.")
+          PY
+
+      - name: Verify artist profile sync and static fallback
+        run: node scripts/browser_profile_smoke.mjs
+
+      - name: Upload browser smoke screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eco-profile-sync-verification
+          path: artifacts/profile-sync-*.png
+          if-no-files-found: warn
