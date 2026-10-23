@@ -60,6 +60,9 @@ def property_value(props, names):
             return bool(prop.get("checkbox"))
         if kind == "number":
             return prop.get("number")
+        if kind == "date":
+            selected = prop.get("date")
+            return selected.get("start") if selected else None
         if kind == "select":
             selected = prop.get("select")
             return selected.get("name") if selected else None
@@ -196,9 +199,20 @@ def main():
                 image_url = "https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg"
         description = get_text(props, "Biografía o descripción", "Descripción", "Description", "Biografía")
         external_url = get_text(props, "Enlace externo", "Web oficial", "Enlace", "URL")
+        slug = get_text(props, "Slug web", "Slug")
+        if not slug:
+            slug = re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
+        raw_tags = property_value(props, ("Géneros y etiquetas", "Tags", "Genres"))
+        if not isinstance(raw_tags, list):
+            raw_tags = [raw_tags] if isinstance(raw_tags, str) and raw_tags.strip() else []
+        tags = [str(tag).strip() for tag in raw_tags if str(tag).strip()]
+        publication_date = get_text(props, "Fecha de publicación", "Publication date")
 
         item = {
             "name": name,
+            "slug": slug.strip().lower(),
+            "tags": tags,
+            "publicationDate": publication_date if isinstance(publication_date, str) and re.match(r"^\d{4}-\d{2}-\d{2}", publication_date) else None,
             "type": get_text(props, "Tipo", "Type") or "Artista",
             "order": order if isinstance(order, (int, float)) else 999,
             "status": status,

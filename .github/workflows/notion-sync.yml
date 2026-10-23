@@ -84,3 +84,9 @@ jobs:
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
+
+      - name: Report successful sync result to Notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATA_SOURCE_ID: "22641827-d2c0-4d3b-bdb2-927b76b08b5b"
+        run: python scripts/report_notion_sync.py
