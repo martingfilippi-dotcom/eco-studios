@@ -211,7 +211,7 @@
     <!-- Joako pertenece a la comunidad Artistas Independientes -->
     <article class="artist-card"><a class="artist-photo" href="artistas/ghb/" aria-label="Abrir página de GHB"><img src="youtube-ghb.jpg" alt="Foto de perfil del canal de YouTube de GHB" loading="lazy"><span class="photo-arrow">↗</span></a><div class="artist-meta"><div><h3>GHB</h3></div><div class="artist-platforms" aria-label="Plataformas oficiales"></div></div></article>
     <article class="artist-card"><a class="artist-photo" href="artistas/lk/" aria-label="Abrir página de LK"><img id="lk-home-portrait" src="eco-colectivo-03.jpg?v=20261023-2" alt="Imagen de LK en SoundCloud" loading="lazy" onerror="this.onerror=null;this.src='eco-colectivo-03.jpg?v=20261023-2'"><span class="photo-arrow">↗</span></a><div class="artist-meta"><div><h3>LK</h3></div><div class="artist-platforms" aria-label="Plataformas oficiales"></div></div></article>
-    <article class="artist-card"><a class="artist-photo" href="artistas/colki/" aria-label="Abrir página de Colki"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg" alt="Foto de perfil de COLKI" loading="eager" fetchpriority="high"><span class="photo-arrow">↗</span></a><div class="artist-meta"><div><h3>COLKI</h3></div><div class="artist-platforms" aria-label="Plataformas oficiales"></div></div></article>
+    <article class="artist-card"><a class="artist-photo" href="artistas/colki/" aria-label="Abrir página de Colki"><img src="assets/colki.jpg" alt="Foto de perfil de COLKI" loading="eager" fetchpriority="high" onerror="this.onerror=null;this.src='https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg'"><span class="photo-arrow">↗</span></a><div class="artist-meta"><div><h3>COLKI</h3></div><div class="artist-platforms" aria-label="Plataformas oficiales"></div></div></article>
     <!-- Fezet pertenece a la comunidad Artistas Independientes -->
   </div>
   <p class="note">Nota editorial: las imágenes colectivas se identifican como tales. Los enlaces de escucha de artistas sin página individual confirmada dirigen al catálogo colectivo de ECO, no a perfiles inventados.</p>
@@ -443,11 +443,11 @@
    const photo=card.querySelector('.artist-photo');
    if(photo){
      photo.href='artistas/'+getSlug(item)+'/';photo.setAttribute('aria-label','Abrir página de '+item.name);
-     const href=getSlug(item)==='colki'?'https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg':safeUrl(item.imageUrl);
+     const href=getSlug(item)==='colki'?'https://martingfilippi-dotcom.github.io/eco-studios/assets/colki.jpg':safeUrl(item.imageUrl);
      let img=photo.querySelector('img');
      if(href){
        if(!img){img=document.createElement('img');img.loading='lazy';photo.appendChild(img);}
-       img.src=href;img.alt='Imagen de '+item.name;
+       img.src=href;img.alt='Imagen de '+item.name;if(getSlug(item)==='colki')img.onerror=function(){this.onerror=null;this.src='https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg';};
      }
    }
    const meta=card.querySelector('.artist-meta');
@@ -465,8 +465,8 @@
  function createCard(item){
    const card=document.createElement('article');card.className='artist-card';card.dataset.ecoOrder=String(orderNumber(item));
    const photo=document.createElement('a');photo.className='artist-photo';photo.href='artistas/'+getSlug(item)+'/';photo.setAttribute('aria-label','Abrir página de '+item.name);
-   const imageUrl=getSlug(item)==='colki'?'https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg':safeUrl(item.imageUrl);
-   if(imageUrl){const img=document.createElement('img');img.src=imageUrl;img.alt='Imagen de '+item.name;img.loading='lazy';photo.appendChild(img);}
+   const imageUrl=getSlug(item)==='colki'?'https://martingfilippi-dotcom.github.io/eco-studios/assets/colki.jpg':safeUrl(item.imageUrl);
+   if(imageUrl){const img=document.createElement('img');img.src=imageUrl;img.alt='Imagen de '+item.name;img.loading='lazy';if(getSlug(item)==='colki')img.onerror=function(){this.onerror=null;this.src='https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg';};photo.appendChild(img);}
    const arrow=document.createElement('span');arrow.className='photo-arrow';arrow.textContent='↗';photo.appendChild(arrow);card.appendChild(photo);
    const meta=document.createElement('div');meta.className='artist-meta';
    const info=document.createElement('div');const h=document.createElement('h3');const artistPage=document.createElement('a');artistPage.href='artistas/'+getSlug(item)+'/';artistPage.textContent=String(item.name||'');artistPage.setAttribute('aria-label','Abrir página de '+item.name);artistPage.style.color='inherit';artistPage.style.textDecoration='none';h.appendChild(artistPage);info.appendChild(h);
