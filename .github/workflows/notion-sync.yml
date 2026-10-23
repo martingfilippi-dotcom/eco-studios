@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "scripts/sync_notion.py"
+      - "scripts/report_notion_sync.py"
       - ".github/workflows/notion-sync.yml"
   workflow_dispatch:
   schedule:
