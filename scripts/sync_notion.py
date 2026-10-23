@@ -155,6 +155,22 @@ def youtube_uploads_playlist_id(channel_url):
     # replacing the channel prefix UC with the playlist prefix UU.
     return "UU" + channel_id[2:]
 
+
+def query_all():
+    results = []
+    cursor = None
+    while True:
+        payload = {"page_size": 100}
+        if cursor:
+            payload["start_cursor"] = cursor
+        data = request_json(f"https://api.notion.com/v1/data_sources/{DATA_SOURCE_ID}/query", payload)
+        results.extend(data.get("results", []))
+        if not data.get("has_more"):
+            return results
+        cursor = data.get("next_cursor")
+        if not cursor:
+            return results
+
 def main():
     pages = query_all()
     items = []
