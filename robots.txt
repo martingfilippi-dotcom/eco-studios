@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://martingfilippi-dotcom.github.io/eco-studios/sitemap.xml
