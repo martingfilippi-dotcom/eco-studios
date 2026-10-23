@@ -142,7 +142,7 @@
       var imageUrl = safeUrl(item.imageUrl);
       if (imageUrl) {
         var img = document.createElement("img");
-        img.src = imageUrl; img.alt = String(item.name); img.loading = "lazy"; card.appendChild(img);
+        img.src = imageUrl; img.alt = String(item.name); img.loading = "lazy"; if (slug === "lk") img.id = "lk-directory-portrait"; card.appendChild(img);
       } else appendText(card, "div", "directory-placeholder", "");
       var copy = document.createElement("div"); copy.className = "copy";
       appendText(copy, "small", "", String(item.type || "ARTISTA").toUpperCase());

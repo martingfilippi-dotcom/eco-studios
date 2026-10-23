@@ -235,7 +235,7 @@ def main():
             "appleMusicUrl": ("Apple Music URL",),
             "deezerUrl": ("Deezer URL",),
             "bandcampUrl": ("Bandcamp URL",),
-            "soundcloudUrl": ("SoundCloud URL",),
+            "soundCloudUrl": ("SoundCloud URL",),
             "twitchUrl": ("Twitch URL",),
             "tidalUrl": ("TIDAL URL",),
             "threadsUrl": ("Threads URL",),
