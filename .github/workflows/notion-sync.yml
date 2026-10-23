@@ -30,6 +30,31 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Cache COLKI portrait locally when source is available
+        run: |
+          mkdir -p assets
+          if [ -s assets/colki.jpg ]; then
+            echo "COLKI portrait already cached in the repository."
+            exit 0
+          fi
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+
+          url = "https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg"
+          try:
+              request = Request(url, headers={"User-Agent": "ECO-Studios-AssetMirror/1.0"})
+              with urlopen(request, timeout=25) as response:
+                  content_type = response.headers.get("Content-Type", "").lower()
+                  image_bytes = response.read(5_000_001)
+              if not content_type.startswith("image/") or len(image_bytes) < 10_000 or len(image_bytes) > 5_000_000:
+                  raise ValueError(f"Unexpected image response: type={content_type!r}, bytes={len(image_bytes)}")
+              Path("assets/colki.jpg").write_bytes(image_bytes)
+              print(f"Cached COLKI portrait locally ({len(image_bytes)} bytes; {content_type}).")
+          except Exception as exc:
+              print(f"::warning::Could not cache COLKI portrait; keeping the external fallback this run: {exc}")
+          PY
+
       - name: Validate synchronization script syntax
         run: python -m py_compile scripts/sync_notion.py
 
@@ -39,14 +64,15 @@ jobs:
           NOTION_DATA_SOURCE_ID: "22641827-d2c0-4d3b-bdb2-927b76b08b5b"
         run: python scripts/sync_notion.py
 
-      - name: Commit updated content if changed
+      - name: Commit updated content and locally cached image if changed
         run: |
-          if git diff --quiet -- data/eco-content.json; then
+          if [[ -z "$(git status --porcelain -- data/eco-content.json assets/colki.jpg)" ]]; then
             echo "No content changes to publish."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/eco-content.json
-          git commit -m "chore: sync approved ECO content from Notion"
+          git add -- data/eco-content.json
+          if [ -s assets/colki.jpg ]; then git add -- assets/colki.jpg; fi
+          git commit -m "chore: sync ECO content and cache COLKI portrait"
           git push
