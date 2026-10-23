@@ -292,10 +292,8 @@
    if(meta){
      const h=meta.querySelector('h3');if(h){h.replaceChildren();const artistPage=document.createElement('a');artistPage.href='artistas/'+getSlug(item)+'/';artistPage.textContent=String(item.name||'');artistPage.setAttribute('aria-label','Abrir página de '+item.name);artistPage.style.color='inherit';artistPage.style.textDecoration='none';h.appendChild(artistPage);}
      const textWrap=meta.querySelector(':scope > div');
-     let p=textWrap&&textWrap.querySelector('p');
-     const description=String(item.description||'').trim();
-     if(description){if(!p){p=document.createElement('p');if(textWrap)textWrap.appendChild(p);}if(p)p.textContent=description;}
-     else if(p)p.remove();
+     const description=textWrap&&textWrap.querySelector('p');
+     if(description)description.remove();
      const link=meta.querySelector('.mini-link');
      const main=primaryLink(item);
      if(link){if(main)setLink(link,main.href,main.label,'Abrir enlace oficial de '+item.name);else link.remove();}
@@ -310,7 +308,7 @@
    const arrow=document.createElement('span');arrow.className='photo-arrow';arrow.textContent='↗';photo.appendChild(arrow);card.appendChild(photo);
    const meta=document.createElement('div');meta.className='artist-meta';
    const info=document.createElement('div');const h=document.createElement('h3');const artistPage=document.createElement('a');artistPage.href='artistas/'+getSlug(item)+'/';artistPage.textContent=String(item.name||'');artistPage.setAttribute('aria-label','Abrir página de '+item.name);artistPage.style.color='inherit';artistPage.style.textDecoration='none';h.appendChild(artistPage);info.appendChild(h);
-   const description=String(item.description||'').trim();if(description){const p=document.createElement('p');p.textContent=description;info.appendChild(p);}
+   
    meta.appendChild(info);
    const main=primaryLink(item);if(main){const link=document.createElement('a');link.className='mini-link';setLink(link,main.href,main.label,'Abrir enlace oficial de '+item.name);meta.appendChild(link);}
    card.appendChild(meta);return card;
