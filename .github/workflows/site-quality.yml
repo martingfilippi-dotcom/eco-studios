@@ -36,21 +36,21 @@ jobs:
       # This condition is scoped to the isolated test branch; normal production
       # pushes do not install browsers or change the website.
       - name: Set up Node for isolated profile smoke test
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'automation/test-artist-profile-sync')
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Install Playwright for isolated profile smoke test
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'automation/test-artist-profile-sync')
         run: npm install --no-save playwright@1.55.0
 
       - name: Install Chromium for isolated profile smoke test
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'automation/test-artist-profile-sync')
         run: npx playwright install --with-deps chromium
 
       - name: Start local site for isolated profile smoke test
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'automation/test-artist-profile-sync')
         run: |
           python -m http.server 4173 --directory . > /tmp/eco-site-smoke-http.log 2>&1 &
           echo $! > /tmp/eco-site-smoke-http.pid
@@ -70,11 +70,11 @@ jobs:
           PY
 
       - name: Verify Notion profile refresh and static fallback in Chromium
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'automation/test-artist-profile-sync')
         run: node scripts/browser_profile_smoke.mjs
 
       - name: Upload isolated profile screenshots
-        if: always() && github.event_name == 'pull_request' && github.head_ref == 'automation/test-artist-profile-sync'
+        if: always() && github.event_name == 'pull_request' && startsWith(github.head_ref, 'automation/test-artist-profile-sync')
         uses: actions/upload-artifact@v4
         with:
           name: eco-profile-sync-smoke
