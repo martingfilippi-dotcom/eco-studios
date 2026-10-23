@@ -70,13 +70,30 @@ try {
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(150);
-  const mobileWidth = await page.evaluate(() => ({
-    viewport: window.innerWidth,
-    document: document.documentElement.scrollWidth,
-  }));
+  const mobileWidth = await page.evaluate(() => {
+    const viewport = window.innerWidth;
+    const documentWidth = document.documentElement.scrollWidth;
+    const offenders = Array.from(document.querySelectorAll("body *")).map((element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        tag: element.tagName.toLowerCase(),
+        id: element.id || "",
+        className: typeof element.className === "string" ? element.className : "",
+        text: (element.innerText || element.getAttribute("alt") || "").trim().slice(0, 60),
+        left: Math.round(rect.left * 100) / 100,
+        right: Math.round(rect.right * 100) / 100,
+        width: Math.round(rect.width * 100) / 100,
+      };
+    }).filter((element) => element.right > viewport + 0.5)
+      .sort((a, b) => b.right - a.right).slice(0, 12);
+    return { viewport, document: documentWidth, offenders };
+  });
+  await page.screenshot({ path: path.join(artifacts, "profile-sync-mobile.png"), fullPage: true });
+  if (mobileWidth.document > mobileWidth.viewport) {
+    console.error("Mobile overflow elements:", JSON.stringify(mobileWidth.offenders));
+  }
   assert.ok(mobileWidth.document <= mobileWidth.viewport, `Mobile horizontal overflow: ${JSON.stringify(mobileWidth)}`);
   assert.equal((await page.locator(".bio").innerText()).trim(), marker);
-  await page.screenshot({ path: path.join(artifacts, "profile-sync-mobile.png"), fullPage: true });
   console.log("PASS: approved Notion content updates the existing profile without losing its layout.");
   console.log(`PASS: responsive layout has no horizontal overflow (desktop ${desktopWidth.document}px; mobile ${mobileWidth.document}px).`);
   await context.close();
