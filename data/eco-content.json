@@ -94,7 +94,8 @@
       "externalUrl": "https://on.soundcloud.com/syICozVXOKxCjTPpwj",
       "permissionVerified": true,
       "instagramUrl": "https://www.instagram.com/luisferkeim?xtok=MTlzNXFtd3U2M2xsYQ==",
-      "soundCloudUrl": "https://on.soundcloud.com/syICozVXOKxCjTPpwj"
+      "soundCloudUrl": "https://on.soundcloud.com/syICozVXOKxCjTPpwj",
+      "soundcloudUrl": "https://on.soundcloud.com/syICozVXOKxCjTPpwj"
     },
     {
       "name": "COLKI",
@@ -111,5 +112,5 @@
       "youtubeUploadsPlaylistId": "UUnKiZr5YEE3_sq9SArh-NAg"
     }
   ],
-  "lastSync": "2026-10-23T12:36:32Z"
+  "lastSync": "2026-10-23T13:00:41Z"
 }
