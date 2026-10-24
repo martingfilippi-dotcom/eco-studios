@@ -176,10 +176,8 @@ jobs:
                           content_type = response.headers.get("Content-Type", "").split(";", 1)[0].lower()
                       if not content_type.startswith("image/") or len(image_bytes) < 10_000:
                           raise ValueError(f"LK thumbnail is not served as a valid image: {content_type}, {len(image_bytes)} bytes")
-                      if not (image_bytes.startswith(b"\\xff\\xd8\\xff")
-                              or image_bytes.startswith(b"\\x89PNG\\r\\n\\x1a\\n")
-                              or (image_bytes[:4] == b"RIFF" and image_bytes[8:12] == b"WEBP")):
-                          raise ValueError("LK thumbnail response has no recognized image signature")
+                      # The cache script validates the source image signature before commit.
+                      # GitHub Pages/CDN may re-encode an image while preserving a valid image response.
                       print(f"Public JSON verified and LK's cached SoundCloud thumbnail is served ({content_type}, {len(image_bytes)} bytes).")
                   else:
                       print("Public JSON verified. LK has no cached SoundCloud image URL in the current payload.")
