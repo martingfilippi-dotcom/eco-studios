@@ -30,6 +30,7 @@ jobs:
           python -m py_compile scripts/sync_notion.py scripts/report_notion_sync.py scripts/validate_site.py
           node --check scripts/artist-profile-sync.js
           node --check scripts/artist-directory-sync.js
+          node --input-type=module --check < webhook-receiver/src/index.js
           python scripts/validate_site.py
 
       # Browser gate for this verification PR only; ordinary production pushes stay lightweight.
