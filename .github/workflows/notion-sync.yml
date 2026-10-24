@@ -10,6 +10,9 @@ on:
       - "scripts/report_notion_sync.py"
       - ".github/workflows/notion-sync.yml"
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - notion-content-changed
   schedule:
     - cron: "*/5 * * * *"
 
