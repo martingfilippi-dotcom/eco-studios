@@ -1,37 +1,34 @@
 # ECO Studios — Notion webhook receiver
 
-This Cloudflare Worker receives Notion webhook events, validates the X-Notion-Signature header, and dispatches notion-content-changed to GitHub Actions. The existing sync workflow still applies the publication checks: only records with Estado = Publicado and Derechos de uso verificados = true are published.
+This Cloudflare Worker receives Notion webhook events, validates the X-Notion-Signature header, and dispatches notion-content-changed to GitHub Actions. The sync workflow remains responsible for publication checks: only records marked Estado = Publicado and Derechos de uso verificados = true can be published.
 
-## No paid plan required
+## Cost
 
-Cloudflare Workers Free currently allows up to 100,000 requests per day. This receiver should use only a tiny fraction of that limit. See the [official limits](https://developers.cloudflare.com/workers/platform/limits/). GitHub Actions usage may depend on repository visibility and runner type; this repository is public and uses the standard GitHub-hosted runner.
+Cloudflare Workers Free currently permits up to 100,000 requests per day; this receiver should use a tiny fraction of that limit. See the [official Cloudflare limits](https://developers.cloudflare.com/workers/platform/limits/). The repository is public and uses standard GitHub-hosted runners for Actions.
 
 ## Required secrets
 
-Set these in the Cloudflare Worker as **Secrets** (not plain-text variables):
+Configure these in Cloudflare as encrypted Worker **Secrets**, never as plain-text variables:
 
-- NOTION_WEBHOOK_SECRET: the exact verification_token Notion sends during webhook setup.
-- GITHUB_DISPATCH_TOKEN: a fine-grained GitHub personal access token limited to this repository, with **Contents: Read and write** (write permission is required for repository dispatch).
+- NOTION_WEBHOOK_SECRET: the exact verification_token received from Notion during setup.
+- GITHUB_DISPATCH_TOKEN: a fine-grained GitHub personal access token scoped only to martingfilippi-dotcom/eco-studios, with Contents: Read and write.
 
-Never commit either value to the repository or send either value in chat.
+Never commit either value to this repository or send it in chat.
 
-## Quick setup through the Cloudflare dashboard
+## Dashboard setup
 
-1. In Cloudflare, open **Workers & Pages** and create a Worker (a workers.dev address is enough; no custom domain is needed).
-2. Open **Edit code**, replace the sample code with the contents of src/index.js from this folder, and deploy.
-3. In **Settings → Variables and Secrets**, add the two required values as encrypted secrets. The Notion secret is obtained in step 5 below; the GitHub token is created in step 4.
-4. In GitHub, create a fine-grained personal access token scoped only to martingfilippi-dotcom/eco-studios, with **Contents: Read and write**. Store it in Cloudflare as GITHUB_DISPATCH_TOKEN. Do not paste it into Notion or this repository.
-5. In your Notion integration/connection settings, open **Webhooks**, create a subscription pointing to https://YOUR-WORKER.workers.dev/notion, and select page/content update events. The first request contains a verification_token; open the Worker live logs and copy the TEMP_NOTION_VERIFICATION_TOKEN=... value. Paste the token into Notion's **Verify** modal, and save the same value in Cloudflare as the encrypted secret NOTION_WEBHOOK_SECRET.
-6. **Security cleanup:** immediately remove the temporary console.log line that prints the verification token from the Worker code and redeploy. The subscription remains valid because the secret is already stored in Cloudflare. Keep the signature validation logic.
-7. Check https://YOUR-WORKER.workers.dev/health; it should show "status":"ok". Then edit a harmless field on an approved test record and verify that GitHub Actions starts and the public site updates.
-
-## Cloudflare live logs and the initial verification token
-
-The token is printed only during the first, unsigned verification request, because Notion requires it to be copied manually into the subscription-verification form. Treat it as a secret. Do not share logs or screenshots containing it. Remove that temporary log line and redeploy immediately after verification.
+1. In Cloudflare, open Workers & Pages and create a Worker. The free workers.dev address is sufficient; no custom domain is needed.
+2. Open Edit code and paste the source from this folder's src/index.js; then deploy.
+3. In GitHub, create a fine-grained token scoped only to martingfilippi-dotcom/eco-studios with Contents: Read and write. Add it to the Worker as the encrypted secret GITHUB_DISPATCH_TOKEN.
+4. Before subscribing to Notion, prepare the verification-token log temporarily in the Cloudflare editor: in the existing branch that detects event.verification_token and absence of X-Notion-Signature, add this line immediately before the return: console.log("TEMP_NOTION_VERIFICATION_TOKEN=" + event.verification_token); Deploy that temporary change.
+5. In the Notion integration/connection settings, open Webhooks, create a subscription to https://YOUR-WORKER.workers.dev/notion, and select the relevant page/content events. Open the Cloudflare Worker live logs and copy the TEMP_NOTION_VERIFICATION_TOKEN value. Treat this as a secret.
+6. Set that exact value as the encrypted Cloudflare secret NOTION_WEBHOOK_SECRET, and paste the same value into Notion's Verify modal. Complete subscription verification.
+7. **Immediately remove the temporary console.log line and redeploy.** Do not leave the verification token in logs longer than necessary, and do not share logs or screenshots containing it. Keep the signature-validation code unchanged.
+8. Open https://YOUR-WORKER.workers.dev/health; the response should show status: ok. Then edit a harmless field on an approved test record and confirm GitHub Actions starts and the public site updates.
 
 ## CLI alternative
 
-From this directory, after authenticating Wrangler to the intended Cloudflare account:
+From this directory, after authenticating Wrangler to the correct Cloudflare account:
 
 ~~~sh
 npx wrangler secret put NOTION_WEBHOOK_SECRET
@@ -41,8 +38,8 @@ npx wrangler deploy
 
 ## Security and fallback
 
-- Signed event requests with invalid/missing signatures are rejected.
-- The initial verification request never triggers a GitHub dispatch.
-- GitHub Actions remains the authority for publication approvals.
-- The existing five-minute schedule remains as a fallback if a webhook event is missed.
-- Notion may aggregate some page-content events and deliver them with a delay of roughly a minute or two; “webhook” does not guarantee every keystroke is published instantly.
+- Signed requests with invalid or missing signatures are rejected.
+- An unsigned verification request never triggers a GitHub dispatch.
+- GitHub Actions remains the authority for publication approval.
+- The existing five-minute schedule remains as a fallback if a webhook is missed.
+- Notion can aggregate page-content changes and deliver them with a delay of around a minute or two; a webhook does not mean every keystroke appears immediately.
