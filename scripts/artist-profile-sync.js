@@ -45,33 +45,48 @@
     if (bio && typeof item.description === "string") bio.textContent = item.description;
     var portrait = document.querySelector(".hero .portrait") || document.querySelector(".portrait");
     var imageUrl = safeUrl(item.imageUrl);
-    if (portrait && imageUrl) {
-      portrait.onerror = function () { this.remove(); };
-      portrait.src = imageUrl;
-      portrait.alt = "Imagen de " + name + " · ECO Studios";
-    } else if (portrait) {
-      portrait.remove();
-    } else if (String(item.slug || "").toLowerCase() === "lk" && safeUrl(item.soundCloudUrl || item.soundcloudUrl)) {
-      var soundcloudUrl = safeUrl(item.soundCloudUrl || item.soundcloudUrl);
+    var soundcloudUrl = safeUrl(item.soundCloudUrl || item.soundcloudUrl || item.externalUrl);
+    if (imageUrl) {
+      if (!portrait) {
+        var imageHero = document.querySelector(".hero");
+        if (imageHero) {
+          portrait = document.createElement("img");
+          portrait.className = "portrait";
+          imageHero.appendChild(portrait);
+        }
+      }
+      if (portrait) {
+        portrait.onerror = function () { this.remove(); };
+        portrait.src = imageUrl;
+        portrait.alt = "Imagen de " + name + " · ECO Studios";
+      }
+    } else if (String(item.slug || "").toLowerCase() === "lk" && soundcloudUrl) {
       var hero = document.querySelector(".hero");
       if (hero) {
-        portrait = document.createElement("img");
-        portrait.className = "portrait soundcloud-portrait-loading";
-        portrait.alt = "Miniatura de SoundCloud de LK";
+        if (!portrait) {
+          portrait = document.createElement("img");
+          portrait.className = "portrait";
+          hero.appendChild(portrait);
+        }
+        portrait.classList.add("soundcloud-portrait-loading");
+        portrait.alt = "Miniatura oficial de SoundCloud de LK";
         portrait.loading = "eager";
         portrait.decoding = "async";
-        hero.appendChild(portrait);
+        portrait.onerror = function () { this.remove(); };
         fetch("https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(soundcloudUrl), { cache: "no-store" })
-          .then(function (response) { if (!response.ok) throw new Error("SoundCloud oEmbed unavailable"); return response.json(); })
+          .then(function (response) {
+            if (!response.ok) throw new Error("SoundCloud oEmbed unavailable");
+            return response.json();
+          })
           .then(function (data) {
             var thumbnail = safeUrl(data && data.thumbnail_url);
-            if (!thumbnail) throw new Error("SoundCloud did not return a thumbnail");
-            portrait.onload = function () { portrait.classList.remove("soundcloud-portrait-loading"); };
-            portrait.onerror = function () { portrait.remove(); };
-            portrait.src = thumbnail;
+            if (!thumbnail) throw new Error("SoundCloud did not return a valid thumbnail");
+            if (portrait && portrait.isConnected) portrait.src = thumbnail;
           })
           .catch(function () { if (portrait && portrait.isConnected) portrait.remove(); });
       }
+    } else if (portrait) {
+      portrait.remove();
     }
     var container = document.querySelector(".hero .socials") || document.querySelector(".socials");
     if (container) {
