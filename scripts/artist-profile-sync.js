@@ -51,6 +51,24 @@
       portrait.alt = "Imagen de " + name + " · ECO Studios";
     } else if (portrait) {
       portrait.remove();
+    } else if (String(item.slug || "").toLowerCase() === "lk" && safeUrl(item.soundCloudUrl || item.soundcloudUrl)) {
+      var soundcloudUrl = safeUrl(item.soundCloudUrl || item.soundcloudUrl);
+      var hero = document.querySelector(".hero");
+      if (hero) {
+        portrait = document.createElement("img");
+        portrait.className = "portrait";
+        portrait.alt = "Miniatura de SoundCloud de LK";
+        portrait.loading = "eager";
+        hero.appendChild(portrait);
+        fetch("https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(soundcloudUrl))
+          .then(function (response) { if (!response.ok) throw new Error("SoundCloud oEmbed unavailable"); return response.json(); })
+          .then(function (data) {
+            var thumbnail = safeUrl(data && data.thumbnail_url);
+            if (thumbnail && portrait && portrait.isConnected) portrait.src = thumbnail;
+            else if (portrait && portrait.isConnected) portrait.remove();
+          })
+          .catch(function () { if (portrait && portrait.isConnected) portrait.remove(); });
+      }
     }
     var container = document.querySelector(".hero .socials") || document.querySelector(".socials");
     if (container) {
