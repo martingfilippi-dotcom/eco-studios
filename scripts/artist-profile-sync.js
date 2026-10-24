@@ -46,8 +46,11 @@
     var portrait = document.querySelector(".hero .portrait") || document.querySelector(".portrait");
     var imageUrl = safeUrl(item.imageUrl);
     if (portrait && imageUrl) {
+      portrait.onerror = function () { this.remove(); };
       portrait.src = imageUrl;
       portrait.alt = "Imagen de " + name + " · ECO Studios";
+    } else if (portrait) {
+      portrait.remove();
     }
     var container = document.querySelector(".hero .socials") || document.querySelector(".socials");
     if (container) {
@@ -82,10 +85,17 @@
     setMeta('meta[name="description"]', "content", description);
     setMeta('meta[property="og:title"]', "content", name + " — ECO Studios");
     setMeta('meta[property="og:description"]', "content", description);
-    setMeta('meta[property="og:image"]', "content", imageUrl);
+    if (imageUrl) {
+      setMeta('meta[property="og:image"]', "content", imageUrl);
+      setMeta('meta[name="twitter:image"]', "content", imageUrl);
+    } else {
+      var ogImage = document.querySelector('meta[property="og:image"]');
+      var twitterImage = document.querySelector('meta[name="twitter:image"]');
+      if (ogImage) ogImage.remove();
+      if (twitterImage) twitterImage.remove();
+    }
     setMeta('meta[name="twitter:title"]', "content", name + " — ECO Studios");
     setMeta('meta[name="twitter:description"]', "content", description);
-    setMeta('meta[name="twitter:image"]', "content", imageUrl);
   }
 
   var slug = slugFromPath();
