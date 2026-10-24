@@ -138,7 +138,7 @@
       "type": "Artista",
       "order": 70,
       "status": "Publicado",
-      "imageUrl": null,
+      "imageUrl": "https://martingfilippi-dotcom.github.io/eco-studios/assets/lk-soundcloud-thumbnail.jpg",
       "description": "Luis Fernando Núñez Keim se caracteriza desde pequeño por su disciplina y constancia. Antes de incursionar en la música, practicó calistenia; hoy lleva esa misma esencia al trap OG, con letras que transmiten sentimiento y una identidad propia.",
       "externalUrl": "https://on.soundcloud.com/syICozVXOKxCjTPpwj",
       "permissionVerified": true,
@@ -166,5 +166,5 @@
       "youtubeUploadsPlaylistId": "UUnKiZr5YEE3_sq9SArh-NAg"
     }
   ],
-  "lastSync": "2026-10-24T07:09:39Z"
+  "lastSync": "2026-10-24T08:53:26Z"
 }
