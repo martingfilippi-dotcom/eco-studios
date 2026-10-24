@@ -156,17 +156,40 @@ jobs:
               try:
                   with urlopen(request, timeout=15) as response:
                       actual = json.load(response)
-                  if actual == expected:
-                      print(f"Public JSON verified and matches repository content (attempt {attempt}/10).")
-                      sys.exit(0)
-                  last_error = "public JSON is reachable but differs from the expected JSON"
-                  print(f"Public JSON not current yet (attempt {attempt}/10).")
+                  if actual != expected:
+                      last_error = "public JSON is reachable but differs from the expected JSON"
+                      print(f"Public JSON not current yet (attempt {attempt}/10).")
+                      if attempt < 10:
+                          time.sleep(12)
+                      continue
+
+                  lk = next((item for item in actual.get("items", [])
+                             if str(item.get("slug", "")).lower() == "lk"), None)
+                  image_url = (lk or {}).get("imageUrl") or ""
+                  if "lk-soundcloud-thumbnail." in image_url:
+                      image_request = Request(
+                          f"{image_url}?image_check={time.time_ns()}_{attempt}",
+                          headers={"Cache-Control": "no-cache", "Pragma": "no-cache"},
+                      )
+                      with urlopen(image_request, timeout=15) as response:
+                          image_bytes = response.read(5_000_001)
+                          content_type = response.headers.get("Content-Type", "").split(";", 1)[0].lower()
+                      if not content_type.startswith("image/") or len(image_bytes) < 10_000:
+                          raise ValueError(f"LK thumbnail is not served as a valid image: {content_type}, {len(image_bytes)} bytes")
+                      if not (image_bytes.startswith(b"\\xff\\xd8\\xff")
+                              or image_bytes.startswith(b"\\x89PNG\\r\\n\\x1a\\n")
+                              or (image_bytes[:4] == b"RIFF" and image_bytes[8:12] == b"WEBP")):
+                          raise ValueError("LK thumbnail response has no recognized image signature")
+                      print(f"Public JSON verified and LK's cached SoundCloud thumbnail is served ({content_type}, {len(image_bytes)} bytes).")
+                  else:
+                      print("Public JSON verified. LK has no cached SoundCloud image URL in the current payload.")
+                  sys.exit(0)
               except Exception as exc:
                   last_error = str(exc)
-                  print(f"Public JSON check attempt {attempt}/10 did not pass: {exc}")
+                  print(f"Public JSON/image check attempt {attempt}/10 did not pass: {exc}")
               if attempt < 10:
                   time.sleep(12)
-          print(f"::error::Public JSON could not be verified: {last_error}")
+          print(f"::error::Public JSON and LK thumbnail could not be verified: {last_error}")
           sys.exit(1)
           PY
 
