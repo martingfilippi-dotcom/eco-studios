@@ -1,0 +1,6 @@
+name = "eco-studios-notion-receiver"
+main = "src/index.js"
+compatibility_date = "2026-10-24"
+
+[observability]
+enabled = true
