@@ -13,6 +13,38 @@
     try { var u = new URL(value.trim()); return u.protocol === "https:" ? u.href : ""; }
     catch (_) { return ""; }
   }
+  function loadSoundCloudThumbnail(img, item) {
+    var url = safeUrl(item.soundCloudUrl || item.soundcloudUrl || item.externalUrl);
+    if (!img || slugOf(item) !== "lk" || !url) return false;
+    img.alt = "Miniatura de SoundCloud de LK · ECO Studios";
+    img.decoding = "async";
+    img.onerror = function () { this.remove(); };
+    fetch("https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(url), { cache: "no-store" })
+      .then(function (response) {
+        if (!response.ok) throw new Error("SoundCloud oEmbed unavailable");
+        return response.json();
+      })
+      .then(function (data) {
+        var thumbnail = safeUrl(data && data.thumbnail_url);
+        if (!thumbnail) throw new Error("SoundCloud did not return a valid thumbnail");
+        if (img.isConnected) img.src = thumbnail;
+      })
+      .catch(function () {
+        if (img && img.isConnected) img.remove();
+      });
+    return true;
+  }
+  function createArtistImage(item, imageUrl) {
+    var img = document.createElement("img");
+    img.alt = "Imagen de " + String(item.name || "artista") + " · ECO Studios";
+    img.loading = "lazy";
+    if (imageUrl) {
+      img.onerror = function () { this.remove(); };
+      img.src = imageUrl;
+      return img;
+    }
+    return loadSoundCloudThumbnail(img, item) ? img : null;
+  }
   function slugify(value) {
     return String(value || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -105,10 +137,10 @@
     socialLinks(item, links);
     copy.appendChild(links);
     var imageUrl = safeUrl(item.imageUrl);
-    if (imageUrl) {
-      var img = document.createElement("img");
-      img.src = imageUrl; img.alt = "Imagen de " + item.name + " · ECO Studios"; img.loading = "eager";
-      hero.append(copy, img);
+    var portrait = createArtistImage(item, imageUrl);
+    if (portrait) {
+      portrait.loading = "eager";
+      hero.append(copy, portrait);
     } else hero.appendChild(copy);
     main.appendChild(hero);
     var playlist = String(item.youtubeUploadsPlaylistId || "");
@@ -140,10 +172,11 @@
       card.className = "directory-card";
       card.href = staticProfiles.has(slug) ? slug + "/" : "?artist=" + encodeURIComponent(slug);
       var imageUrl = safeUrl(item.imageUrl);
-      if (imageUrl) {
-        var img = document.createElement("img");
-        img.src = imageUrl; img.alt = String(item.name); img.loading = "lazy"; if (slug === "lk") img.id = "lk-directory-portrait"; card.appendChild(img);
-      } else appendText(card, "div", "directory-placeholder", "");
+      var portrait = createArtistImage(item, imageUrl);
+      if (portrait) {
+        if (slug === "lk") portrait.id = "lk-directory-portrait";
+        card.appendChild(portrait);
+      } else appendText(card, "div", "directory-placeholder", slug === "lk" ? "LK · SOUNDCLOUD" : "");
       var copy = document.createElement("div"); copy.className = "copy";
       appendText(copy, "small", "", String(item.type || "ARTISTA").toUpperCase());
       appendText(copy, "span", "arrow", "↗");
