@@ -23,15 +23,31 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      - name: Check Notion credential without failing scheduled runs
+        id: credentials
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: |
+          if [ -n "${NOTION_TOKEN:-}" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Notion credential is configured; the sync will proceed."
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::NOTION_TOKEN is not configured. Skipping sync safely; add the repository Actions secret to activate Notion reads."
+          fi
+
       - name: Checkout repository
+        if: steps.credentials.outputs.configured == 'true'
         uses: actions/checkout@v4
 
       - name: Set up Python
+        if: steps.credentials.outputs.configured == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Cache COLKI portrait locally when source is available
+        if: steps.credentials.outputs.configured == 'true'
         run: |
           mkdir -p assets
           if [ -s assets/colki.jpg ]; then
@@ -57,9 +73,11 @@ jobs:
           PY
 
       - name: Validate synchronization script syntax
+        if: steps.credentials.outputs.configured == 'true'
         run: python -m py_compile scripts/sync_notion.py
 
       - name: Sync approved Notion content
+        if: steps.credentials.outputs.configured == 'true'
         id: sync
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -67,6 +85,7 @@ jobs:
         run: python scripts/sync_notion.py
 
       - name: Commit updated content and locally cached image if changed
+        if: steps.credentials.outputs.configured == 'true'
         id: publish
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -109,7 +128,7 @@ jobs:
 
       - name: Verify public JSON matches synchronized content
         id: verify_live
-        if: steps.sync.outcome == 'success' && steps.publish.outcome == 'success'
+        if: steps.credentials.outputs.configured == 'true' && steps.sync.outcome == 'success' && steps.publish.outcome == 'success'
         env:
           PUBLIC_JSON_URL: "https://martingfilippi-dotcom.github.io/eco-studios/data/eco-content.json"
         run: |
@@ -145,7 +164,7 @@ jobs:
           PY
 
       - name: Report actual sync result to Notion
-        if: always()
+        if: always() && steps.credentials.outputs.configured == 'true'
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DATA_SOURCE_ID: "22641827-d2c0-4d3b-bdb2-927b76b08b5b"
