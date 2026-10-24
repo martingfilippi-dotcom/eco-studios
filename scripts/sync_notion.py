@@ -190,6 +190,15 @@ def main():
         image_url = get_text(props, "Imagen URL", "Image URL")
         if not image_url:
             image_url = property_value(props, ("Imagen (archivo)", "Imagen", "Image"))
+        # LK may have no editorial portrait. In that case, use the verified local
+        # thumbnail mirrored from the artist's official SoundCloud oEmbed endpoint.
+        # This avoids independent browser fetches and eliminates stale shared-image fallbacks.
+        if name.strip().casefold() == "lk" and not image_url:
+            for extension in (".jpg", ".png", ".webp"):
+                local_portrait = Path("assets") / ("lk-soundcloud-thumbnail" + extension)
+                if local_portrait.is_file() and local_portrait.stat().st_size >= 10_000:
+                    image_url = "https://martingfilippi-dotcom.github.io/eco-studios/" + local_portrait.as_posix()
+                    break
         # Keep COLKI on one canonical portrait. Prefer the repository copy after the workflow caches it.
         if name.strip().casefold() == "colki":
             local_portrait = Path("assets/colki.jpg")
