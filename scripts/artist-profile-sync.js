@@ -56,16 +56,19 @@
       var hero = document.querySelector(".hero");
       if (hero) {
         portrait = document.createElement("img");
-        portrait.className = "portrait";
+        portrait.className = "portrait soundcloud-portrait-loading";
         portrait.alt = "Miniatura de SoundCloud de LK";
         portrait.loading = "eager";
+        portrait.decoding = "async";
         hero.appendChild(portrait);
-        fetch("https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(soundcloudUrl))
+        fetch("https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(soundcloudUrl), { cache: "no-store" })
           .then(function (response) { if (!response.ok) throw new Error("SoundCloud oEmbed unavailable"); return response.json(); })
           .then(function (data) {
             var thumbnail = safeUrl(data && data.thumbnail_url);
-            if (thumbnail && portrait && portrait.isConnected) portrait.src = thumbnail;
-            else if (portrait && portrait.isConnected) portrait.remove();
+            if (!thumbnail) throw new Error("SoundCloud did not return a thumbnail");
+            portrait.onload = function () { portrait.classList.remove("soundcloud-portrait-loading"); };
+            portrait.onerror = function () { portrait.remove(); };
+            portrait.src = thumbnail;
           })
           .catch(function () { if (portrait && portrait.isConnected) portrait.remove(); });
       }
