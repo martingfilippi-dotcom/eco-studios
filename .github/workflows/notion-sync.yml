@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "scripts/sync_notion.py"
+      - "scripts/cache_soundcloud_thumbnail.py"
       - "scripts/report_notion_sync.py"
       - ".github/workflows/notion-sync.yml"
   workflow_dispatch:
@@ -102,17 +103,23 @@ jobs:
             echo "Publish attempt ${attempt}/3"
             git fetch origin main
             git reset --hard origin/main
+            # Mirror LK's official SoundCloud thumbnail to a stable local asset.
+            # If SoundCloud is temporarily unavailable, the script preserves the last verified copy.
+            python scripts/cache_soundcloud_thumbnail.py
             python scripts/sync_notion.py
 
             git add -- data/eco-content.json
             if [ -s assets/colki.jpg ]; then git add -- assets/colki.jpg; fi
+            for portrait in assets/lk-soundcloud-thumbnail.*; do
+              if [ -s "$portrait" ]; then git add -- "$portrait"; fi
+            done
 
             if git diff --cached --quiet; then
               echo "No content changes to publish."
               exit 0
             fi
 
-            git commit -m "chore: sync ECO content and cache COLKI portrait"
+            git commit -m "chore: sync ECO content and cache artist portraits"
             if git push origin HEAD:main; then
               echo "Updated editorial content pushed to main."
               exit 0
