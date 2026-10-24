@@ -444,12 +444,20 @@
    if(photo){
      photo.href='artistas/'+getSlug(item)+'/';photo.setAttribute('aria-label','Abrir página de '+item.name);
      const href=getSlug(item)==='colki'?'https://martingfilippi-dotcom.github.io/eco-studios/assets/colki.jpg':safeUrl(item.imageUrl);
-     let img=photo.querySelector('img');
-     if(href){
-       if(!img){img=document.createElement('img');img.loading='lazy';photo.insertBefore(img,photo.querySelector('.photo-arrow'));}
-       img.onerror=function(){this.remove();};
-       img.src=href;img.alt='Imagen de '+item.name;
-     }else if(img){img.remove();}
+      let img=photo.querySelector('img');
+      if(href){
+        if(!img){img=document.createElement('img');img.loading='lazy';photo.insertBefore(img,photo.querySelector('.photo-arrow'));}
+        img.onerror=function(){this.remove();};
+        img.src=href;img.alt='Imagen de '+item.name;
+      }else if(getSlug(item)==='lk' && safeUrl(item.soundCloudUrl||item.soundcloudUrl)){
+        if(!img){img=document.createElement('img');img.loading='lazy';photo.insertBefore(img,photo.querySelector('.photo-arrow'));}
+        img.alt='Miniatura de SoundCloud de LK';
+        const soundcloudUrl=safeUrl(item.soundCloudUrl||item.soundcloudUrl);
+        fetch('https://soundcloud.com/oembed?format=json&url='+encodeURIComponent(soundcloudUrl))
+          .then(function(response){if(!response.ok)throw new Error('SoundCloud oEmbed unavailable');return response.json();})
+          .then(function(data){const thumbnail=safeUrl(data&&data.thumbnail_url);if(thumbnail&&photo.isConnected)img.src=thumbnail;else img.remove();})
+          .catch(function(){if(img&&img.isConnected)img.remove();});
+      }else if(img){img.remove();}
    }
    const meta=card.querySelector('.artist-meta');
    if(meta){
@@ -467,8 +475,16 @@
    const card=document.createElement('article');card.className='artist-card';card.dataset.ecoOrder=String(orderNumber(item));
    const photo=document.createElement('a');photo.className='artist-photo';photo.href='artistas/'+getSlug(item)+'/';photo.setAttribute('aria-label','Abrir página de '+item.name);
    const imageUrl=getSlug(item)==='colki'?'https://martingfilippi-dotcom.github.io/eco-studios/assets/colki.jpg':safeUrl(item.imageUrl);
-   if(imageUrl){const img=document.createElement('img');img.src=imageUrl;img.alt='Imagen de '+item.name;img.loading='lazy';if(getSlug(item)==='colki')img.onerror=function(){this.onerror=null;this.src='https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg';};photo.appendChild(img);}
-   const arrow=document.createElement('span');arrow.className='photo-arrow';arrow.textContent='↗';photo.appendChild(arrow);card.appendChild(photo);
+    if(imageUrl){const img=document.createElement('img');img.src=imageUrl;img.alt='Imagen de '+item.name;img.loading='lazy';if(getSlug(item)==='colki')img.onerror=function(){this.onerror=null;this.src='https://d2ol7oe51mr4n9.cloudfront.net/user_3K6TUIpdwDjoRVmxX2NnzXnds1k/91bf43f8-b98d-4851-973a-7110ecec22c7.jpg';};photo.appendChild(img);}
+    else if(getSlug(item)==='lk' && safeUrl(item.soundCloudUrl||item.soundcloudUrl)){
+      const img=document.createElement('img');img.alt='Miniatura de SoundCloud de LK';img.loading='lazy';photo.appendChild(img);
+      const soundcloudUrl=safeUrl(item.soundCloudUrl||item.soundcloudUrl);
+      fetch('https://soundcloud.com/oembed?format=json&url='+encodeURIComponent(soundcloudUrl))
+        .then(function(response){if(!response.ok)throw new Error('SoundCloud oEmbed unavailable');return response.json();})
+        .then(function(data){const thumbnail=safeUrl(data&&data.thumbnail_url);if(thumbnail&&photo.isConnected)img.src=thumbnail;else img.remove();})
+        .catch(function(){img.remove();});
+    }
+    const arrow=document.createElement('span');arrow.className='photo-arrow';arrow.textContent='↗';photo.appendChild(arrow);card.appendChild(photo);
    const meta=document.createElement('div');meta.className='artist-meta';
    const info=document.createElement('div');const h=document.createElement('h3');const artistPage=document.createElement('a');artistPage.href='artistas/'+getSlug(item)+'/';artistPage.textContent=String(item.name||'');artistPage.setAttribute('aria-label','Abrir página de '+item.name);artistPage.style.color='inherit';artistPage.style.textDecoration='none';h.appendChild(artistPage);info.appendChild(h);
    
