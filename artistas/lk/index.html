@@ -37,7 +37,7 @@
         <a class="social" href="https://on.soundcloud.com/syICozVXOKxCjTPpwj" target="_blank" rel="noopener noreferrer">SoundCloud ↗</a>
       </div>
     </div>
-    <img class="portrait" id="lk-portrait" src="../../eco-colectivo-03.jpg?v=20261023-2" alt="Imagen de LK" loading="eager" onerror="this.onerror=null;this.src='../../eco-colectivo-03.jpg?v=20261023-2'">
+    
   </section>
   <section class="player">
     <div class="eyebrow">MÚSICA DE LK</div>
@@ -53,16 +53,10 @@
 <script>
 (function(){
   const sharedUrl = "https://on.soundcloud.com/syICozVXOKxCjTPpwj";
-  const image = document.getElementById("lk-portrait");
   const frame = document.getElementById("lk-soundcloud-player");
   fetch("https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(sharedUrl))
     .then(function(response){ if(!response.ok) throw new Error("SoundCloud oEmbed unavailable"); return response.json(); })
     .then(function(data){
-      if(data && data.thumbnail_url && image) {
-        image.onerror = function(){ this.onerror=null; this.src="../../eco-colectivo-03.jpg?v=20261023-2"; this.alt="Imagen de LK en ECO Studios"; };
-        image.src = data.thumbnail_url;
-        image.alt = "Imagen de perfil o portada pública de LK en SoundCloud";
-      }
       if(data && data.html && frame) {
         const parsed = new DOMParser().parseFromString(data.html, "text/html");
         const embedded = parsed.querySelector("iframe");
