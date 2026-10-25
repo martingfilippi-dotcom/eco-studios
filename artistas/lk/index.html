@@ -54,12 +54,27 @@
 (function(){
   const sharedUrl = "https://on.soundcloud.com/syICozVXOKxCjTPpwj";
   const frame = document.getElementById("lk-soundcloud-player");
-  // Keep the official player embedded; do not replace it with SoundCloud's oEmbed teaser HTML.
-  // This avoids a cross-origin oEmbed request changing the player into a promotional hand-off.
+  // Resolve SoundCloud's share URL to its official embed URL, then disable the teaser.
+  // If oEmbed is unavailable, keep the direct in-page widget as a fallback.
   if (frame) {
     frame.src = "https://w.soundcloud.com/player/?url=" + encodeURIComponent(sharedUrl) +
       "&color=%23ff6a2b&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false";
   }
+  fetch("https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(sharedUrl))
+    .then(function(response){ if(!response.ok) throw new Error("SoundCloud oEmbed unavailable"); return response.json(); })
+    .then(function(data){
+      if(!data || !data.html || !frame) return;
+      const parsed = new DOMParser().parseFromString(data.html, "text/html");
+      const embedded = parsed.querySelector("iframe");
+      if(!embedded || !embedded.src) return;
+      const embedUrl = new URL(embedded.src, "https://soundcloud.com");
+      if(embedUrl.hostname !== "w.soundcloud.com") return;
+      embedUrl.searchParams.set("show_teaser", "false");
+      embedUrl.searchParams.set("visual", "false");
+      embedUrl.searchParams.set("auto_play", "false");
+      frame.src = embedUrl.href;
+    })
+    .catch(function(){ /* Direct in-page widget remains available as fallback. */ });
 })();
 </script>
 <script src="../../scripts/artist-profile-sync.js" defer></script><script src="../../site-config.js" defer></script>
