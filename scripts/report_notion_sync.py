@@ -15,6 +15,7 @@ NOTION_VERSION = "2025-09-03"
 SYNC_OUTCOME = os.environ.get("SYNC_OUTCOME", "unknown")
 PUBLISH_OUTCOME = os.environ.get("PUBLISH_OUTCOME", "unknown")
 LIVE_VERIFY_OUTCOME = os.environ.get("LIVE_VERIFY_OUTCOME", "unknown")
+VISUAL_CONFIG_OUTCOME = os.environ.get("VISUAL_CONFIG_OUTCOME", "unknown")
 SYNC_CONFIRMED = (
     SYNC_OUTCOME == "success"
     and PUBLISH_OUTCOME == "success"
@@ -30,7 +31,9 @@ def published_result_text() -> str:
         return "No se pudo completar el paso final de publicación en GitHub. Revisar GitHub Actions."
     if LIVE_VERIFY_OUTCOME != "success":
         return "Contenido guardado en GitHub; la versión pública no pudo verificarse. Revisar GitHub Actions."
-    return "Sincronización completada: JSON público de ECO Studios verificado."
+    if VISUAL_CONFIG_OUTCOME != "success":
+        return "Contenido editorial sincronizado y verificado; editor visual bloqueado por permisos de Notion. Se conserva la configuración visual anterior."
+    return "Sincronización editorial y configuración visual de ECO Studios verificadas en la web pública."
 
 def request_json(url: str, payload: dict | None = None, method: str | None = None) -> dict:
     body = None if payload is None else json.dumps(payload, ensure_ascii=False).encode("utf-8")
