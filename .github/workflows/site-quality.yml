@@ -27,18 +27,20 @@ jobs:
           python-version: "3.12"
       - name: Run static site and editorial-data checks
         run: |
-          python -m py_compile scripts/sync_notion.py scripts/report_notion_sync.py scripts/validate_site.py
+          python -m py_compile scripts/sync_notion.py scripts/sync_site_config.py scripts/report_notion_sync.py scripts/validate_site.py
           node --check scripts/artist-profile-sync.js
           node --check scripts/artist-directory-sync.js
+          node --check site-config.js
+          node --check scripts/browser_site_config_smoke.mjs
           node --input-type=module --check < webhook-receiver/src/index.js
           python scripts/validate_site.py
 
-      # Browser gate for this verification PR only; ordinary production pushes stay lightweight.
+      # Run real-browser smoke tests on every push, pull request, and manual verification.
       - name: Set up Node for artist sync verification
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        if: success()
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Cache Playwright browser
         if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
@@ -78,10 +80,14 @@ jobs:
         if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
         run: node scripts/browser_profile_smoke.mjs
 
+      - name: Verify Notion visual config, URL safety, and XSS-safe rendering
+        if: success()
+        run: node scripts/browser_site_config_smoke.mjs
+
       - name: Upload browser smoke screenshots
-        if: always() && github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: eco-profile-sync-verification
-          path: artifacts/profile-sync-*.png
+          path: artifacts/*.png
           if-no-files-found: warn
