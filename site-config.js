@@ -1,6 +1,7 @@
 (function(){
   'use strict';
-  var configUrl = '/eco-studios/data/eco-site-config.json';
+  var configScript = document.currentScript && document.currentScript.src;
+  var configUrl = new URL('data/eco-site-config.json', configScript || window.location.href).href;
   function safeHref(value, fallback){
     if(typeof value !== 'string' || !value.trim()) return fallback;
     if(value.charAt(0)==='#') return value;
