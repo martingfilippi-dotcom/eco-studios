@@ -89,7 +89,7 @@ try {
   assert.equal(await page.locator(".hero-copy h1 img, .hero-copy h1 svg").count(), 0, "Hero text must not inject HTML nodes");
   assert.equal(await page.locator(".hero-actions .button-orange").getAttribute("href"), "#artistas", "javascript: links must fall back to a safe in-site anchor");
   assert.equal(await page.locator(".hero-actions .text-link").getAttribute("href"), "#musica", "untrusted external hosts must fall back to a safe in-site anchor");
-  assert.equal(await page.locator(".hero-actions .button-orange").innerText(), "Probar principal ↘");
+  assert.equal((await page.locator(".hero-actions .button-orange").innerText()).replace(/\s+/g, " ").trim(), "Probar principal ↘");
   assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue("--orange")), "", "invalid CSS values must not override the brand accent");
   assert.match(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange")), /#ff6a2b/i, "invalid CSS must leave the original accent unchanged");
   assert.equal(await page.locator(".main-nav a[href='#artistas']").evaluate(el => getComputedStyle(el).display), "none", "A hidden navigation item must actually be hidden");
