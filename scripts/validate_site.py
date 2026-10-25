@@ -2,6 +2,7 @@
 """Lightweight, dependency-free quality checks for ECO Studios."""
 from __future__ import annotations
 import json
+import re
 import posixpath
 import sys
 import xml.etree.ElementTree as ET
@@ -159,6 +160,57 @@ def check_html_files() -> None:
             relative = normalized_local_target(rel, raw_url)
             if relative is not None and not is_existing_route(relative):
                 fail(f"{rel}: {attribute} apunta a un recurso local inexistente: {raw_url!r} (resuelto como {relative!r}).")
+        expected_config_script = {
+            "index.html": "site-config.js",
+        }.get(rel.as_posix())
+        if expected_config_script is None:
+            depth = len(rel.parts) - 1
+            expected_config_script = "../" * depth + "site-config.js"
+        config_script_targets = [url for attr, url in parser.links if attr == "src" and url.endswith("site-config.js")]
+        if expected_config_script not in config_script_targets:
+            fail(f"{rel}: debe cargar la configuración visual común desde {expected_config_script!r}.")
+
+def check_site_config_json() -> None:
+    file_path = ROOT / "data" / "eco-site-config.json"
+    try:
+        payload = json.loads(file_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        fail(f"data/eco-site-config.json no es JSON válido: {exc}")
+        return
+    if not isinstance(payload, dict) or payload.get("schemaVersion") != 1:
+        fail("data/eco-site-config.json: debe ser un objeto con schemaVersion=1.")
+        return
+    colors = payload.get("colors")
+    if not isinstance(colors, dict):
+        fail("data/eco-site-config.json: falta el objeto colors.")
+        return
+    color_keys = ("bg", "panel", "panel2", "text", "muted", "line", "orange", "orange2")
+    color_re = re.compile(r"^#[0-9a-fA-F]{3,8}$")
+    rgba_re = re.compile(r"^rgba?\(\s*[0-9.,%\s]+\)$")
+    for key in color_keys:
+        value = colors.get(key)
+        if not isinstance(value, str) or not (color_re.fullmatch(value) or rgba_re.fullmatch(value)):
+            fail(f"data/eco-site-config.json: colors.{key} tiene un valor de color inválido.")
+    fonts = payload.get("fonts")
+    allowed_fonts = {"DM Sans", "Inter", "Manrope", "Space Grotesk"}
+    if not isinstance(fonts, dict) or fonts.get("body") not in allowed_fonts or fonts.get("heading") not in allowed_fonts:
+        fail("data/eco-site-config.json: solo se permiten las fuentes aprobadas.")
+    for section in ("brand", "hero", "navigation", "communityReturn"):
+        if not isinstance(payload.get(section), dict):
+            fail(f"data/eco-site-config.json: falta el objeto {section}.")
+    if isinstance(payload.get("hero"), dict):
+        for key in ("primaryUrl", "secondaryUrl"):
+            value = payload["hero"].get(key, "")
+            if not isinstance(value, str) or not (value.startswith("#") or value.startswith("https://")):
+                fail(f"data/eco-site-config.json: hero.{key} debe ser un ancla local o una URL HTTPS.")
+    if isinstance(payload.get("communityReturn"), dict):
+        url = payload["communityReturn"].get("url", "")
+        if not isinstance(url, str) or not url.startswith("https://"):
+            fail("data/eco-site-config.json: la URL de retorno a Comunidad debe ser HTTPS.")
+    serialized = json.dumps(payload, ensure_ascii=False).lower()
+    for sensitive in ("ghp_", "github_pat_", "secret", "password", "private_key", "notion_secret", "sk_live_"):
+        if sensitive in serialized:
+            fail(f"data/eco-site-config.json: se detectó un posible marcador sensible {sensitive!r}; no publicar secretos.")
 
 def check_content_json() -> None:
     file_path = ROOT / "data" / "eco-content.json"
@@ -231,6 +283,7 @@ def check_robots_and_sitemap() -> None:
 def main() -> int:
     check_html_files()
     check_content_json()
+    check_site_config_json()
     check_robots_and_sitemap()
     for warning in WARNINGS:
         print(f"::warning::{warning}")
@@ -239,7 +292,7 @@ def main() -> int:
     print(f"Auditoría estática ECO Studios: {len(ERRORS)} errores, {len(WARNINGS)} advertencias.")
     if ERRORS:
         return 1
-    print("OK: HTML, metadatos, recursos locales, datos editoriales y sitemap cumplen los controles básicos.")
+    print("OK: HTML, configuración visual, metadatos, recursos locales, datos editoriales y sitemap cumplen los controles básicos.")
     return 0
 
 if __name__ == "__main__":
