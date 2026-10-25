@@ -2,7 +2,6 @@
 """Export the latest published ECO Studios visual configuration from Notion."""
 from __future__ import annotations
 import json, os, re, sys, urllib.error, urllib.request
-from datetime import datetime, timezone
 from pathlib import Path
 
 TOKEN = os.environ.get("NOTION_TOKEN")
@@ -91,12 +90,13 @@ def main():
         candidates.append((page.get("last_edited_time", ""), cfg))
     if not candidates:
         sys.exit("No published ECO site configuration found; refusing to replace existing config.")
-    _, p = max(candidates, key=lambda item: item[0])
+    config_edited_at, p = max(candidates, key=lambda item: item[0])
 
     config = {
         "schemaVersion": 1,
         "source": "notion",
-        "lastSync": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+        # Stable between scheduled runs: only change the public file when the source record changes.
+        "lastSync": config_edited_at or None,
         "colors": {
             "bg": safe_color(p.get("Color de fondo"), "#10100f"),
             "panel": safe_color(p.get("Color de panel"), "#191917"),
