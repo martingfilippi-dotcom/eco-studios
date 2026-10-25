@@ -226,7 +226,7 @@
     var avButton=document.querySelector('.ov-actions .ov-cta');
     if(avButton){
       var buttonArrow=avButton.querySelector('span[aria-hidden="true"]');
-      var avButtonLabel=(audiovisual.buttonLabel||'Consultar un proyecto por WhatsApp').replace(/\\s*[↗↘→]+$/u,'').trim();
+      var avButtonLabel=(audiovisual.buttonLabel||'Consultar un proyecto por WhatsApp').replace(/\s*[↗↘→]+$/u,'').trim();
       avButton.replaceChildren(document.createTextNode(avButtonLabel+' '));
       if(buttonArrow) avButton.appendChild(buttonArrow);
       else {var newArrow=document.createElement('span');newArrow.setAttribute('aria-hidden','true');newArrow.textContent='↗';avButton.appendChild(newArrow);}
