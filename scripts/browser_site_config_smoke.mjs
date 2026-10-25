@@ -109,9 +109,12 @@ try {
   let configRequested = false;
   const pageErrors = [];
   const unexpectedDialogs = [];
-  page.on("pageerror", error => pageErrors.push(error.message));
+  page.on("pageerror", error => { pageErrors.push(error.message); console.log("BROWSER_PAGE_ERROR:", error.message); });
+  page.on("close", () => console.log("BROWSER_PAGE_CLOSED"));
+  page.on("crash", () => console.log("BROWSER_PAGE_CRASHED"));
   page.on("dialog", async dialog => {
     unexpectedDialogs.push({ type: dialog.type(), message: dialog.message() });
+    console.log("UNEXPECTED_BROWSER_DIALOG:", dialog.type(), dialog.message());
     await dialog.dismiss();
   });
   await page.route("**/*", async route => {
@@ -151,7 +154,9 @@ try {
   assert.equal(await page.locator(".menu-toggle b").innerText(), "Navegación QA");
   assert.equal(await page.locator(".community-return-bar").evaluate(el => getComputedStyle(el).display), "none", "Disabled community return bar must actually be hidden");
   assert.equal(await page.locator("#contenido-eco").evaluate(el => getComputedStyle(el).display), "none", "Section visibility must be editable from the visual editor");
+  console.log("CHECK_BEFORE_HISTORY_HEADING", { pageClosed: page.isClosed(), pageErrors, unexpectedDialogs });
   assert.equal(await page.locator("#historia h2").innerText().replace(/\s+/g, " ").trim(), "Nuestra historia Un eco real.");
+  console.log("CHECK_AFTER_HISTORY_HEADING");
   assert.equal(await page.locator("#historia .intro-body > p").first().innerText(), "Texto principal administrado desde Notion.");
   assert.equal(await page.locator("#artistas .section-heading > p a").innerText(), "Directorio QA");
   assert.equal(await page.locator(".ov-intro h2").innerText().replace(/\s+/g, " ").trim(), "Imagen nueva Identidad propia.");
@@ -177,6 +182,15 @@ try {
   console.log("PASS: Notion-managed visual configuration is fetched and applied.");
   console.log("PASS: unsafe links fall back safely and hostile text is rendered without HTML injection.");
   console.log("PASS: menu visibility, dynamic typography, and mobile/desktop overflow checks passed.");
+} catch (error) {
+  console.error("VISUAL_SMOKE_FAILURE_DIAGNOSTICS", {
+    error: String(error),
+    stack: error && error.stack,
+    pageClosed: page.isClosed(),
+    pageErrors,
+    unexpectedDialogs
+  });
+  throw error;
 } finally {
   await browser.close();
 }
