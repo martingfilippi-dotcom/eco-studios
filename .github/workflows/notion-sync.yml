@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - "scripts/sync_notion.py"
+      - "scripts/sync_site_config.py"
+      - "site-config.js"
       - "scripts/cache_soundcloud_thumbnail.py"
       - "scripts/report_notion_sync.py"
       - ".github/workflows/notion-sync.yml"
@@ -88,8 +90,16 @@ jobs:
           NOTION_DATA_SOURCE_ID: "22641827-d2c0-4d3b-bdb2-927b76b08b5b"
         run: python scripts/sync_notion.py
 
+      - name: Validate visual configuration exporter
+        if: steps.credentials.outputs.configured == 'true' && steps.sync.outcome == 'success'
+        id: sync_config
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_CONFIG_DATA_SOURCE_ID: "860acdc0-7ed3-4e05-86f3-d028788bb43e"
+        run: python -m py_compile scripts/sync_site_config.py
+
       - name: Commit updated content and locally cached image if changed
-        if: steps.credentials.outputs.configured == 'true'
+        if: steps.credentials.outputs.configured == 'true' && steps.sync_config.outcome == 'success'
         id: publish
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -110,8 +120,9 @@ jobs:
             # If SoundCloud is temporarily unavailable, the script preserves the last verified copy.
             python scripts/cache_soundcloud_thumbnail.py
             python scripts/sync_notion.py
+            NOTION_CONFIG_DATA_SOURCE_ID="860acdc0-7ed3-4e05-86f3-d028788bb43e" python scripts/sync_site_config.py
 
-            git add -- data/eco-content.json
+            git add -- data/eco-content.json data/eco-site-config.json
             if [ -s assets/colki.jpg ]; then git add -- assets/colki.jpg; fi
             for portrait in assets/lk-soundcloud-thumbnail.*; do
               if [ -s "$portrait" ]; then git add -- "$portrait"; fi
@@ -141,6 +152,7 @@ jobs:
         if: steps.credentials.outputs.configured == 'true' && steps.sync.outcome == 'success' && steps.publish.outcome == 'success'
         env:
           PUBLIC_JSON_URL: "https://martingfilippi-dotcom.github.io/eco-studios/data/eco-content.json"
+          PUBLIC_CONFIG_URL: "https://martingfilippi-dotcom.github.io/eco-studios/data/eco-site-config.json"
         run: |
           python - <<'PY'
           import json
@@ -151,7 +163,9 @@ jobs:
           from pathlib import Path
 
           expected = json.loads(Path("data/eco-content.json").read_text(encoding="utf-8"))
+          expected_config = json.loads(Path("data/eco-site-config.json").read_text(encoding="utf-8"))
           base_url = os.environ["PUBLIC_JSON_URL"]
+          config_url = os.environ["PUBLIC_CONFIG_URL"]
           last_error = "public JSON did not match the repository copy"
           for attempt in range(1, 11):
               request_url = f"{base_url}?sync_check={time.time_ns()}_{attempt}"
@@ -162,6 +176,17 @@ jobs:
                   if actual != expected:
                       last_error = "public JSON is reachable but differs from the expected JSON"
                       print(f"Public JSON not current yet (attempt {attempt}/10).")
+                      if attempt < 10:
+                          time.sleep(12)
+                      continue
+
+                  config_request = Request(f"{config_url}?sync_check={time.time_ns()}_{attempt}",
+                                           headers={"Cache-Control": "no-cache", "Pragma": "no-cache"})
+                  with urlopen(config_request, timeout=15) as response:
+                      actual_config = json.load(response)
+                  if actual_config != expected_config:
+                      last_error = "public visual config is reachable but differs from the expected config"
+                      print(f"Public visual config not current yet (attempt {attempt}/10).")
                       if attempt < 10:
                           time.sleep(12)
                       continue
