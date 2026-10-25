@@ -104,11 +104,12 @@ const config = {
 
 const base = process.env.ECO_TEST_BASE_URL || "http://127.0.0.1:4173";
 const browser = await chromium.launch({ headless: true });
+let page = null;
+let pageErrors = [];
+let unexpectedDialogs = [];
+let configRequested = false;
 try {
-  const page = await browser.newPage({ viewport: { width: 1365, height: 900 } });
-  let configRequested = false;
-  const pageErrors = [];
-  const unexpectedDialogs = [];
+  page = await browser.newPage({ viewport: { width: 1365, height: 900 } });
   page.on("pageerror", error => { pageErrors.push(error.message); console.log("BROWSER_PAGE_ERROR:", error.message); });
   page.on("close", () => console.log("BROWSER_PAGE_CLOSED"));
   page.on("crash", () => console.log("BROWSER_PAGE_CRASHED"));
@@ -186,7 +187,7 @@ try {
   console.error("VISUAL_SMOKE_FAILURE_DIAGNOSTICS", {
     error: String(error),
     stack: error && error.stack,
-    pageClosed: page.isClosed(),
+    pageClosed: page ? page.isClosed() : null,
     pageErrors,
     unexpectedDialogs
   });
