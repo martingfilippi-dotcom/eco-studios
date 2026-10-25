@@ -4,9 +4,19 @@
   var configUrl = new URL('data/eco-site-config.json', configScript || window.location.href).href;
   function safeHref(value, fallback){
     if(typeof value !== 'string' || !value.trim()) return fallback;
-    if(value.charAt(0)==='#') return value;
-    try { var u=new URL(value, window.location.href); return u.protocol==='https:' ? u.href : fallback; }
-    catch(e){ return fallback; }
+    if(/^#[A-Za-z][A-Za-z0-9_-]*$/.test(value)) return value;
+    try {
+      var u=new URL(value, window.location.href);
+      var trustedHost = u.hostname === window.location.hostname || u.hostname === 'martingfilippi-dotcom.github.io';
+      return u.protocol==='https:' && trustedHost && !u.username && !u.password && !u.port ? u.href : fallback;
+    } catch(e){ return fallback; }
+  }
+  function safeColor(value){
+    if(typeof value !== 'string') return null;
+    var v=value.trim();
+    if(/^#[0-9a-fA-F]{3,8}$/.test(v)) return v;
+    if(/^rgba?\(\s*[0-9.,%\s]+\)$/.test(v)) return v;
+    return null;
   }
   function setText(node, value){
     if(node && typeof value==='string' && value.trim()) node.textContent=value;
@@ -15,7 +25,7 @@
     if(!cfg || cfg.schemaVersion!==1) return;
     var root=document.documentElement.style;
     var colors=cfg.colors||{}, fonts=cfg.fonts||{}, brand=cfg.brand||{}, hero=cfg.hero||{}, nav=cfg.navigation||{}, ret=cfg.communityReturn||{};
-    [['--bg',colors.bg],['--panel',colors.panel],['--panel-2',colors.panel2],['--text',colors.text],['--muted',colors.muted],['--line',colors.line],['--orange',colors.orange],['--orange-2',colors.orange2]].forEach(function(pair){if(typeof pair[1]==='string')root.setProperty(pair[0],pair[1]);});
+    [['--bg',colors.bg],['--panel',colors.panel],['--panel-2',colors.panel2],['--text',colors.text],['--muted',colors.muted],['--line',colors.line],['--orange',colors.orange],['--orange-2',colors.orange2]].forEach(function(pair){var safe=safeColor(pair[1]);if(safe)root.setProperty(pair[0],safe);});
     function fontName(v){return ['DM Sans','Inter','Manrope','Space Grotesk'].indexOf(v)>=0 ? v : null;}
     var body=fontName(fonts.body), heading=fontName(fonts.heading);
     if(body)root.setProperty('--font-body','"'+body+'",Arial,sans-serif');
