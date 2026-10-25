@@ -238,4 +238,5 @@ jobs:
           SYNC_OUTCOME: ${{ steps.sync.outcome }}
           PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
           LIVE_VERIFY_OUTCOME: ${{ steps.verify_live.outcome }}
+          VISUAL_CONFIG_OUTCOME: ${{ steps.publish.outputs.visual_config_result }}
         run: python scripts/report_notion_sync.py
