@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "source": "notion",
-  "lastSync": "2026-10-25T06:47:00.000Z",
+  "lastSync": "2026-10-25T13:08:00.000Z",
   "colors": {
     "bg": "#10100f",
     "panel": "#191917",
@@ -19,7 +19,7 @@
   "brand": {
     "name": "ECO",
     "subtitle": "STUDIOS",
-    "mark": "E",
+    "mark": "ECO",
     "seoDescription": "ECO Studios — música, artistas, producción y cultura audiovisual desde Paraguay."
   },
   "hero": {
