@@ -108,7 +108,12 @@ try {
   const page = await browser.newPage({ viewport: { width: 1365, height: 900 } });
   let configRequested = false;
   const pageErrors = [];
+  const unexpectedDialogs = [];
   page.on("pageerror", error => pageErrors.push(error.message));
+  page.on("dialog", async dialog => {
+    unexpectedDialogs.push({ type: dialog.type(), message: dialog.message() });
+    await dialog.dismiss();
+  });
   await page.route("**/*", async route => {
     const url = new URL(route.request().url());
     if (url.pathname.endsWith("/data/eco-site-config.json")) {
@@ -155,6 +160,7 @@ try {
   assert.equal(await page.locator(".site-footer > p").innerText(), "Lema QA");
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), "QA configuration applied");
   assert.equal(pageErrors.some(message => /alert is not defined/i.test(message)), false, "Hostile configuration must not execute injected JavaScript");
+  assert.deepEqual(unexpectedDialogs, [], "Hostile configuration must not trigger browser dialogs");
   assert.match(await page.evaluate(() => getComputedStyle(document.body).fontFamily), /Inter/);
   assert.match(await page.locator(".hero-copy h1").evaluate(el => getComputedStyle(el).fontFamily), /Manrope/);
   assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange").trim()), "#ff6a2b", "invalid injected CSS must preserve the original accent");
