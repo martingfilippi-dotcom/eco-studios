@@ -71,9 +71,9 @@ try {
     assert.equal(await page.evaluate(key => document.documentElement.style.getPropertyValue(key).trim(), key), value, "Theme token mismatch: " + key);
   }
 
-  assert.equal(await page.locator(".brand-words").evaluate(el => el.childNodes[0].textContent), config.brand.name);
-  await text(".brand-words span", config.brand.subtitle);
-  await text(".brand-mark", config.brand.mark);
+  assert.equal(await page.locator("header.site-header .brand-words").evaluate(el => el.childNodes[0].textContent), config.brand.name);
+  await text("header.site-header .brand-words span", config.brand.subtitle);
+  await text("header.site-header .brand-mark", config.brand.mark);
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), config.brand.seoDescription);
   assert.equal(await page.locator(".hero-copy .eyebrow").evaluate(el => el.textContent), config.hero.eyebrow);
   await heading(".hero-copy h1", config.hero.titleLine1, config.hero.titleLine2);
