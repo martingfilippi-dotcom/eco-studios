@@ -20,7 +20,7 @@ const config = {
     text: "#f9fafb",
     muted: "#cbd5e1",
     line: "rgba(255,255,255,.2)",
-    orange: "#22c55e",
+    orange: "red; background-image: url(javascript:alert(1))",
     orange2: "#86efac"
   },
   fonts: { body: "Inter", heading: "Manrope" },
@@ -33,7 +33,7 @@ const config = {
     primaryLabel: "Probar principal",
     primaryUrl: "javascript:alert(1)",
     secondaryLabel: "Probar secundaria",
-    secondaryUrl: "#contacto"
+    secondaryUrl: "https://evil.example/path"
   },
   navigation: {
     project: { label: "Proyecto QA", visible: true, href: "#historia" },
@@ -88,7 +88,10 @@ try {
   assert.equal(await page.locator(".hero-copy h1 span").innerText(), hostileText, "Untrusted text must be rendered as text");
   assert.equal(await page.locator(".hero-copy h1 img, .hero-copy h1 svg").count(), 0, "Hero text must not inject HTML nodes");
   assert.equal(await page.locator(".hero-actions .button-orange").getAttribute("href"), "#artistas", "javascript: links must fall back to a safe in-site anchor");
+  assert.equal(await page.locator(".hero-actions .text-link").getAttribute("href"), "#musica", "untrusted external hosts must fall back to a safe in-site anchor");
   assert.equal(await page.locator(".hero-actions .button-orange").innerText(), "Probar principal ↘");
+  assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue("--orange")), "", "invalid CSS values must not override the brand accent");
+  assert.match(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange")), /#ff6a2b/i, "invalid CSS must leave the original accent unchanged");
   assert.equal(await page.locator(".main-nav a[href='#artistas']").evaluate(el => getComputedStyle(el).display), "none", "A hidden navigation item must actually be hidden");
   assert.equal(await page.locator(".main-nav a[href='#historia']").innerText(), "Proyecto QA");
   assert.equal(await page.locator(".menu-toggle b").innerText(), "Navegación QA");
