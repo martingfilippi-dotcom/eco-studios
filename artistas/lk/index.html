@@ -42,7 +42,7 @@
   <section class="player">
     <div class="eyebrow">MÚSICA DE LK</div>
     <p>Escuchá a LK directamente desde SoundCloud. El reproductor usa el enlace que compartió el artista; también podés abrirlo en SoundCloud.</p>
-    <iframe id="lk-soundcloud-player" title="Reproductor oficial de SoundCloud de LK" loading="lazy" allow="autoplay" scrolling="no" frameborder="0" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fon.soundcloud.com%2FsyICozVXOKxCjTPpwj&amp;color=%23ff6a2b&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>
+    <iframe id="lk-soundcloud-player" title="Reproductor oficial de SoundCloud de LK" loading="lazy" allow="autoplay" scrolling="no" frameborder="0" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fon.soundcloud.com%2FsyICozVXOKxCjTPpwj&amp;color=%23ff6a2b&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=false&amp;visual=false"></iframe>
     <div class="player-actions">
       <a href="https://on.soundcloud.com/syICozVXOKxCjTPpwj" target="_blank" rel="noopener noreferrer">Abrir SoundCloud ↗</a>
       <a href="https://www.instagram.com/luisferkeim?xtok=MTlzNXFtd3U2M2xsYQ==" target="_blank" rel="noopener noreferrer">Instagram oficial ↗</a>
@@ -54,19 +54,12 @@
 (function(){
   const sharedUrl = "https://on.soundcloud.com/syICozVXOKxCjTPpwj";
   const frame = document.getElementById("lk-soundcloud-player");
-  fetch("https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(sharedUrl))
-    .then(function(response){ if(!response.ok) throw new Error("SoundCloud oEmbed unavailable"); return response.json(); })
-    .then(function(data){
-      if(data && data.html && frame) {
-        const parsed = new DOMParser().parseFromString(data.html, "text/html");
-        const embedded = parsed.querySelector("iframe");
-        if(embedded && embedded.src) {
-          const embedUrl = new URL(embedded.src, "https://soundcloud.com");
-          if(embedUrl.hostname === "w.soundcloud.com") frame.src = embedUrl.href;
-        }
-      }
-    })
-    .catch(function(){});
+  // Keep the official player embedded; do not replace it with SoundCloud's oEmbed teaser HTML.
+  // This avoids a cross-origin oEmbed request changing the player into a promotional hand-off.
+  if (frame) {
+    frame.src = "https://w.soundcloud.com/player/?url=" + encodeURIComponent(sharedUrl) +
+      "&color=%23ff6a2b&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false";
+  }
 })();
 </script>
 <script src="../../scripts/artist-profile-sync.js" defer></script><script src="../../site-config.js" defer></script>
