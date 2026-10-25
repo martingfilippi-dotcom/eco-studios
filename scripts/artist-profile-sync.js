@@ -86,7 +86,8 @@
           .catch(function () { if (portrait && portrait.isConnected) portrait.remove(); });
       }
     } else if (portrait) {
-      portrait.remove();
+      // Keep the curated static portrait when the approved Notion record has no valid image URL.
+      // Missing editorial data must not erase a working page fallback.
     }
     var container = document.querySelector(".hero .socials") || document.querySelector(".socials");
     if (container) {
