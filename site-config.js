@@ -68,11 +68,13 @@
       setText(node,item.label||node.textContent);
       node.href=safeHref(item.href,node.getAttribute('href'));
       node.hidden=item.visible===false;
+      node.style.display=item.visible===false?'none':'';
     });
     var mobile=document.querySelector('.menu-toggle b');setText(mobile,nav.mobileLabel||'Menú');
     var bar=document.querySelector('.community-return-bar'), link=bar&&bar.querySelector('a');
     if(bar&&link){
       bar.hidden=ret.visible===false;
+      bar.style.display=ret.visible===false?'none':'';
       setText(link,ret.label||link.textContent.trim());
       link.href=safeHref(ret.url,'https://martingfilippi-dotcom.github.io/comunidad-artistas-paraguayos./');
     }
