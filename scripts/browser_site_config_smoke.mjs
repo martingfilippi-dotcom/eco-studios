@@ -81,9 +81,9 @@ try {
   await page.goto(base + "/", { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => document.documentElement.style.getPropertyValue("--bg") === "#172033", null, { timeout: 8000 });
   assert.equal(configRequested, true, "site-config.js must request its JSON configuration");
-  assert.equal(await page.locator(".brand-mark").innerText(), "Q");
-  assert.equal(await page.locator(".brand-words span").innerText(), "QA MODE");
-  assert.equal(await page.locator(".brand-words svg, .brand-words img").count(), 0, "Brand text must not become executable HTML");
+  assert.equal(await page.locator("header.site-header .brand-mark").innerText(), "Q");
+  assert.equal(await page.locator("header.site-header .brand-words span").innerText(), "QA MODE");
+  assert.equal(await page.locator("header.site-header .brand-words svg, header.site-header .brand-words img").count(), 0, "Brand text must not become executable HTML");
   assert.equal(await page.locator(".hero-copy h1").evaluate(el => el.childNodes[0].textContent), "Config OK");
   assert.equal(await page.locator(".hero-copy h1 span").innerText(), hostileText, "Untrusted text must be rendered as text");
   assert.equal(await page.locator(".hero-copy h1 img, .hero-copy h1 svg").count(), 0, "Hero text must not inject HTML nodes");
