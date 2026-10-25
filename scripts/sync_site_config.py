@@ -2,6 +2,7 @@
 """Export the latest published ECO Studios visual configuration from Notion."""
 from __future__ import annotations
 import json, os, re, sys, urllib.error, urllib.request
+from urllib.parse import urlsplit
 from pathlib import Path
 
 TOKEN = os.environ.get("NOTION_TOKEN")
@@ -57,9 +58,23 @@ def safe_color(v, default):
     return default
 
 def safe_url(v, default=""):
-    if not isinstance(v, str) or not v.startswith("https://"):
+    if not isinstance(v, str) or len(v) >= 1000:
         return default
-    return v if len(v) < 1000 else default
+    try:
+        parsed = urlsplit(v.strip())
+        port = parsed.port
+    except ValueError:
+        return default
+    # Public config links stay on ECO's known GitHub Pages host; never export arbitrary destinations.
+    if (
+        parsed.scheme != "https"
+        or parsed.hostname != "martingfilippi-dotcom.github.io"
+        or parsed.username
+        or parsed.password
+        or port not in (None, 443)
+    ):
+        return default
+    return v.strip()
 
 def safe_text(v, default="", limit=500):
     if not isinstance(v, str):
