@@ -107,6 +107,13 @@
       // Keep the curated static portrait when the approved Notion record has no valid image URL.
       // Missing editorial data must not erase a working page fallback.
     }
+    var socialStyle = document.getElementById("eco-social-icon-style");
+    if (!socialStyle) {
+      socialStyle = document.createElement("style");
+      socialStyle.id = "eco-social-icon-style";
+      socialStyle.textContent = ".socials a.social-instagram{display:inline-flex;align-items:center;gap:7px}.socials a.social-instagram svg{display:block;flex:none}.socials a.social-instagram:hover{color:#ff9bcb}";
+      document.head.appendChild(socialStyle);
+    }
     var container = document.querySelector(".hero .socials") || document.querySelector(".socials");
     if (container) {
       var links = [];
@@ -129,8 +136,15 @@
           a.href = entry.url;
           a.target = "_blank";
           a.rel = "noopener noreferrer";
-          a.textContent = entry.label + " ↗";
-          a.setAttribute("aria-label", entry.label + " oficial de " + name);
+          if (entry.label === "Instagram") {
+            a.classList.add("social-instagram");
+            a.setAttribute("aria-label", "Instagram oficial de " + name);
+            a.title = "Instagram oficial de " + name;
+            a.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg><span>Instagram ↗</span>';
+          } else {
+            a.textContent = entry.label + " ↗";
+            a.setAttribute("aria-label", entry.label + " oficial de " + name);
+          }
           container.appendChild(a);
         });
       }
