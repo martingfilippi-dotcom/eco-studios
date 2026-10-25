@@ -39,6 +39,15 @@ try {
       });
       return;
     }
+    // Keep the smoke test deterministic: serve a tiny local SVG for image requests instead of relying on external CDNs.
+    if (route.request().resourceType() === "image") {
+      await route.fulfill({
+        status: 200,
+        contentType: "image/svg+xml",
+        body: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect width="16" height="16" fill="#777"/></svg>',
+      });
+      return;
+    }
     if (requestUrl.hostname !== "127.0.0.1" && requestUrl.hostname !== "localhost") {
       await route.abort();
       return;
@@ -120,7 +129,8 @@ try {
   assert.equal((await fallbackPage.locator(".hero h1").innerText()).trim(), "LILMARTINCHO");
   assert.equal((await fallbackPage.locator(".bio").innerText()).trim(), staticBio);
   await fallbackPage.locator(".player iframe").waitFor({ state: "visible" });
-  console.log("PASS: a confirmed JSON failure leaves the exact static biography and profile layout intact.");
+  await fallbackPage.locator(".portrait").waitFor({ state: "visible" });
+  console.log("PASS: a confirmed JSON failure leaves the exact static biography, portrait frame, and profile layout intact.");
   await fallbackPage.close();
 } finally {
   await browser.close();
