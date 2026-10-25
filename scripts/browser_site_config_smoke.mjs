@@ -107,7 +107,8 @@ try {
 
   await page.setViewportSize({ width: 390, height: 844 });
   const mobile = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
-  assert.ok(mobile.document <= mobile.viewport, "Mobile layout must not overflow horizontally: " + JSON.stringify(mobile));
+  const overflowers = await page.evaluate(() => [...document.querySelectorAll("body *")].map(el => ({tag: el.tagName.toLowerCase(), cls: typeof el.className === "string" ? el.className : "", id: el.id, left: Math.round(el.getBoundingClientRect().left), right: Math.round(el.getBoundingClientRect().right), width: Math.round(el.getBoundingClientRect().width), scrollWidth: el.scrollWidth, text: (el.innerText || "").slice(0, 70)})).filter(el => el.right > innerWidth + 1 || el.left < -1).slice(0, 20));
+  assert.ok(mobile.document <= mobile.viewport, "Mobile layout must not overflow horizontally: " + JSON.stringify({ ...mobile, overflowers }));
   await page.screenshot({ path: path.join(artifacts, "site-config-mobile.png"), fullPage: true });
   console.log("PASS: Notion-managed visual configuration is fetched and applied.");
   console.log("PASS: unsafe links fall back safely and hostile text is rendered without HTML injection.");
