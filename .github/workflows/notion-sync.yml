@@ -92,14 +92,14 @@ jobs:
 
       - name: Validate visual configuration exporter
         if: steps.credentials.outputs.configured == 'true' && steps.sync.outcome == 'success'
-        id: sync_config
+        id: validate_config_script
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_CONFIG_DATA_SOURCE_ID: "860acdc0-7ed3-4e05-86f3-d028788bb43e"
         run: python -m py_compile scripts/sync_site_config.py
 
       - name: Commit updated content and locally cached image if changed
-        if: steps.credentials.outputs.configured == 'true' && steps.sync_config.outcome == 'success'
+        if: steps.credentials.outputs.configured == 'true' && steps.validate_config_script.outcome == 'success'
         id: publish
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -121,8 +121,10 @@ jobs:
             python scripts/cache_soundcloud_thumbnail.py
             python scripts/sync_notion.py
             if NOTION_CONFIG_DATA_SOURCE_ID="860acdc0-7ed3-4e05-86f3-d028788bb43e" python scripts/sync_site_config.py; then
+              echo "visual_config_result=success" >> "$GITHUB_OUTPUT"
               echo "Published Notion visual configuration exported."
             else
+              echo "visual_config_result=blocked" >> "$GITHUB_OUTPUT"
               echo "::warning::Visual config could not be read from Notion. Keeping the last committed safe configuration; share the editor database with the GitHub Actions Notion integration to enable live updates."
               test -s data/eco-site-config.json
             fi
@@ -223,6 +225,10 @@ jobs:
           print(f"::error::Public JSON and LK thumbnail could not be verified: {last_error}")
           sys.exit(1)
           PY
+
+      - name: Flag blocked visual configuration sync
+        if: always() && steps.credentials.outputs.configured == 'true' && steps.publish.outputs.visual_config_result != 'success'
+        run: echo "::warning::Visual editor changes from Notion are NOT live yet; the last committed config is being served. Share ⚙️ Editor visual de ECO Studios with the MARTIN HQ - github actions integration."
 
       - name: Report actual sync result to Notion
         if: always() && steps.credentials.outputs.configured == 'true'
