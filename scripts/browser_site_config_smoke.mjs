@@ -35,6 +35,58 @@ const config = {
     secondaryLabel: "Probar secundaria",
     secondaryUrl: "https://evil.example/path"
   },
+  visibility: {
+    history: true, artists: true, music: true, audiovisual: true,
+    news: false, team: true, contact: true
+  },
+  history: {
+    eyebrow: "HISTORIA QA", kicker: "CONTENIDO CONFIGURADO",
+    titleLine1: "Nuestra historia", titleLine2: "Un eco real.",
+    body1: "Texto principal administrado desde Notion.",
+    body2: "Texto secundario administrado desde Notion.",
+    origin: "Origen editado desde Notion.",
+    teamLink: "Conocé al equipo QA",
+    values: ["VALOR A", "VALOR B", "VALOR C", "VALOR D"]
+  },
+  artists: {
+    eyebrow: "ROSTER QA", kicker: "ARTISTAS DE PRUEBA",
+    titleLine1: "Voces nuevas", titleLine2: "Mismo eco.",
+    description: "Descripción de artistas editada desde Notion.",
+    directoryLabel: "Directorio QA"
+  },
+  music: {
+    eyebrow: "MÚSICA QA", kicker: "LANZAMIENTOS QA",
+    titleLine1: "Música nueva", titleLine2: "Cada semana.",
+    description: "Descripción musical configurada desde Notion.",
+    note: "Nota del catálogo configurada desde Notion.",
+    noteUrl: "https://music.apple.com/us/album/eco-live-at-black-mango-live/1822286569"
+  },
+  audiovisual: {
+    eyebrow: "AUDIOVISUAL QA", kicker: "PRODUCCIÓN QA",
+    topline: "DIRECCIÓN QA", titleLine1: "Imagen nueva", titleLine2: "Identidad propia.",
+    lead: "Texto de portada audiovisual QA.",
+    description: "Descripción audiovisual QA.",
+    buttonLabel: "Contacto audiovisual QA",
+    buttonUrl: "https://wa.me/595972861717",
+    instagramLabel: "Instagram audiovisual QA",
+    instagramUrl: "https://www.instagram.com/ov.audiovisual/"
+  },
+  news: {
+    eyebrow: "NOVEDADES QA", kicker: "CONTENIDO QA",
+    titleLine1: "Novedades", titleLine2: "Publicadas.",
+    description: "Descripción de novedades QA."
+  },
+  team: {
+    eyebrow: "EQUIPO QA", kicker: "DETRÁS DE QA",
+    titleLine1: "Equipo unido", titleLine2: "Trabajo real.",
+    description: "Descripción del equipo QA."
+  },
+  contact: {
+    eyebrow: "CONTACTO QA", kicker: "CANALES QA",
+    email: "contacto@example.com", whatsappLabel: "WHATSAPP QA",
+    phone: "595994562633"
+  },
+  footer: { tagline: "Lema QA", copyright: "© ECO QA", backTop: "VOLVER QA ↑" },
   navigation: {
     project: { label: "Proyecto QA", visible: true, href: "#historia" },
     artists: { label: "Artistas ocultos QA", visible: false, href: "#artistas" },
@@ -96,6 +148,14 @@ try {
   assert.equal(await page.locator(".main-nav a[href='#historia']").innerText(), "Proyecto QA");
   assert.equal(await page.locator(".menu-toggle b").innerText(), "Navegación QA");
   assert.equal(await page.locator(".community-return-bar").evaluate(el => getComputedStyle(el).display), "none", "Disabled community return bar must actually be hidden");
+  assert.equal(await page.locator("#contenido-eco").evaluate(el => getComputedStyle(el).display), "none", "Section visibility must be editable from the visual editor");
+  assert.equal(await page.locator("#historia h2").innerText().replace(/\s+/g, " ").trim(), "Nuestra historia Un eco real.");
+  assert.equal(await page.locator("#historia .intro-body > p").first().innerText(), "Texto principal administrado desde Notion.");
+  assert.equal(await page.locator("#artistas .section-heading > p a").innerText(), "Directorio QA");
+  assert.equal(await page.locator(".ov-intro h2").innerText().replace(/\s+/g, " ").trim(), "Imagen nueva Identidad propia.");
+  assert.equal(await page.locator(".ov-actions .ov-cta").getAttribute("href"), "https://wa.me/595972861717");
+  assert.equal(await page.locator(".official-contact-list a[href^='mailto:']").getAttribute("href"), "mailto:contacto@example.com");
+  assert.equal(await page.locator(".site-footer > p").innerText(), "Lema QA");
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), "QA configuration applied");
   assert.match(await page.evaluate(() => getComputedStyle(document.body).fontFamily), /Inter/);
   assert.match(await page.locator(".hero-copy h1").evaluate(el => getComputedStyle(el).fontFamily), /Manrope/);
