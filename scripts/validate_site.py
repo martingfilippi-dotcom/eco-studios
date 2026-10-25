@@ -203,10 +203,21 @@ def check_site_config_json() -> None:
             value = payload["hero"].get(key, "")
             if not isinstance(value, str) or not (value.startswith("#") or value.startswith("https://")):
                 fail(f"data/eco-site-config.json: hero.{key} debe ser un ancla local o una URL HTTPS.")
+            elif value.startswith("https://"):
+                try:
+                    parsed = urlsplit(value)
+                    if parsed.hostname != SITE_HOST or parsed.username or parsed.password or parsed.port not in (None, 443):
+                        fail(f"data/eco-site-config.json: hero.{key} debe apuntar al host oficial de ECO.")
+                except ValueError:
+                    fail(f"data/eco-site-config.json: hero.{key} no es una URL válida.")
     if isinstance(payload.get("communityReturn"), dict):
         url = payload["communityReturn"].get("url", "")
-        if not isinstance(url, str) or not url.startswith("https://"):
-            fail("data/eco-site-config.json: la URL de retorno a Comunidad debe ser HTTPS.")
+        try:
+            parsed = urlsplit(url) if isinstance(url, str) else None
+            if not parsed or parsed.scheme != "https" or parsed.hostname != SITE_HOST or parsed.username or parsed.password or parsed.port not in (None, 443):
+                fail("data/eco-site-config.json: la URL de retorno a Comunidad debe usar el host oficial.")
+        except ValueError:
+            fail("data/eco-site-config.json: la URL de retorno a Comunidad no es válida.")
     if not payload.get("lastSync"):
         WARNINGS.append("data/eco-site-config.json: lastSync es null; los cambios visuales de Notion todavía no se han confirmado en producción.")
     serialized = json.dumps(payload, ensure_ascii=False).lower()
