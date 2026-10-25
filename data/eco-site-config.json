@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "source": "notion",
-  "lastSync": null,
+  "lastSync": "2026-10-25T06:47:00.000Z",
   "colors": {
     "bg": "#10100f",
     "panel": "#191917",
@@ -28,9 +28,93 @@
     "titleLine2": "Muchos ecos.",
     "description": "Música, imágenes y comunidad. ECO conecta artistas que comparten una misma energía, sin perder lo que hace único a cada uno.",
     "primaryLabel": "Conocé el colectivo",
-    "primaryUrl": "#artistas",
+    "primaryUrl": "https://martingfilippi-dotcom.github.io/eco-studios/#artistas",
     "secondaryLabel": "Escuchar música",
-    "secondaryUrl": "#musica"
+    "secondaryUrl": "https://martingfilippi-dotcom.github.io/eco-studios/#musica",
+    "imageUrl": "https://martingfilippi-dotcom.github.io/eco-studios/eco-colectivo-01.jpg"
+  },
+  "visibility": {
+    "history": true,
+    "artists": true,
+    "music": true,
+    "audiovisual": true,
+    "news": true,
+    "team": true,
+    "contact": true
+  },
+  "history": {
+    "eyebrow": "EL PROYECTO",
+    "kicker": "DE UNA IDEA A UN MOVIMIENTO",
+    "titleLine1": "El arte nos conecta.",
+    "titleLine2": "El eco nos reúne.",
+    "body1": "ECO Studios es una plataforma creativa que conecta artistas, música, producción y cultura audiovisual.",
+    "body2": "Nació de la amistad, de hacer cosas juntos y de la convicción de que cada artista puede tener su propio sonido dentro de una identidad compartida. No se trata de sonar igual: se trata de crear en comunidad y hacer que cada obra llegue más lejos.",
+    "origin": "La idea del nombre ECO, según la historia compartida por el equipo, apareció en un sueño de Ascarza. Una imagen sencilla para algo que sigue creciendo: lo que creamos resuena en los demás.",
+    "teamLink": "Conocé al equipo",
+    "values": [
+      "MÚSICA ORIGINAL",
+      "IDENTIDAD PROPIA",
+      "CREACIÓN COLECTIVA",
+      "VISIÓN AUDIOVISUAL"
+    ]
+  },
+  "artists": {
+    "eyebrow": "EL ROSTER",
+    "kicker": "ARTISTAS DEL COLECTIVO",
+    "titleLine1": "Distintas voces.",
+    "titleLine2": "Un mismo eco.",
+    "description": "Descubrí a las personas que forman parte de la escena ECO. Los enlaces de escucha llevan a páginas musicales verificadas o a lanzamientos colectivos donde participan.",
+    "directoryLabel": "Explorar todos los perfiles ↗"
+  },
+  "music": {
+    "eyebrow": "CATÁLOGO",
+    "kicker": "LANZAMIENTOS Y SESIONES",
+    "titleLine1": "La música habla",
+    "titleLine2": "por nosotros.",
+    "description": "Un punto de partida para descubrir el sonido de ECO. Cada botón abre una página de música real en Apple Music.",
+    "note": "El catálogo también conserva colaboraciones históricas del colectivo, con artistas que compartieron escenario en distintas sesiones en vivo.",
+    "noteUrl": "https://music.apple.com/us/album/eco-live-at-black-mango-live/1822286569"
+  },
+  "audiovisual": {
+    "eyebrow": "IMAGEN Y MOVIMIENTO",
+    "kicker": "OV AUDIOVISUAL · PRODUCCIÓN CREATIVA",
+    "topline": "DIRECCIÓN VISUAL · FOTO · VIDEO",
+    "titleLine1": "Tu música merece",
+    "titleLine2": "una imagen propia.",
+    "lead": "Imágenes que transmiten una identidad. Videos que cuentan una historia. Una estética pensada para que cada artista se vea y se recuerde.",
+    "description": "Gastón OV desarrolla proyectos audiovisuales para artistas y marcas: desde la idea y la fotografía hasta piezas de video que acompañan lanzamientos, campañas y contenido para redes.",
+    "buttonLabel": "Consultar un proyecto por WhatsApp ↗",
+    "buttonUrl": "https://wa.me/595972861717?text=Hola%20OV%20Audiovisual%2C%20quiero%20consultar%20por%20un%20proyecto.",
+    "instagramLabel": "Ver trabajos en Instagram ↗",
+    "instagramUrl": "https://www.instagram.com/ov.audiovisual/",
+    "image1Url": "https://martingfilippi-dotcom.github.io/eco-studios/eco-colectivo-03.jpg",
+    "image2Url": "https://martingfilippi-dotcom.github.io/eco-studios/eco-ascarza.jpg"
+  },
+  "news": {
+    "eyebrow": "CONTENIDO DEL ESTUDIO",
+    "kicker": "ACTUALIZACIONES APROBADAS",
+    "titleLine1": "Lo nuevo en",
+    "titleLine2": "ECO Studios.",
+    "description": "Artistas, lanzamientos, noticias y proyectos publicados por el equipo de ECO Studios."
+  },
+  "team": {
+    "eyebrow": "EL EQUIPO",
+    "kicker": "DETRÁS DE LA IDEA",
+    "titleLine1": "Un colectivo",
+    "titleLine2": "se construye juntos.",
+    "description": "ECO crece gracias a artistas, productores y personas que aportan su oficio, su tiempo y su visión."
+  },
+  "contact": {
+    "eyebrow": "CONTACTO",
+    "kicker": "CANALES OFICIALES · ECO STUDIOS",
+    "email": "ecostudiosparaguay@gmail.com",
+    "whatsappLabel": "WHATSAPP OFICIAL",
+    "phone": "595994562633"
+  },
+  "footer": {
+    "tagline": "Independiente por naturaleza.",
+    "copyright": "© ECO STUDIOS · ASUNCIÓN, PARAGUAY",
+    "backTop": "VOLVER ARRIBA ↑"
   },
   "navigation": {
     "project": {
