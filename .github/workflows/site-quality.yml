@@ -32,6 +32,7 @@ jobs:
           node --check scripts/artist-directory-sync.js
           node --check site-config.js
           node --check scripts/browser_site_config_smoke.mjs
+          node --check scripts/browser_site_config_published_smoke.mjs
           node --input-type=module --check < webhook-receiver/src/index.js
           python scripts/validate_site.py
 
@@ -83,6 +84,10 @@ jobs:
       - name: Verify Notion visual config, URL safety, and XSS-safe rendering
         if: success()
         run: node scripts/browser_site_config_smoke.mjs
+
+      - name: Verify committed Notion configuration renders end to end
+        if: success()
+        run: node scripts/browser_site_config_published_smoke.mjs
 
       - name: Upload browser smoke screenshots
         if: always()
