@@ -240,3 +240,9 @@ jobs:
           LIVE_VERIFY_OUTCOME: ${{ steps.verify_live.outcome }}
           VISUAL_CONFIG_OUTCOME: ${{ steps.publish.outputs.visual_config_result }}
         run: python scripts/report_notion_sync.py
+
+      - name: Require visual configuration sync for a green run
+        if: always() && steps.credentials.outputs.configured == 'true' && steps.publish.outputs.visual_config_result != 'success'
+        run: |
+          echo "::error::The Notion visual configuration did not synchronize. This run must stay red until the actual configuration is exported and verified on the public site."
+          exit 1

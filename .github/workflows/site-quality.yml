@@ -33,6 +33,7 @@ jobs:
           node --check site-config.js
           node --check scripts/browser_site_config_smoke.mjs
           node --check scripts/browser_site_config_published_smoke.mjs
+          node --check scripts/browser_site_live_smoke.mjs
           node --input-type=module --check < webhook-receiver/src/index.js
           python scripts/validate_site.py
 
@@ -88,6 +89,12 @@ jobs:
       - name: Verify committed Notion configuration renders end to end
         if: success()
         run: node scripts/browser_site_config_published_smoke.mjs
+
+      - name: Verify deployed ECO site against live Notion config
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && success()
+        env:
+          ECO_LIVE_SITE_URL: https://martingfilippi-dotcom.github.io/eco-studios/
+        run: node scripts/browser_site_live_smoke.mjs
 
       - name: Upload browser smoke screenshots
         if: always()
