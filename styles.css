@@ -61,6 +61,8 @@ h1,h2,h3,p{margin-top:0}
 h1,h2,h3{font-family:"Space Grotesk",sans-serif}
 h1{font-size:clamp(58px,8vw,106px);line-height:.95;letter-spacing:-.075em;margin:0 0 26px;font-weight:600}
 h1 span,h2 span{color:var(--orange)}
+/* Keep configurable hero copy from widening the viewport on narrow screens. */
+.hero h1 span{max-width:100%;overflow-wrap:anywhere;word-break:normal}
 .hero-lede{max-width:460px;color:#c4c1b9;font-size:17px;line-height:1.7;margin-bottom:30px}
 .hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
 .button{min-height:46px;padding:12px 16px;display:inline-flex;align-items:center;justify-content:center;gap:20px;font-size:12px;font-weight:700;letter-spacing:.03em;border:1px solid transparent;transition:transform .2s,border-color .2s,background .2s}
