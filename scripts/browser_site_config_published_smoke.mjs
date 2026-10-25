@@ -25,10 +25,11 @@ let page;
 try {
   page = await browser.newPage({ viewport: { width: 1365, height: 900 } });
   const pageErrors = [];
+  const unexpectedDialogs = [];
   page.on("pageerror", error => pageErrors.push(error.message));
   page.on("dialog", async dialog => {
+    unexpectedDialogs.push({ type: dialog.type(), message: dialog.message() });
     await dialog.dismiss();
-    throw new Error("Unexpected browser dialog during published-config test: " + dialog.type());
   });
   await page.route("**/*", async route => {
     const url = new URL(route.request().url());
@@ -102,10 +103,10 @@ try {
   await text("#historia .intro-body > p:nth-of-type(2)", config.history.body2);
   await text("#historia .intro-body > p:nth-of-type(3)", config.history.origin);
   await text("#historia .intro-body > a", config.history.teamLink);
-  for (let i = 0; i < 4; i++) await text("#historia .value-strip span:nth-of-type(1)", config.history.values[i]).catch(async () => {
+  for (let i = 0; i < 4; i++) {
     const actual = await page.locator("#historia .value-strip span").nth(i).innerText();
     assert.equal(actual, config.history.values[i], "History value mapping mismatch at index " + i);
-  });
+  }
 
   await text("#artistas .section-kicker > span:nth-child(1)", config.artists.eyebrow);
   await text("#artistas .section-kicker > span:nth-child(2)", config.artists.kicker);
@@ -129,7 +130,8 @@ try {
   await heading(".ov-intro h2", config.audiovisual.titleLine1, config.audiovisual.titleLine2);
   await text(".ov-intro p.large-copy", config.audiovisual.lead);
   await text(".ov-intro > p:not(.ov-eyebrow):nth-of-type(2)", config.audiovisual.description);
-  await text(".ov-actions .ov-cta", config.audiovisual.buttonLabel + " ↗");
+  const avButtonText = (config.audiovisual.buttonLabel || "").replace(/\\s*[↗↘→]+$/u, "").trim() + " ↗";
+  assert.equal(normalize(await page.locator(".ov-actions .ov-cta").innerText()), normalize(avButtonText), "Audiovisual CTA must show exactly one arrow.");
   assert.equal(new URL(await page.locator(".ov-actions .ov-cta").getAttribute("href"), base).href, new URL(config.audiovisual.buttonUrl, base).href);
   assert.equal(new URL(await page.locator(".ov-actions .ov-instagram").getAttribute("href"), base).href, new URL(config.audiovisual.instagramUrl, base).href);
 
@@ -183,6 +185,7 @@ try {
   await page.screenshot({ path: path.join(artifacts, "site-config-published-mobile.png"), fullPage: true });
 
   assert.deepEqual(pageErrors, [], "Published config must not trigger uncaught browser errors");
+  assert.deepEqual(unexpectedDialogs, [], "Published config must not trigger browser dialogs");
   console.log("PASS: The committed Notion-exported configuration is present, current, and uses the supported schema.");
   console.log("PASS: Brand, theme, all homepage copy sections, navigation, visibility, contact links, and footer render from the actual Notion configuration.");
   console.log("PASS: The real published configuration keeps desktop/mobile widths within the viewport.");
