@@ -6,8 +6,10 @@ import { chromium } from "playwright";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const expected = JSON.parse(await readFile(path.join(root, "data/eco-site-config.json"), "utf8"));
+const expectedClientScript = await readFile(path.join(root, "site-config.js"), "utf8");
 const base = (process.env.ECO_LIVE_SITE_URL || "https://martingfilippi-dotcom.github.io/eco-studios/").replace(/\/?$/, "/");
 const publicConfigUrl = new URL("data/eco-site-config.json", base).href;
+const publicClientScriptUrl = new URL("site-config.js", base).href;
 
 assert.equal(expected.schemaVersion, 1, "Repository config must use the supported schema");
 assert.equal(expected.source, "notion", "Repository config must come from Notion export");
@@ -23,7 +25,23 @@ for (let attempt = 1; attempt <= 20; attempt++) {
     if (!response.ok) throw new Error("HTTP " + response.status);
     publicConfig = await response.json();
     assert.deepEqual(publicConfig, expected, "Public visual config differs from the checked-in Notion export");
+
+    // The Pages deploy runs independently of this quality workflow. A matching
+    // JSON file alone is not proof that the page JavaScript has reached this commit:
+    // the JSON may be unchanged while site-config.js is still the previous version.
+    const clientUrl = new URL(publicClientScriptUrl);
+    clientUrl.searchParams.set("live_e2e", Date.now() + "-" + attempt);
+    const clientResponse = await fetch(clientUrl, { headers: { "Cache-Control": "no-cache", "Pragma": "no-cache" } });
+    if (!clientResponse.ok) throw new Error("Public site-config.js HTTP " + clientResponse.status);
+    const actualClientScript = await clientResponse.text();
+    assert.equal(
+      actualClientScript,
+      expectedClientScript,
+      "Public site-config.js is not deployed from the checked-in commit yet"
+    );
+
     console.log("PASS: public Notion visual JSON matches the repository export.");
+    console.log("PASS: public site-config.js matches the checked-in version; deployment is current.");
     break;
   } catch (error) {
     lastConfigError = String(error);
