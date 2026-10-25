@@ -120,7 +120,12 @@ jobs:
             # If SoundCloud is temporarily unavailable, the script preserves the last verified copy.
             python scripts/cache_soundcloud_thumbnail.py
             python scripts/sync_notion.py
-            NOTION_CONFIG_DATA_SOURCE_ID="860acdc0-7ed3-4e05-86f3-d028788bb43e" python scripts/sync_site_config.py
+            if NOTION_CONFIG_DATA_SOURCE_ID="860acdc0-7ed3-4e05-86f3-d028788bb43e" python scripts/sync_site_config.py; then
+              echo "Published Notion visual configuration exported."
+            else
+              echo "::warning::Visual config could not be read from Notion. Keeping the last committed safe configuration; share the editor database with the GitHub Actions Notion integration to enable live updates."
+              test -s data/eco-site-config.json
+            fi
 
             git add -- data/eco-content.json data/eco-site-config.json
             if [ -s assets/colki.jpg ]; then git add -- assets/colki.jpg; fi
