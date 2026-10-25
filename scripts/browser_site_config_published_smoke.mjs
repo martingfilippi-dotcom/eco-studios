@@ -130,7 +130,7 @@ try {
   await heading(".ov-intro h2", config.audiovisual.titleLine1, config.audiovisual.titleLine2);
   await text(".ov-intro p.large-copy", config.audiovisual.lead);
   await text(".ov-intro > p:not(.ov-eyebrow):nth-of-type(2)", config.audiovisual.description);
-  const avButtonText = (config.audiovisual.buttonLabel || "").replace(/\\s*[↗↘→]+$/u, "").trim() + " ↗";
+  const avButtonText = (config.audiovisual.buttonLabel || "").replace(/\s*[↗↘→]+$/u, "").trim() + " ↗";
   assert.equal(normalize(await page.locator(".ov-actions .ov-cta").innerText()), normalize(avButtonText), "Audiovisual CTA must show exactly one arrow.");
   assert.equal(new URL(await page.locator(".ov-actions .ov-cta").getAttribute("href"), base).href, new URL(config.audiovisual.buttonUrl, base).href);
   assert.equal(new URL(await page.locator(".ov-actions .ov-instagram").getAttribute("href"), base).href, new URL(config.audiovisual.instagramUrl, base).href);
