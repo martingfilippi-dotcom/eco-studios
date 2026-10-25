@@ -75,7 +75,15 @@
       seen.add(url);
       var a = document.createElement("a");
       a.className = "social"; a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
-      a.textContent = field[1] + " ↗"; container.appendChild(a);
+      if (field[1] === "Instagram") {
+        a.classList.add("social-instagram");
+        a.setAttribute("aria-label", "Instagram oficial de " + String(item.name || "artista"));
+        a.title = "Instagram oficial de " + String(item.name || "artista");
+        a.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg><span>Instagram ↗</span>';
+      } else {
+        a.textContent = field[1] + " ↗";
+      }
+      container.appendChild(a);
     });
     var external = safeUrl(item.externalUrl);
     if (external && !seen.has(external)) {
@@ -93,6 +101,8 @@
       ".dynamic-artist-copy h1{margin:12px 0 20px;font-size:clamp(40px,7vw,76px)}",
       ".dynamic-artist-copy p{max-width:680px;color:var(--muted,#aaa);line-height:1.85;white-space:pre-line}",
       ".dynamic-artist-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}",
+      ".dynamic-artist-links .social-instagram{display:inline-flex;align-items:center;gap:7px}",
+      ".dynamic-artist-links .social-instagram svg{display:block;flex:none}",
       ".dynamic-artist-player{margin-top:36px}",
       ".dynamic-artist-player iframe{width:100%;aspect-ratio:16/9;min-height:220px;border:0;border-radius:10px;background:#080808}",
       ".dynamic-artist-back{display:inline-block;margin-top:30px;color:var(--orange,#ff6a2b);text-decoration:none}",
@@ -156,6 +166,25 @@
       frame.referrerPolicy = "strict-origin-when-cross-origin";
       frame.src = "https://www.youtube-nocookie.com/embed/videoseries?list=" + encodeURIComponent(playlist) + "&rel=0&playsinline=1";
       player.appendChild(frame); main.appendChild(player);
+    }
+    var soundcloudUrl = safeUrl(item.soundCloudUrl || item.soundcloudUrl || (slug === "lk" ? item.externalUrl : ""));
+    if (slug === "lk" && soundcloudUrl) {
+      var parsedSoundCloud;
+      try { parsedSoundCloud = new URL(soundcloudUrl); } catch (_) { parsedSoundCloud = null; }
+      if (parsedSoundCloud && (parsedSoundCloud.hostname === "soundcloud.com" || parsedSoundCloud.hostname === "on.soundcloud.com" || parsedSoundCloud.hostname.endsWith(".soundcloud.com"))) {
+        var soundcloudPlayer = document.createElement("section");
+        soundcloudPlayer.className = "dynamic-artist-player";
+        appendText(soundcloudPlayer, "div", "eyebrow", "ESCUCHÁ A LK EN SOUNDCLOUD");
+        var soundcloudFrame = document.createElement("iframe");
+        soundcloudFrame.title = "Reproductor oficial de SoundCloud de LK";
+        soundcloudFrame.loading = "lazy";
+        soundcloudFrame.allow = "autoplay";
+        soundcloudFrame.scrolling = "no";
+        soundcloudFrame.referrerPolicy = "strict-origin-when-cross-origin";
+        soundcloudFrame.src = "https://w.soundcloud.com/player/?url=" + encodeURIComponent(soundcloudUrl) + "&color=%23ff6a2b&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true";
+        soundcloudPlayer.appendChild(soundcloudFrame);
+        main.appendChild(soundcloudPlayer);
+      }
     }
     var back = document.createElement("a");
     back.className = "dynamic-artist-back"; back.href = "./"; back.textContent = "← Volver al directorio de artistas";
