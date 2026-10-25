@@ -207,6 +207,8 @@ def check_site_config_json() -> None:
         url = payload["communityReturn"].get("url", "")
         if not isinstance(url, str) or not url.startswith("https://"):
             fail("data/eco-site-config.json: la URL de retorno a Comunidad debe ser HTTPS.")
+    if not payload.get("lastSync"):
+        WARNINGS.append("data/eco-site-config.json: lastSync es null; los cambios visuales de Notion todavía no se han confirmado en producción.")
     serialized = json.dumps(payload, ensure_ascii=False).lower()
     for sensitive in ("ghp_", "github_pat_", "secret", "password", "private_key", "notion_secret", "sk_live_"):
         if sensitive in serialized:
