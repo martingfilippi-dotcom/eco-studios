@@ -43,22 +43,22 @@ jobs:
           node-version: "24"
 
       - name: Cache Playwright browser
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        if: success()
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-1.55.0
 
       - name: Install Playwright
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        if: success()
         run: npm install --no-save playwright@1.55.0
 
       - name: Install Chromium
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        if: success()
         run: npx playwright install --with-deps chromium
 
       - name: Start local site
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        if: success()
         run: |
           python -m http.server 4173 --directory . > /tmp/eco-site-smoke-http.log 2>&1 &
           echo $! > /tmp/eco-site-smoke-http.pid
@@ -77,7 +77,7 @@ jobs:
           PY
 
       - name: Verify live artist profile refresh and fallback
-        if: github.event_name == 'pull_request' && github.head_ref == 'automation/verify-current-artist-sync'
+        if: success()
         run: node scripts/browser_profile_smoke.mjs
 
       - name: Verify Notion visual config, URL safety, and XSS-safe rendering
@@ -88,6 +88,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: eco-profile-sync-verification
+          name: eco-browser-smoke-verification
           path: artifacts/*.png
           if-no-files-found: warn
