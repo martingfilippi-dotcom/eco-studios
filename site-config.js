@@ -21,6 +21,12 @@
     if(heading)root.setProperty('--font-heading','"'+heading+'",Arial,sans-serif');
     if(body)document.body.style.fontFamily='var(--font-body)';
     if(heading)document.querySelectorAll('h1,h2,h3,h4,.brand-words,.brand-mark').forEach(function(n){n.style.fontFamily='var(--font-heading)';});
+    if(body && heading){
+      var families=Array.from(new Set([body,heading])).map(function(name){return 'family='+encodeURIComponent(name).replace(/%20/g,'+')+':wght@400;500;600;700';}).join('&');
+      var fontLink=document.getElementById('eco-dynamic-fonts');
+      if(!fontLink){fontLink=document.createElement('link');fontLink.id='eco-dynamic-fonts';fontLink.rel='stylesheet';document.head.appendChild(fontLink);}
+      fontLink.href='https://fonts.googleapis.com/css2?'+families+'&display=swap';
+    }
     setText(document.querySelector('.brand-words'), brand.name||'ECO');
     var brandWords=document.querySelector('.brand-words');
     if(brandWords){
