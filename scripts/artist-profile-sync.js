@@ -56,9 +56,27 @@
         }
       }
       if (portrait) {
-        portrait.onerror = function () { this.remove(); };
-        portrait.src = imageUrl;
+        var originalPortraitSrc = portrait.getAttribute("src") || "";
+        var fallbackPortraitUrl = "";
+        try {
+          var fallbackCandidate = new URL(originalPortraitSrc, window.location.href);
+          if (fallbackCandidate.protocol === "https:" || fallbackCandidate.origin === window.location.origin) {
+            fallbackPortraitUrl = fallbackCandidate.href;
+          }
+        } catch (_) {}
         portrait.alt = "Imagen de " + name + " · ECO Studios";
+        portrait.onerror = function () {
+          this.onerror = null;
+          var fallback = fallbackPortraitUrl;
+          if (fallback && fallback !== imageUrl) {
+            this.src = fallback;
+          } else {
+            // Preserve the portrait frame and its layout when even the fallback is unavailable.
+            this.removeAttribute("src");
+            this.classList.add("portrait-unavailable");
+          }
+        };
+        portrait.src = imageUrl;
       }
     } else if (String(item.slug || "").toLowerCase() === "lk" && soundcloudUrl) {
       var hero = document.querySelector(".hero");
