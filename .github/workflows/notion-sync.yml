@@ -226,9 +226,11 @@ jobs:
           sys.exit(1)
           PY
 
-      - name: Flag blocked visual configuration sync
+      - name: Fail when visual configuration sync is blocked
         if: always() && steps.credentials.outputs.configured == 'true' && steps.publish.outputs.visual_config_result != 'success'
-        run: echo "::warning::Visual editor changes from Notion are NOT live yet; the last committed config is being served. Share ⚙️ Editor visual de ECO Studios with the MARTIN HQ - github actions integration."
+        run: |
+          echo "::error::Visual configuration was not exported from Notion. The previous safe configuration remains public; fix the Notion integration access or inspect the exporter before treating this run as successful."
+          exit 1
 
       - name: Report actual sync result to Notion
         if: always() && steps.credentials.outputs.configured == 'true'
