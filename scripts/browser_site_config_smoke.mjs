@@ -156,11 +156,11 @@ try {
   assert.equal(await page.locator(".community-return-bar").evaluate(el => getComputedStyle(el).display), "none", "Disabled community return bar must actually be hidden");
   assert.equal(await page.locator("#contenido-eco").evaluate(el => getComputedStyle(el).display), "none", "Section visibility must be editable from the visual editor");
   console.log("CHECK_BEFORE_HISTORY_HEADING", { pageClosed: page.isClosed(), pageErrors, unexpectedDialogs });
-  assert.equal(await page.locator("#historia h2").innerText().replace(/\s+/g, " ").trim(), "Nuestra historia Un eco real.");
+  assert.equal((await page.locator("#historia h2").innerText()).replace(/\s+/g, " ").trim(), "Nuestra historia Un eco real.");
   console.log("CHECK_AFTER_HISTORY_HEADING");
   assert.equal(await page.locator("#historia .intro-body > p").first().innerText(), "Texto principal administrado desde Notion.");
   assert.equal(await page.locator("#artistas .section-heading > p a").innerText(), "Directorio QA");
-  assert.equal(await page.locator(".ov-intro h2").innerText().replace(/\s+/g, " ").trim(), "Imagen nueva Identidad propia.");
+  assert.equal((await page.locator(".ov-intro h2").innerText()).replace(/\s+/g, " ").trim(), "Imagen nueva Identidad propia.");
   assert.equal(await page.locator(".ov-actions .ov-cta").getAttribute("href"), "https://wa.me/595972861717");
   assert.equal(await page.locator(".official-contact-list a[href^='mailto:']").getAttribute("href"), "mailto:contacto@example.com");
   assert.equal(await page.locator(".site-footer > p").innerText(), "Lema QA");
