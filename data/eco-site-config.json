@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "source": "notion",
+  "lastSync": null,
+  "colors": {
+    "bg": "#10100f",
+    "panel": "#191917",
+    "panel2": "#20201d",
+    "text": "#f5f3ed",
+    "muted": "#a8a69e",
+    "line": "rgba(245,243,237,.15)",
+    "orange": "#ff6a2b",
+    "orange2": "#ff8b50"
+  },
+  "fonts": {
+    "body": "DM Sans",
+    "heading": "Space Grotesk"
+  },
+  "brand": {
+    "name": "ECO",
+    "subtitle": "STUDIOS",
+    "mark": "E",
+    "seoDescription": "ECO Studios — música, artistas, producción y cultura audiovisual desde Paraguay."
+  },
+  "hero": {
+    "eyebrow": "PLATAFORMA CREATIVA · ASUNCIÓN, PARAGUAY",
+    "titleLine1": "Una voz.",
+    "titleLine2": "Muchos ecos.",
+    "description": "Música, imágenes y comunidad. ECO conecta artistas que comparten una misma energía, sin perder lo que hace único a cada uno.",
+    "primaryLabel": "Conocé el colectivo",
+    "primaryUrl": "#artistas",
+    "secondaryLabel": "Escuchar música",
+    "secondaryUrl": "#musica"
+  },
+  "navigation": {
+    "project": {
+      "label": "El proyecto",
+      "visible": true,
+      "href": "#historia"
+    },
+    "artists": {
+      "label": "Artistas",
+      "visible": true,
+      "href": "#artistas"
+    },
+    "music": {
+      "label": "Música",
+      "visible": true,
+      "href": "#musica"
+    },
+    "audiovisual": {
+      "label": "Audiovisual",
+      "visible": true,
+      "href": "#audiovisual"
+    },
+    "contact": {
+      "label": "Contacto ↗",
+      "visible": true,
+      "href": "#contacto"
+    },
+    "mobileLabel": "Menú"
+  },
+  "communityReturn": {
+    "visible": true,
+    "label": "VOLVER A COMUNIDAD DE ARTISTAS PARAGUAYOS",
+    "url": "https://martingfilippi-dotcom.github.io/comunidad-artistas-paraguayos./"
+  }
+}
