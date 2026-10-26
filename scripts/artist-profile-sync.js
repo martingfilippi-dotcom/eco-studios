@@ -111,7 +111,7 @@
     if (!socialStyle) {
       socialStyle = document.createElement("style");
       socialStyle.id = "eco-social-icon-style";
-      socialStyle.textContent = ".socials a.social{display:inline-flex;align-items:center;gap:10px}.socials a.social svg{display:block;width:22px;height:22px;flex:none}.socials a.social-youtube svg{color:#ff4545}.socials a.social-spotify svg{color:#1ed760}.socials a.social-apple-music svg{color:#f5f2eb}.socials a.social-instagram svg{color:#e7a4c3}.socials a.social-tiktok svg{color:#f5f2eb}.socials a.social-soundcloud svg{color:#ff8b4a}.socials a.social:hover{border-color:var(--eco-sand,#d9c9b5);background:rgba(217,201,181,.07)}";
+      socialStyle.textContent = ".socials a.social{display:inline-flex;align-items:center;gap:10px}.socials a.social svg{display:block;width:22px;height:22px;flex:none}.socials a.social-youtube svg{color:#ff4545}.socials a.social-spotify svg{color:#1ed760}.socials a.social-apple-music svg{color:#f5f2eb}.socials a.social-instagram svg{color:#e7a4c3}.socials a.social-tiktok svg{color:#f5f2eb}.socials a.social-soundcloud svg{color:#D9C9B5}.socials a.social:hover{border-color:var(--eco-sand,#d9c9b5);background:rgba(217,201,181,.07)}";
       document.head.appendChild(socialStyle);
     }
     function platformIcon(label) {
