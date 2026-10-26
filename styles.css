@@ -279,3 +279,92 @@ h2{font-size:clamp(38px,5vw,64px);line-height:1.02;letter-spacing:-.065em;font-w
 .black-mango-return h3{font-size:clamp(22px,2.5vw,32px)}
 .black-mango-return .button{flex-shrink:0}
 @media(max-width:640px){.video-showcase{margin-top:32px;padding-top:22px}.video-showcase-heading h3{font-size:28px}.video-showcase-heading p,.black-mango-return p{font-size:12px}.black-mango-return{align-items:flex-start;flex-direction:column;padding:18px;gap:18px}.black-mango-return .button{width:100%;justify-content:center}}
+
+
+/* ECO Studios visual direction — Ascarza reference 2026
+   Archive-led editorial identity, restrained sound-wave mark and official palette. */
+:root{
+  --bg:#0B0B0B;
+  --panel:#151514;
+  --panel-2:#20201E;
+  --text:#F5F2EB;
+  --muted:#A7A39B;
+  --line:rgba(245,242,235,.17);
+  --orange:#FF6A00;
+  --orange-2:#FF8533;
+  --max:1240px;
+  --eco-ivory:#F5F2EB;
+  --eco-earth:#3A2418;
+  --eco-sand:#D9C9B5;
+  --eco-grey:#8D8D8D;
+  --eco-red:#A21D1D;
+}
+body{background:var(--bg);color:var(--eco-ivory)}
+.site-header{background:rgba(11,11,11,.94);border-bottom-color:rgba(245,242,235,.13)}
+.brand{gap:13px}
+.brand-mark{width:38px;height:38px;border-radius:0;background:transparent;color:var(--orange);box-shadow:none;font-size:0;position:relative}
+.brand-mark:before{content:"";position:absolute;left:2px;top:8px;width:17px;height:22px;border-left:3px solid currentColor;border-radius:50%;transform:scaleX(.65)}
+.brand-mark:after{content:"))";position:absolute;left:10px;top:1px;font-family:Arial,sans-serif;font-size:29px;line-height:36px;font-weight:400;letter-spacing:-8px;color:currentColor}
+.brand-words{font-size:18px;letter-spacing:.08em;color:var(--eco-ivory)}
+.brand-words span{color:var(--eco-grey);letter-spacing:.28em}
+h1,h2,h3{font-family:"Space Grotesk","DM Sans",Arial,sans-serif}
+h1 span,h2 span{color:var(--orange)}
+.pulse{background:var(--orange);box-shadow:0 0 0 5px rgba(255,106,0,.12)}
+.button-orange{background:var(--orange);color:#0B0B0B}
+.button-orange:hover{background:var(--orange-2)}
+.main-nav a:hover,.text-link:hover,.mini-link:hover{color:var(--orange)}
+.main-nav .nav-cta{border-radius:0}
+.hero-art{background:var(--eco-earth)}
+.hero-art>img{filter:saturate(.72) contrast(1.04)}
+.hero-art:after{background:linear-gradient(0deg,rgba(11,11,11,.78),transparent 55%),linear-gradient(90deg,rgba(255,106,0,.12),transparent 65%)}
+.hero-stamp span:first-child{color:var(--orange)}
+.hero-foot a,.mini-link,.profile-number{color:var(--orange)}
+.intro,.music{background:var(--eco-ivory);color:var(--bg)}
+.intro h2 span{color:var(--eco-earth)}
+.intro-body p{color:#5C554D}
+.intro-body .text-link{color:var(--bg)}
+.value-strip strong,.music-note-mark{color:var(--orange)}
+.artist-photo{background:var(--panel-2)}
+.artist-photo img{filter:saturate(.68) contrast(1.04)}
+.photo-index{background:rgba(11,11,11,.78);border:1px solid rgba(245,242,235,.22);font-size:9px;letter-spacing:.13em}
+.photo-arrow{border-radius:0;background:var(--orange);color:var(--bg)}
+.artist-meta h3{letter-spacing:-.025em}
+.profiles{background:#151514}
+.tag-row span{border-radius:0}
+.release-card{background:var(--eco-earth);border-radius:0}
+.release-card img{filter:saturate(.72) contrast(1.05)}
+.release-type{color:var(--eco-sand)}
+.release-bottom{letter-spacing:.14em}
+.live-show{background:#111110}
+.audiovisual{background:#151514}
+.managed-content{background:#111110}
+.managed-content-card{background:#151514;border-color:rgba(245,242,235,.16);border-radius:0}
+.managed-content-card>img{filter:saturate(.72) contrast(1.04)}
+.managed-content-type{color:var(--orange)}
+.community-return-bar{background:#111110;border-bottom-color:rgba(255,106,0,.3)}
+.community-return-bar a{color:var(--eco-sand)}
+.community-return-bar a:hover{color:var(--orange)}
+.community-card{border-radius:0}
+.eco-community{background:var(--eco-ivory);color:var(--bg);border-color:var(--eco-sand)}
+.eco-community:hover{background:#fffaf2;border-color:var(--orange)}
+.eco-community .eco-logo-mark{background:var(--orange);color:var(--bg);border-radius:0}
+.eco-community .community-arrow,.eco-community .community-enter{color:var(--orange)}
+.indie-profile-back{border-radius:0}
+.indie-profile-layout>img{border-radius:0}
+.artist-social-link{border-radius:0;background:#151514}
+.artist-social-link:hover,.artist-social-link:focus-visible{border-color:var(--orange)}
+.video-showcase-player{border-color:rgba(245,242,235,.2)}
+.black-mango-return{border-radius:0;border-color:rgba(255,106,0,.4);background:linear-gradient(135deg,rgba(255,106,0,.10),rgba(245,242,235,.02))}
+/* Archive-inspired metadata and consistent square-corner system */
+.section-kicker,.eyebrow,.hero-foot,.release-type,.release-bottom{letter-spacing:.16em}
+.artist-card,.release-card,.managed-content-card,.community-card{border-radius:0}
+.artist-meta{border-bottom:1px solid rgba(245,242,235,.13);padding-bottom:13px}
+.managed-content-card h3{letter-spacing:-.035em}
+@media(max-width:760px){
+  .site-header{background:rgba(11,11,11,.97)}
+  .brand-mark{width:30px}
+  .brand-words{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
