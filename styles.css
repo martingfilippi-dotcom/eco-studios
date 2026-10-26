@@ -1168,3 +1168,100 @@ h1 span, h2 span, .hero-stamp span:first-child, .hero-foot a,
   border: 1px solid rgba(245,242,235,.42) !important;
 }
 .photo-arrow:hover { color: var(--eco-sand) !important; border-color: var(--eco-sand) !important; }
+
+
+/* ECO Studios — cream / sand palette from the visual identity reference.
+   Warm neutrals lead; orange is reserved for occasional media-brand details. */
+:root {
+  --bg: #0B0B0B !important;
+  --panel: #191816 !important;
+  --panel-2: #24211D !important;
+  --text: #F5F2EB !important;
+  --muted: #B9ADA0 !important;
+  --line: rgba(217,201,181,.24) !important;
+  --orange: #D9C9B5 !important;
+  --orange-2: #F5F2EB !important;
+  --eco-earth: #3A2418 !important;
+  --eco-sand: #D9C9B5 !important;
+  --eco-ivory: #F5F2EB !important;
+  --eco-grey: #8D8D8D !important;
+}
+.eyebrow,
+.section-kicker span:first-child,
+.hero-stamp span:first-child,
+.hero-foot a,
+.section-heading .text-link,
+.artist-meta .mini-link,
+.profile-number,
+.story-label,
+.story-symbol,
+.team-role,
+.community-arrow,
+.community-enter,
+.gateway-origin,
+.gateway-eyebrow,
+.indie-symbol,
+.indie-artist-no {
+  color: var(--eco-sand) !important;
+}
+h1 span, h2 span,
+.intro h2 span, .team h2 span,
+.contact h2 span {
+  color: var(--eco-earth) !important;
+}
+.button-orange, .audiovisual .button-orange,
+.contact, .av-caption {
+  background: var(--eco-sand) !important;
+  border-color: var(--eco-sand) !important;
+  color: #0B0B0B !important;
+}
+.contact-grid > div:first-child p { color: #51473D !important; }
+.contact-links > a { border-color: rgba(58,36,24,.24) !important; }
+.contact-links > a span { color: #6D5948 !important; }
+.contact-links > a strong { color: #0B0B0B !important; }
+.value-strip strong, .music-note-mark, .team-role { color: var(--eco-earth) !important; }
+.team-avatar { color: var(--eco-earth) !important; }
+.eyebrow, .section-kicker span:first-child { letter-spacing: .16em; }
+.main-nav a:hover, .artist-platform-link:hover,
+.artist-platform-link:focus-visible,
+.button-outline:hover, .text-link:hover,
+.mini-link:hover {
+  color: var(--eco-ivory) !important;
+  border-color: var(--eco-sand) !important;
+}
+.artist-platform-link:hover, .artist-platform-link:focus-visible {
+  background: rgba(217,201,181,.09) !important;
+}
+.photo-arrow {
+  background: rgba(11,11,11,.76) !important;
+  color: var(--eco-ivory) !important;
+  border: 1px solid rgba(245,242,235,.42) !important;
+}
+.photo-arrow:hover, .artist-photo:hover .photo-arrow,
+.artist-photo:focus-visible .photo-arrow {
+  color: var(--eco-sand) !important;
+  border-color: var(--eco-sand) !important;
+  background: rgba(217,201,181,.10) !important;
+}
+.pulse { background: var(--eco-sand) !important; box-shadow: 0 0 0 5px rgba(217,201,181,.12) !important; }
+.note { border-left-color: var(--eco-sand) !important; }
+.intro, .team, .music { background: var(--eco-ivory) !important; }
+.intro h2 span, .team h2 span, .music h2 span { color: var(--eco-earth) !important; }
+.music-note { border-top-color: rgba(58,36,24,.22) !important; }
+.music-note-mark { color: var(--eco-earth) !important; }
+.value-strip { border-top-color: rgba(58,36,24,.22) !important; }
+.value-strip span { color: var(--eco-earth) !important; }
+.story-card { border-top-color: rgba(217,201,181,.28) !important; }
+.story-pending { border-color: rgba(217,201,181,.48) !important; }
+.av-caption { background: var(--eco-sand) !important; color: #0B0B0B !important; }
+.artist-page .eyebrow { color: var(--eco-sand) !important; }
+.artist-page .social {
+  border-color: rgba(217,201,181,.30) !important;
+  border-radius: 3px !important;
+  background: rgba(245,242,235,.025) !important;
+}
+.artist-page .social:hover,
+.artist-page .social:focus-visible {
+  border-color: var(--eco-sand) !important;
+  background: rgba(217,201,181,.08) !important;
+}
