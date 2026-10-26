@@ -895,10 +895,24 @@ body { background: var(--bg); color: var(--text); }
 .artist-directory .directory-card p { color: var(--muted); }
 
 
-/* PDF alignment: a single ECO wordmark, three-digit archive IDs, and no fake dates. */
-.brand {
-  gap: 0 !important;
+
+/* ECO visual reference PDF — official palette, integrated wordmark and digital archive. */
+:root {
+  --bg: #0B0B0B;
+  --panel: #171717;
+  --panel-2: #24201D;
+  --text: #F5F2EB;
+  --muted: #8D8D8D;
+  --line: rgba(217,201,181,.22);
+  --orange: #FF6A00;
+  --orange-2: #FF8333;
+  --eco-earth: #3A2418;
+  --eco-sand: #D9C9B5;
+  --eco-grey: #8D8D8D;
+  --eco-red: #A21D1D;
 }
+/* One ECO wordmark: the sound waves belong to the word, not a second badge. */
+.brand { gap: 0 !important; }
 .brand-mark {
   position: absolute !important;
   width: 0 !important;
@@ -912,35 +926,66 @@ body { background: var(--bg); color: var(--text); }
   pointer-events: none !important;
 }
 .brand-words {
+  width: max-content;
+  position: relative;
+  padding-right: 1.8em;
   font-size: 24px;
   letter-spacing: -.075em;
-  padding-right: 2em;
+  color: var(--text);
 }
 .brand-words::after {
-  left: calc(100% - .7em);
+  content: ")))";
+  position: absolute;
+  left: calc(100% - .62em);
   right: auto;
+  top: -.02em;
   color: var(--orange);
   font-size: .8em;
   letter-spacing: -.22em;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
 }
 .brand-words span {
-  letter-spacing: .3em;
+  display: block;
+  color: var(--eco-sand);
+  font-size: 8px;
+  letter-spacing: .31em;
+  margin-top: 5px;
 }
 @media (max-width: 760px) {
   .brand { gap: 0 !important; }
-  .brand-words {
-    font-size: 19px;
-    padding-right: 1.8em;
-  }
+  .brand-words { font-size: 20px; padding-right: 1.8em; }
   .brand-words::after { left: calc(100% - .62em); }
 }
-
-/* Editorial index: match the PDF's ARCHIVO_001 / project name / date structure.
-   Dates are shown only where the source content actually provides them. */
+/* The requested return-to-community bar is removed; this is a defensive fallback. */
+.community-return-bar { display: none !important; }
+/* ARCHIVO_001 treatment follows the PDF: clean plaque, real image, discreet ECO stamp. */
+.artist-grid { counter-reset: eco-archive; }
+.artist-card { counter-increment: eco-archive; }
+.artist-photo {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 4.7;
+  background: var(--panel);
+  outline: 1px solid rgba(217,201,181,.22);
+  outline-offset: -1px;
+}
 .artist-photo::before {
-  content: "ARCHIVO_0" counter(eco-archive, decimal-leading-zero) !important;
+  content: "ARCHIVO_0" counter(eco-archive, decimal-leading-zero);
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 12px;
+  padding: 6px 8px;
+  background: rgba(11,11,11,.86);
+  border: 1px solid rgba(217,201,181,.48);
   border-radius: 0;
-  letter-spacing: .15em;
+  color: var(--text);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  line-height: 1.2;
 }
 .artist-photo::after {
   content: "ECO )))";
@@ -949,8 +994,8 @@ body { background: var(--bg); color: var(--text); }
   bottom: 12px;
   z-index: 2;
   padding: 5px 7px;
-  background: rgba(11,11,11,.72);
-  border: 1px solid rgba(245,242,235,.24);
+  background: rgba(11,11,11,.82);
+  border: 1px solid rgba(217,201,181,.3);
   color: var(--text);
   font-size: 8px;
   font-weight: 700;
@@ -958,22 +1003,29 @@ body { background: var(--bg); color: var(--text); }
   line-height: 1.2;
   pointer-events: none;
 }
+.artist-photo img,
+.release-card img,
+.ov-work img { filter: saturate(.72) contrast(1.05); }
 .photo-arrow {
   z-index: 3;
   border-radius: 0 !important;
+  background: var(--orange);
+  color: var(--bg);
 }
+.artist-meta {
+  border-top: 1px solid rgba(217,201,181,.28);
+  padding-top: 13px;
+}
+.artist-meta h3 { letter-spacing: -.045em; }
+.artist-platform-link { border-radius: 0; }
 @media (max-width: 640px) {
-  .artist-photo::after {
-    left: 8px;
-    bottom: 8px;
-    font-size: 7px;
-    padding: 4px 5px;
-  }
+  .artist-photo { aspect-ratio: 3 / 4.1; }
+  .artist-photo::before { top: 8px; left: 8px; padding: 4px 6px; font-size: 7px; }
+  .artist-photo::after { left: 8px; bottom: 8px; padding: 4px 5px; font-size: 7px; }
 }
-
-/* Catalog cards behave like separate archive entries, but keep their real links. */
-.release-grid { counter-reset: eco-release; }
-.release-card { counter-increment: eco-release; }
+/* Catalogue tiles are archive entries; only the known album date is printed. */
+.release-grid { counter-reset: eco-release; gap: 12px; }
+.release-card { counter-increment: eco-release; border: 1px solid rgba(217,201,181,.22); }
 .release-card::before {
   content: "ARCHIVO_0" counter(eco-release, decimal-leading-zero);
   position: absolute;
@@ -981,41 +1033,38 @@ body { background: var(--bg); color: var(--text); }
   left: 14px;
   z-index: 2;
   padding: 6px 8px;
-  background: rgba(11,11,11,.75);
-  border: 1px solid rgba(245,242,235,.26);
-  color: #f5f2eb;
+  background: rgba(11,11,11,.86);
+  border: 1px solid rgba(217,201,181,.45);
+  color: var(--text);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: .14em;
   line-height: 1.2;
   pointer-events: none;
 }
-.release-card::after {
-  pointer-events: none;
-}
+.release-card::after { pointer-events: none; }
+.release-type { color: var(--eco-sand); }
+.release-bottom { color: var(--text); }
+.release-main { outline: 1px solid rgba(255,106,0,.48); outline-offset: -1px; }
 @media (max-width: 640px) {
-  .release-card::before {
-    top: 9px;
-    left: 9px;
-    padding: 4px 6px;
-    font-size: 7px;
-  }
+  .release-card::before { top: 9px; left: 9px; padding: 4px 6px; font-size: 7px; }
 }
-
-/* The PDF says reels should lead straight into the video: avoid a heavy frame. */
-.video-showcase-player {
-  box-shadow: none !important;
-  border-color: rgba(217,201,181,.18) !important;
-}
-
-
-/* Use the PDF's official neutral grey on small labels and secondary metadata. */
+/* Earth, sand and red are supporting tones; orange remains the main accent. */
+.story-card { border-top: 1px solid rgba(217,201,181,.28); }
+.story-pending .story-symbol { color: var(--eco-red); }
 .section-kicker span:last-child,
 .hero-foot,
 .artist-meta p,
 .team-role,
-.release-bottom,
 .artist-page .crumbs,
-.artist-page .bio {
-  color: var(--eco-grey, #8D8D8D);
+.artist-page .bio { color: var(--eco-grey); }
+.artist-page .portrait,
+.artist-page .player { border-radius: 0 !important; }
+.artist-page .social,
+.artist-page .player-actions a,
+.artist-page .player-actions button,
+.artist-page .back-to-communities { border-radius: 0 !important; }
+.video-showcase-player {
+  box-shadow: none !important;
+  border-color: rgba(217,201,181,.22) !important;
 }
