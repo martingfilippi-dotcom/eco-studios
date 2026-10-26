@@ -1132,3 +1132,39 @@ body { background: var(--bg); color: var(--text); }
   background:rgba(255,106,0,.14) !important; color:var(--orange) !important;
 }
 @media(max-width:640px){.photo-arrow{width:36px !important;height:36px !important;right:8px !important;bottom:8px !important}.photo-arrow svg{width:19px;height:19px}}
+
+
+/* ECO warm-sand direction: ivory and sand lead; orange is a rare accent. */
+:root {
+  --orange: #D9C9B5;
+  --orange-2: #F5F2EB;
+  --muted: #B9ADA0;
+  --line: rgba(217,201,181,.24);
+  --panel: #191816;
+  --panel-2: #24211D;
+  --eco-sand: #D9C9B5;
+  --eco-ivory: #F5F2EB;
+}
+h1 span, h2 span, .hero-stamp span:first-child, .hero-foot a,
+.section-heading .text-link, .value-strip strong, .artist-meta p,
+.profile-number, .mini-link, .story-label, .story-symbol {
+  color: var(--eco-sand) !important;
+}
+.button-orange, .contact, .av-caption, .brand-mark {
+  background: var(--eco-sand) !important;
+  border-color: var(--eco-sand) !important;
+  color: #0B0B0B !important;
+}
+.button-orange:hover, .button-outline:hover, .text-link:hover,
+.main-nav a:hover, .mini-link:hover {
+  color: var(--eco-ivory) !important;
+  border-color: var(--eco-ivory) !important;
+}
+.pulse { background: var(--eco-sand) !important; box-shadow: 0 0 0 5px rgba(217,201,181,.12) !important; }
+.note { border-left-color: var(--eco-sand) !important; }
+.photo-arrow {
+  background: rgba(11,11,11,.76) !important;
+  color: var(--eco-ivory) !important;
+  border: 1px solid rgba(245,242,235,.42) !important;
+}
+.photo-arrow:hover { color: var(--eco-sand) !important; border-color: var(--eco-sand) !important; }
