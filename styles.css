@@ -470,7 +470,7 @@ body { background: var(--bg); color: var(--text); }
 }
 .hero-art > img { filter: saturate(.68) contrast(1.08); }
 .hero-art::before {
-  content: "ECO / ARCHIVO_001";
+  content: none; display: none;
   position: absolute;
   z-index: 2;
   top: 16px;
@@ -525,7 +525,7 @@ body { background: var(--bg); color: var(--text); }
   outline-offset: -1px;
 }
 .artist-photo::before {
-  content: "ARCHIVO_" counter(eco-archive, decimal-leading-zero);
+  content: none; display: none;
   position: absolute;
   z-index: 2;
   top: 12px;
@@ -974,7 +974,7 @@ body { background: var(--bg); color: var(--text); }
   outline-offset: -1px;
 }
 .artist-photo::before {
-  content: "ARCHIVO_0" counter(eco-archive, decimal-leading-zero);
+  content: none; display: none;
   position: absolute;
   z-index: 2;
   top: 12px;
@@ -990,7 +990,7 @@ body { background: var(--bg); color: var(--text); }
   line-height: 1.2;
 }
 .artist-photo::after {
-  content: "ECO )))";
+  content: none; display: none;
   position: absolute;
   left: 12px;
   bottom: 12px;
