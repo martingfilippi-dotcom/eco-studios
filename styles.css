@@ -1007,3 +1007,15 @@ body { background: var(--bg); color: var(--text); }
   box-shadow: none !important;
   border-color: rgba(217,201,181,.18) !important;
 }
+
+
+/* Use the PDF's official neutral grey on small labels and secondary metadata. */
+.section-kicker span:last-child,
+.hero-foot,
+.artist-meta p,
+.team-role,
+.release-bottom,
+.artist-page .crumbs,
+.artist-page .bio {
+  color: var(--eco-grey, #8D8D8D);
+}
