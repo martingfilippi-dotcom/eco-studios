@@ -938,7 +938,7 @@ body { background: var(--bg); color: var(--text); }
 .brand-words::after {
   content: ")))";
   position: absolute;
-  left: calc(100% - .62em);
+  left: calc(100% - 1.8em);
   right: auto;
   top: -.02em;
   color: var(--orange);
@@ -958,7 +958,7 @@ body { background: var(--bg); color: var(--text); }
 @media (max-width: 760px) {
   .brand { gap: 0 !important; }
   .brand-words { font-size: 20px; padding-right: 1.8em; }
-  .brand-words::after { left: calc(100% - .62em); }
+  .brand-words::after { left: calc(100% - 1.8em); }
 }
 /* The requested return-to-community bar is removed; this is a defensive fallback. */
 .community-return-bar { display: none !important; }
