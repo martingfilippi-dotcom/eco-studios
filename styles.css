@@ -912,6 +912,8 @@ body { background: var(--bg); color: var(--text); }
   --eco-red: #A21D1D;
 }
 /* One ECO wordmark: the sound waves belong to the word, not a second badge. */
+.brand-mark::before,
+.brand-mark::after { content: none !important; display: none !important; }
 .brand { gap: 0 !important; }
 .brand-mark {
   position: absolute !important;
