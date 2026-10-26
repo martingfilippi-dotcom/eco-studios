@@ -1,7 +1,7 @@
 (function(){
   'use strict';
   var configScript = document.currentScript && document.currentScript.src;
-  var configUrl = new URL('data/eco-site-config.json', configScript || window.location.href).href;
+  var configUrl = new URL('data/eco-site-config.json', configScript || window.location.href);\n  configUrl.searchParams.set('v', '20261026-pdf-archive');\n  configUrl = configUrl.href;
   var SITE_HOST = 'martingfilippi-dotcom.github.io';
   var ALLOWED_LINK_HOSTS = new Set([
     SITE_HOST, 'music.apple.com', 'www.youtube.com', 'youtube.com', 'youtu.be',
@@ -91,7 +91,7 @@
     if(!cfg || cfg.schemaVersion!==1) return;
     var root=document.documentElement.style;
     var colors=cfg.colors||{}, fonts=cfg.fonts||{}, brand=cfg.brand||{}, hero=cfg.hero||{};
-    var nav=cfg.navigation||{}, ret=cfg.communityReturn||{}, visibility=cfg.visibility||{};
+    var nav=cfg.navigation||{}, visibility=cfg.visibility||{};
 
     [
       ['--bg',colors.bg],['--panel',colors.panel],['--panel-2',colors.panel2],
@@ -178,17 +178,6 @@
       node.style.display=visible?'':'none';
     });
     setText(document.querySelector('.menu-toggle b'),nav.mobileLabel||'Menú');
-
-    if(ret){
-      var bar=document.querySelector('.community-return-bar'), returnLink=bar&&bar.querySelector('a');
-      if(bar&&returnLink){
-        var returnVisible=ret.visible!==false;
-        bar.hidden=!returnVisible;
-        bar.style.display=returnVisible?'':'none';
-        setText(returnLink,ret.label||returnLink.textContent.trim());
-        returnLink.href=safeHref(ret.url,'https://martingfilippi-dotcom.github.io/comunidad-artistas-paraguayos./');
-      }
-    }
 
     var history=cfg.history||{};
     setKicker('#historia .section-kicker',history);
