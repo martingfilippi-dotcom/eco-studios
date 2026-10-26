@@ -3,14 +3,14 @@
   "source": "notion",
   "lastSync": "2026-10-25T14:16:00.000Z",
   "colors": {
-    "bg": "#10100f",
-    "panel": "#191917",
-    "panel2": "#20201d",
-    "text": "#f5f3ed",
-    "muted": "#a8a69e",
-    "line": "rgba(245,243,237,.15)",
-    "orange": "#ff6a2b",
-    "orange2": "#ff8b50"
+    "bg": "#0b0b0b",
+    "panel": "#171717",
+    "panel2": "#24201d",
+    "text": "#f5f2eb",
+    "muted": "#b8b0a4",
+    "line": "rgba(217,201,181,.22)",
+    "orange": "#ff6a00",
+    "orange2": "#ff8333"
   },
   "fonts": {
     "body": "DM Sans",
