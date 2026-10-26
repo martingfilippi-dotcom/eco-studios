@@ -163,7 +163,7 @@ try {
   assert.equal(await page.locator(".main-nav a[href='#artistas']").evaluate(el => getComputedStyle(el).display), "none", "A hidden navigation item must actually be hidden");
   assert.equal(await page.locator(".main-nav a[href='#historia']").innerText(), "Proyecto QA");
   assert.equal(await page.locator(".menu-toggle b").innerText(), "Navegación QA");
-  assert.equal(await page.locator(".community-return-bar").evaluate(el => getComputedStyle(el).display), "none", "Disabled community return bar must actually be hidden");
+  assert.equal(await page.locator(".community-return-bar").count(), 0, "The community return bar must be removed from the page");
   assert.equal(await page.locator("#contenido-eco").evaluate(el => getComputedStyle(el).display), "none", "Section visibility must be editable from the visual editor");
   console.log("CHECK_BEFORE_HISTORY_HEADING", { pageClosed: page.isClosed(), pageErrors, unexpectedDialogs });
   assert.equal((await page.locator("#historia h2").innerText()).replace(/\s+/g, " ").trim(), "Nuestra historia Un eco real.");
