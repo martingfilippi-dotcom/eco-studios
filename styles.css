@@ -1402,3 +1402,57 @@ h1 span, h2 span,
 .intro .value-strip strong {
   color: #3A2418 !important;
 }
+
+
+/* Contact app marks: clean monochrome glyphs that match ECO's earth/sand palette. */
+.contact .section-kicker {
+  color: #6D5948 !important;
+  opacity: 1 !important;
+  border-bottom-color: rgba(58,36,24,.22) !important;
+}
+.contact .section-kicker span,
+.contact .section-kicker span:first-child,
+.contact .section-kicker span:last-child {
+  color: #6D5948 !important;
+  opacity: 1 !important;
+}
+.contact .official-contact .contact-label {
+  color: #6D5948 !important;
+  opacity: 1 !important;
+}
+.contact .official-contact strong,
+.contact .official-contact strong > span {
+  color: #3A2418 !important;
+}
+.contact .official-contact:hover strong,
+.contact .official-contact:hover strong > span {
+  color: #3A2418 !important;
+}
+.contact .official-contact-list {
+  border-top-color: rgba(58,36,24,.22) !important;
+}
+.contact .official-contact {
+  border-bottom-color: rgba(58,36,24,.22) !important;
+}
+.contact .contact-brand-icon {
+  width: 25px !important;
+  height: 25px !important;
+  flex: 0 0 25px !important;
+  display: block;
+  color: #3A2418 !important;
+  opacity: .88;
+  filter: none !important;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.contact .official-contact:hover .contact-brand-icon {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+@media(max-width:640px) {
+  .contact .contact-brand-icon {
+    width: 23px !important;
+    height: 23px !important;
+    flex-basis: 23px !important;
+  }
+  .contact .official-contact strong { gap: 12px !important; }
+}
