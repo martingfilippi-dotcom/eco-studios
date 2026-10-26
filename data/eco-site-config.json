@@ -4,13 +4,13 @@
   "lastSync": "2026-10-26T06:41:00.000Z",
   "colors": {
     "bg": "#0B0B0B",
-    "panel": "#171717",
-    "panel2": "#24201D",
+    "panel": "#191816",
+    "panel2": "#24211D",
     "text": "#F5F2EB",
-    "muted": "#8D8D8D",
-    "line": "rgba(217,201,181,.22)",
-    "orange": "#FF6A00",
-    "orange2": "#FF8333"
+    "muted": "#B9ADA0",
+    "line": "rgba(217,201,181,.24)",
+    "orange": "#D9C9B5",
+    "orange2": "#F5F2EB"
   },
   "fonts": {
     "body": "DM Sans",
