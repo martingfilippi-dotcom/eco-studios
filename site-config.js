@@ -2,7 +2,7 @@
   'use strict';
   var configScript = document.currentScript && document.currentScript.src;
   var configUrl = new URL('data/eco-site-config.json', configScript || window.location.href);
-  configUrl.searchParams.set('v', '20261026-cream-sand-contrast-v8');
+  configUrl.searchParams.set('v', '20261026-cream-sand-contrast-v9');
   configUrl = configUrl.href;
   var SITE_HOST = 'martingfilippi-dotcom.github.io';
   var ALLOWED_LINK_HOSTS = new Set([
