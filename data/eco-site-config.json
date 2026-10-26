@@ -147,10 +147,5 @@
       "href": "#contacto"
     },
     "mobileLabel": "Menú"
-  },
-  "communityReturn": {
-    "visible": false,
-    "label": "VOLVER A COMUNIDAD DE ARTISTAS PARAGUAYOS",
-    "url": "https://martingfilippi-dotcom.github.io/comunidad-artistas-paraguayos./"
   }
 }
