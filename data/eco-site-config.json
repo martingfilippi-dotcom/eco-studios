@@ -7,14 +7,10 @@
     "panel": "#171717",
     "panel2": "#24201D",
     "text": "#F5F2EB",
-    "muted": "#8D8D8D",
+    "muted": "#B8B0A4",
     "line": "rgba(217,201,181,.22)",
     "orange": "#FF6A00",
-    "orange2": "#FF8333",
-    "earth": "#3A2418",
-    "sand": "#D9C9B5",
-    "grey": "#8D8D8D",
-    "red": "#A21D1D"
+    "orange2": "#FF8333"
   },
   "fonts": {
     "body": "DM Sans",
@@ -149,7 +145,7 @@
     "mobileLabel": "Menú"
   },
   "communityReturn": {
-    "visible": false,
+    "visible": true,
     "label": "VOLVER A COMUNIDAD DE ARTISTAS PARAGUAYOS",
     "url": "https://martingfilippi-dotcom.github.io/comunidad-artistas-paraguayos./"
   }
