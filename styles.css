@@ -1070,3 +1070,42 @@ body { background: var(--bg); color: var(--text); }
   box-shadow: none !important;
   border-color: rgba(217,201,181,.22) !important;
 }
+
+
+/* Refine the wordmark placement and frame each archive item like the PDF. */
+.brand-words::after {
+  left: 2.05em;
+}
+@media (max-width: 760px) {
+  .brand-words::after { left: 2.05em; }
+}
+.hero-art::before {
+  content: "ECO / ARCHIVO DIGITAL";
+  border-radius: 0;
+  letter-spacing: .14em;
+}
+.artist-card {
+  background: var(--panel, #171717);
+  border: 1px solid rgba(217,201,181,.2);
+  min-width: 0;
+}
+.artist-photo {
+  outline: 0;
+  border-bottom: 1px solid rgba(217,201,181,.2);
+}
+.artist-meta {
+  min-height: 58px;
+  padding: 12px;
+  border-top: 0;
+}
+.artist-meta h3 {
+  margin: 0;
+  font-size: clamp(15px,1.4vw,19px);
+}
+@media (max-width: 640px) {
+  .artist-meta {
+    min-height: 0;
+    padding: 10px;
+  }
+  .artist-meta h3 { font-size: 15px; }
+}
