@@ -1109,3 +1109,6 @@ body { background: var(--bg); color: var(--text); }
   }
   .artist-meta h3 { font-size: 15px; }
 }
+
+/* Final lock: prevent legacy stylesheet layers from shifting the ECO sound waves. */
+.brand-words::after { left: calc(100% - 1.8em) !important; right: auto !important; }
