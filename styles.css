@@ -714,3 +714,118 @@ body { background: var(--bg); color: var(--text); }
 .contact .official-contact:hover strong {
   color: #ff8333;
 }
+
+
+/* Final mobile polish from Ascarza's visual reference — CSS only. */
+.brand-mark,
+.brand-mark:before,
+.brand-mark:after {
+  box-shadow: none !important;
+}
+.brand-mark {
+  position: relative;
+  overflow: hidden;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--orange);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+}
+.brand-mark:before,
+.brand-mark:after {
+  content: none !important;
+  display: none !important;
+}
+.brand-words {
+  width: max-content;
+  padding-right: 0;
+  position: relative;
+  letter-spacing: -.075em;
+}
+.brand-words::after {
+  left: calc(100% - .48em);
+  right: auto;
+  top: -.02em;
+  font-size: .82em;
+  letter-spacing: -.22em;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.brand-words span {
+  letter-spacing: .31em;
+}
+@media (max-width: 760px) {
+  .brand { gap: 9px; }
+  .brand-mark {
+    width: 29px;
+    height: 29px;
+    flex-basis: 29px;
+    font-size: 16px;
+  }
+  .brand-words { font-size: 18px; }
+  .brand-words::after { left: calc(100% - .48em); }
+}
+
+/* Keep navigation arrows crisp on iOS: draw them with CSS, not emoji glyphs. */
+.hero-actions .button-orange > span,
+.hero-actions .text-link > span {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  overflow: visible;
+  font-size: 0;
+  line-height: 1;
+  color: currentColor;
+}
+.hero-actions .button-orange > span::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 7px;
+  width: 2px;
+  height: 10px;
+  background: currentColor;
+}
+.hero-actions .button-orange > span::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  bottom: 1px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+}
+.hero-actions .text-link > span::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  bottom: 3px;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  transform: rotate(-45deg);
+  transform-origin: center;
+}
+.hero-actions .text-link > span::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 6px;
+  height: 6px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
