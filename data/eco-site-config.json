@@ -8,9 +8,13 @@
     "panel2": "#24201D",
     "text": "#F5F2EB",
     "muted": "#8D8D8D",
-    "line": "rgba(217,201,181,.22)",
-    "orange": "#FF6A00",
-    "orange2": "#FF8333"
+    "line": "rgba(217,201,181,.24)",
+    "orange": "#D9C9B5",
+    "orange2": "#F5F2EB",
+    "earth": "#3A2418",
+    "sand": "#D9C9B5",
+    "grey": "#8D8D8D",
+    "red": "#A21D1D"
   },
   "fonts": {
     "body": "DM Sans",
