@@ -1,7 +1,9 @@
 (function(){
   'use strict';
   var configScript = document.currentScript && document.currentScript.src;
-  var configUrl = new URL('data/eco-site-config.json', configScript || window.location.href);\n  configUrl.searchParams.set('v', '20261026-pdf-archive');\n  configUrl = configUrl.href;
+  var configUrl = new URL('data/eco-site-config.json', configScript || window.location.href);
+  configUrl.searchParams.set('v', '20261026-pdf-archive');
+  configUrl = configUrl.href;
   var SITE_HOST = 'martingfilippi-dotcom.github.io';
   var ALLOWED_LINK_HOSTS = new Set([
     SITE_HOST, 'music.apple.com', 'www.youtube.com', 'youtube.com', 'youtu.be',
@@ -96,7 +98,8 @@
     [
       ['--bg',colors.bg],['--panel',colors.panel],['--panel-2',colors.panel2],
       ['--text',colors.text],['--muted',colors.muted],['--line',colors.line],
-      ['--orange',colors.orange],['--orange-2',colors.orange2]
+      ['--orange',colors.orange],['--orange-2',colors.orange2],
+      ['--eco-earth',colors.earth],['--eco-sand',colors.sand],['--eco-grey',colors.grey],['--eco-red',colors.red]
     ].forEach(function(pair){
       var safe=safeColor(pair[1]);
       if(safe) root.setProperty(pair[0],safe);
