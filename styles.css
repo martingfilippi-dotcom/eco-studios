@@ -1265,3 +1265,45 @@ h1 span, h2 span,
   border-color: var(--eco-sand) !important;
   background: rgba(217,201,181,.08) !important;
 }
+
+
+/* Final contrast pass: sand on dark panels, earth-brown on ivory panels. */
+h1 span, h2 span,
+.gateway-hero h1 span, .indie-hero h1 span {
+  color: var(--eco-sand) !important;
+}
+.intro h2 span, .team h2 span, .music h2 span, .contact h2 span,
+.intro h1 span, .team h1 span, .music h1 span, .contact h1 span {
+  color: var(--eco-earth) !important;
+}
+/* Remove the old orange-gradient treatment from the community cards too. */
+.community-card:hover, .indie-artist:hover {
+  border-color: var(--eco-sand) !important;
+}
+.eco-community {
+  background: linear-gradient(140deg, #F5F2EB 0%, #D9C9B5 100%) !important;
+  color: #0B0B0B !important;
+  border-color: rgba(58,36,24,.22) !important;
+}
+.eco-community:hover {
+  background: linear-gradient(140deg, #F5F2EB 0%, #E8DCCB 100%) !important;
+  border-color: #D9C9B5 !important;
+}
+.eco-community .community-arrow,
+.eco-community .community-enter {
+  color: var(--eco-earth) !important;
+}
+.eco-community .eco-logo-mark {
+  background: var(--eco-sand) !important;
+  color: #0B0B0B !important;
+  box-shadow: none !important;
+}
+.community-logo .eco-logo-mark { background: var(--eco-sand) !important; color: #0B0B0B !important; }
+.gateway-origin, .gateway-eyebrow, .indie-symbol, .indie-artist-no,
+.community-arrow, .community-enter {
+  color: var(--eco-sand) !important;
+}
+.back-communities:hover, .community-card:hover, .indie-artist:hover {
+  border-color: var(--eco-sand) !important;
+  color: var(--eco-ivory) !important;
+}
