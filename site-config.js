@@ -281,7 +281,7 @@
     return digits.length>=8&&digits.length<=15?digits:fallback;
   }
 
-  fetch(configUrl+'?v='+Date.now(),{cache:'no-store'})
+  fetch(configUrl,{cache:'no-store'})
     .then(function(response){if(!response.ok)throw new Error('Site config HTTP '+response.status);return response.json();})
     .then(apply)
     .catch(function(error){console.warn('ECO visual config unavailable; using built-in defaults.',error);});
