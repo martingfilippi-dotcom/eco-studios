@@ -962,7 +962,7 @@ body { background: var(--bg); color: var(--text); }
 }
 /* The requested return-to-community bar is removed; this is a defensive fallback. */
 .community-return-bar { display: none !important; }
-/* ARCHIVO_001 treatment follows the PDF: clean plaque, real image, discreet ECO stamp. */
+/* Legacy archive plaques disabled per the revised visual direction. */
 .artist-grid { counter-reset: eco-archive; }
 .artist-card { counter-increment: eco-archive; }
 .artist-photo {
@@ -1029,7 +1029,7 @@ body { background: var(--bg); color: var(--text); }
 .release-grid { counter-reset: eco-release; gap: 12px; }
 .release-card { counter-increment: eco-release; border: 1px solid rgba(217,201,181,.22); }
 .release-card::before {
-  content: "ARCHIVO_0" counter(eco-release, decimal-leading-zero);
+  content: none; display: none;
   position: absolute;
   top: 14px;
   left: 14px;
@@ -1080,7 +1080,7 @@ body { background: var(--bg); color: var(--text); }
   .brand-words::after { left: 2.05em; }
 }
 .hero-art::before {
-  content: "ECO / ARCHIVO DIGITAL";
+  content: none; display: none;
   border-radius: 0;
   letter-spacing: .14em;
 }
