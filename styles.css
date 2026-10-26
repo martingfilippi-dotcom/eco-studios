@@ -1307,3 +1307,61 @@ h1 span, h2 span,
   border-color: var(--eco-sand) !important;
   color: var(--eco-ivory) !important;
 }
+
+
+/* ECO cream-section contrast pass — keep the warm palette, make every label readable. */
+.music .section-kicker {
+  opacity: 1 !important;
+  color: #3A2418 !important;
+  border-bottom-color: rgba(58,36,24,.22) !important;
+}
+.music .section-kicker span,
+.music .section-kicker span:first-child,
+.music .section-kicker span:last-child {
+  color: #3A2418 !important;
+  opacity: 1 !important;
+}
+.music .section-kicker span:last-child {
+  color: #6D5948 !important;
+}
+.music .section-heading > p {
+  color: #51473D !important;
+  opacity: 1 !important;
+}
+.music .section-heading > p .text-link,
+.music .music-note .text-link {
+  color: #3A2418 !important;
+  opacity: 1 !important;
+  text-decoration-color: rgba(58,36,24,.55);
+}
+.music .music-note p {
+  color: #51473D !important;
+  opacity: 1 !important;
+}
+.music .music-note-mark {
+  color: #3A2418 !important;
+}
+.music .music-note {
+  border-top-color: rgba(58,36,24,.24) !important;
+}
+.music .release-type {
+  color: #F5F2EB !important;
+  opacity: 1 !important;
+  text-shadow: 0 1px 5px rgba(0,0,0,.7);
+}
+.music .release-bottom {
+  color: #F5F2EB !important;
+  opacity: 1 !important;
+  border-top-color: rgba(245,242,235,.5) !important;
+}
+@media (max-width: 640px) {
+  .music .section-kicker {
+    gap: 12px;
+    font-size: 8px;
+    letter-spacing: .11em;
+  }
+  .music .section-heading > p {
+    font-size: 13px;
+    line-height: 1.8;
+  }
+}
