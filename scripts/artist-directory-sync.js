@@ -67,6 +67,18 @@
         item.status === "Publicado" && item.permissionVerified === true;
     }).sort(function (a, b) { return (Number(a.order) || 9999) - (Number(b.order) || 9999); });
   }
+  function platformIcon(label) {
+    var common = {
+      "YouTube": '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.1 3.1 0 0 0-2.2-2.2C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.3.5A3.1 3.1 0 0 0 .5 6.2 32.7 32.7 0 0 0 0 12a32.7 32.7 0 0 0 .5 5.8 3.1 3.1 0 0 0 2.2 2.2c1.9.5 9.3.5 9.3.5s7.4 0 9.3-.5a3.1 3.1 0 0 0 2.2-2.2A32.7 32.7 0 0 0 24 12a32.7 32.7 0 0 0-.5-5.8Z"/><path fill="#0b0b0b" d="m9.6 15.5 6.3-3.5-6.3-3.5v7Z"/></svg>',
+      "Spotify": '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M5.3 8.8c4.5-1.2 9.7-.7 13.5 1.7M6.2 12.2c3.8-1 8-.5 11.3 1.4m-10.2 2c3-.7 6-.3 8.5 1.1" fill="none" stroke="#0b0b0b" stroke-width="1.65" stroke-linecap="round"/></svg>',
+      "Apple Music": '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.1 20.2c-.9.9-1.9.8-3 .3-1.1-.5-2.1-.5-3.3 0-1.4.6-2.2.4-3.1-.4C2.7 15.7 3.3 8.6 8.7 8.3c1.3.1 2.2.8 3 .8 1.1-.2 2.2-.9 3.4-.8 1.5.1 2.6.7 3.3 1.7-3 1.8-2.3 5.7.5 6.8-.5 1.4-1.2 2.8-1.8 3.4ZM12 8.2c-.1-2.2 1.6-4 3.6-4.1.3 2.5-2.2 4.4-3.6 4.1Z"/></svg>',
+      "Instagram": '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.7" cy="6.7" r="1.15" fill="currentColor"/></svg>',
+      "TikTok": '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M19.6 7.1a6.5 6.5 0 0 1-4.2-1.5v8.1a6.2 6.2 0 1 1-5.4-6.1v3.3a2.9 2.9 0 1 0 2.1 2.8V2.5h3.3a6.2 6.2 0 0 0 4.2 4.6v0Z"/></svg>',
+      "SoundCloud": '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M2.2 14.3a.9.9 0 0 1 0-1.8h.5a4.9 4.9 0 0 1 9.6-.7 4.7 4.7 0 0 1 7 3.8 3.5 3.5 0 0 1-.4 7H2.8a.9.9 0 0 1-.6-1.6l-.2-6.7Zm1.3 0v5.8m2-6.3v6.3m2-7.1v7.1m2-8v8m2-7.2v7.2"/></svg>'
+    };
+    return common[label] || '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 12h8M12 8v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  }
+
   function socialLinks(item, container) {
     var seen = new Set();
     socialFields.forEach(function (field) {
@@ -74,22 +86,27 @@
       if (!url || seen.has(url)) return;
       seen.add(url);
       var a = document.createElement("a");
-      a.className = "social"; a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
-      if (field[1] === "Instagram") {
-        a.classList.add("social-instagram");
-        a.setAttribute("aria-label", "Instagram oficial de " + String(item.name || "artista"));
-        a.title = "Instagram oficial de " + String(item.name || "artista");
-        a.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg><span>Instagram ↗</span>';
-      } else {
-        a.textContent = field[1] + " ↗";
-      }
+      a.className = "social";
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      var iconClass = "social-" + field[1].toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      a.classList.add(iconClass);
+      a.setAttribute("aria-label", field[1] + " oficial de " + String(item.name || "artista"));
+      a.title = field[1] + " oficial de " + String(item.name || "artista");
+      a.innerHTML = platformIcon(field[1]) + "<span>" + field[1] + "</span>";
       container.appendChild(a);
     });
     var external = safeUrl(item.externalUrl);
     if (external && !seen.has(external)) {
       var a = document.createElement("a");
-      a.className = "social"; a.href = external; a.target = "_blank"; a.rel = "noopener noreferrer";
-      a.textContent = "Enlace principal ↗"; container.appendChild(a);
+      a.className = "social social-website";
+      a.href = external;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.setAttribute("aria-label", "Enlace principal de " + String(item.name || "artista"));
+      a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Enlace principal</span>';
+      container.appendChild(a);
     }
   }
   function addStyles() {
@@ -103,6 +120,12 @@
       ".dynamic-artist-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}",
       ".dynamic-artist-links .social-instagram{display:inline-flex;align-items:center;gap:7px}",
       ".dynamic-artist-links .social-instagram svg{display:block;flex:none}",
+      ".dynamic-artist-links .social{display:inline-flex;align-items:center;gap:10px}",
+      ".dynamic-artist-links .social svg{display:block;width:22px;height:22px;flex:none}",
+      ".dynamic-artist-links .social-youtube svg{color:#ff4545}",
+      ".dynamic-artist-links .social-spotify svg{color:#1ed760}",
+      ".dynamic-artist-links .social-apple-music svg{color:#f5f2eb}",
+      ".dynamic-artist-links .social-instagram svg{color:#d9c9b5}",
       ".dynamic-artist-player{margin-top:36px}",
       ".dynamic-artist-player iframe{width:100%;aspect-ratio:16/9;min-height:220px;border:0;border-radius:10px;background:#080808}",
       ".dynamic-artist-back{display:inline-block;margin-top:30px;color:var(--orange,#ff6a2b);text-decoration:none}",
@@ -208,7 +231,7 @@
       } else appendText(card, "div", "directory-placeholder", slug === "lk" ? "LK · SOUNDCLOUD" : "");
       var copy = document.createElement("div"); copy.className = "copy";
       appendText(copy, "small", "", String(item.type || "ARTISTA").toUpperCase());
-      appendText(copy, "span", "arrow", "↗");
+      var arrow = document.createElement("span"); arrow.className = "arrow"; arrow.setAttribute("aria-hidden", "true"); arrow.innerHTML = '<svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M7 17 17 7M8 7h9v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'; copy.appendChild(arrow);
       appendText(copy, "h2", "", item.name);
       appendText(copy, "p", "", item.description || "");
       card.appendChild(copy); grid.appendChild(card);
