@@ -142,6 +142,12 @@ try {
   assert.equal(await page.locator("header.site-header .brand-mark").innerText(), "Q");
   assert.equal(await page.locator("header.site-header .brand-words span").innerText(), "QA MODE");
   assert.equal(await page.locator("header.site-header .brand-words svg, header.site-header .brand-words img").count(), 0, "Brand text must not become executable HTML");
+  assert.equal(await page.locator(".brand-mark").evaluate(el => getComputedStyle(el, "::before").content), "none", "Legacy decorative curve must not overlap the brand letter");
+  assert.equal(await page.locator(".brand-mark").evaluate(el => getComputedStyle(el, "::after").content), "none", "Legacy waves must not double up inside the brand square");
+  assert.notEqual(await page.locator(".brand-words").evaluate(el => getComputedStyle(el, "::after").content), "none", "The ECO wordmark must retain its sound-wave mark");
+  assert.equal(await page.locator(".hero-actions .button-orange > span").evaluate(el => getComputedStyle(el).fontSize), "0px", "Primary CTA arrow must use the CSS-drawn icon, not an emoji glyph");
+  assert.equal(await page.locator(".hero-actions .button-orange > span").evaluate(el => getComputedStyle(el, "::after").borderTopStyle), "solid", "Primary CTA arrowhead must be visible");
+  assert.equal(await page.locator(".hero-actions .text-link > span").evaluate(el => getComputedStyle(el, "::after").borderTopStyle), "solid", "Secondary CTA arrowhead must be visible");
   assert.equal(await page.locator(".hero-copy h1").evaluate(el => el.childNodes[0].textContent), "Config OK");
   assert.equal(await page.locator(".hero-copy h1 span").innerText(), hostileText, "Untrusted text must be rendered as text");
   assert.equal(await page.locator(".hero-copy h1 img, .hero-copy h1 svg").count(), 0, "Hero text must not inject HTML nodes");
