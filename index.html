@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261026-sand-social-v6">
+<link rel="stylesheet" href="styles.css?v=20261026-cream-sand-icons-v7">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -483,7 +483,7 @@
         .then(function(data){const thumbnail=safeUrl(data&&data.thumbnail_url);if(thumbnail&&photo.isConnected)img.src=thumbnail;else img.remove();})
         .catch(function(){img.remove();});
     }
-    const arrow=document.createElement('span');arrow.className='photo-arrow';arrow.textContent='↗';photo.appendChild(arrow);card.appendChild(photo);
+    const arrow=document.createElement('span');arrow.className='photo-arrow';arrow.setAttribute('aria-hidden','true');arrow.innerHTML='<svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M7 17 17 7M8 7h9v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';photo.appendChild(arrow);card.appendChild(photo);
    const meta=document.createElement('div');meta.className='artist-meta';
    const info=document.createElement('div');const h=document.createElement('h3');const artistPage=document.createElement('a');artistPage.href='artistas/'+getSlug(item)+'/';artistPage.textContent=String(item.name||'');artistPage.setAttribute('aria-label','Abrir página de '+item.name);artistPage.style.color='inherit';artistPage.style.textDecoration='none';h.appendChild(artistPage);info.appendChild(h);
    
@@ -698,6 +698,6 @@
 })();
 </script>
 
-<script src="site-config.js?v=20261026-sand-social-v6" defer></script>
+<script src="site-config.js?v=20261026-cream-sand-icons-v7" defer></script>
 </body>
 </html>
