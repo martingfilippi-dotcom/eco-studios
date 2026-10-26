@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "source": "notion",
-  "lastSync": "2026-10-25T14:16:00.000Z",
+  "lastSync": "2026-10-26T05:56:00.000Z",
   "colors": {
-    "bg": "#0b0b0b",
+    "bg": "#0B0B0B",
     "panel": "#171717",
-    "panel2": "#24201d",
-    "text": "#f5f2eb",
-    "muted": "#b8b0a4",
+    "panel2": "#24201D",
+    "text": "#F5F2EB",
+    "muted": "#B8B0A4",
     "line": "rgba(217,201,181,.22)",
-    "orange": "#ff6a00",
-    "orange2": "#ff8333"
+    "orange": "#FF6A00",
+    "orange2": "#FF8333"
   },
   "fonts": {
     "body": "DM Sans",
