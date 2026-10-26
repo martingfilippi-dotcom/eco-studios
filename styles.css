@@ -687,3 +687,30 @@ body { background: var(--bg); color: var(--text); }
 @media (prefers-reduced-motion: reduce) {
   .artist-photo img, .release-card img, .ov-work img { transition: none !important; }
 }
+
+
+/* Contact links are archived as clean editorial rows, not dark-on-dark dividers. */
+.contact .official-contact-list {
+  border-top: 1px solid rgba(217,201,181,.24) !important;
+}
+.contact .official-contact {
+  border-bottom: 1px solid rgba(217,201,181,.24) !important;
+  padding: 22px 0 !important;
+  gap: 10px !important;
+}
+.contact .official-contact .contact-label {
+  color: #ff8333 !important;
+  letter-spacing: .16em;
+}
+.contact .official-contact strong {
+  color: #f5f2eb;
+  gap: 18px;
+  font-size: clamp(16px,2vw,22px);
+}
+.contact .official-contact strong > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.contact .official-contact:hover strong {
+  color: #ff8333;
+}
