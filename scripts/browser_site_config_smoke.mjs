@@ -142,8 +142,8 @@ try {
   assert.equal(await page.locator("header.site-header .brand-mark").innerText(), "Q");
   assert.equal(await page.locator("header.site-header .brand-words span").innerText(), "QA MODE");
   assert.equal(await page.locator("header.site-header .brand-words svg, header.site-header .brand-words img").count(), 0, "Brand text must not become executable HTML");
-  assert.equal(await page.locator(".brand-mark").evaluate(el => getComputedStyle(el, "::before").content), "none", "Legacy decorative curve must not overlap the brand letter");
-  assert.equal(await page.locator(".brand-mark").evaluate(el => getComputedStyle(el, "::after").content), "none", "Legacy waves must not double up inside the brand square");
+  assert.equal(await page.locator("header.site-header .brand-mark").evaluate(el => getComputedStyle(el, "::before").content), "none", "Legacy decorative curve must not overlap the brand letter");
+  assert.equal(await page.locator("header.site-header .brand-mark").evaluate(el => getComputedStyle(el, "::after").content), "none", "Legacy waves must not double up inside the brand square");
   assert.notEqual(await page.locator(".brand-words").evaluate(el => getComputedStyle(el, "::after").content), "none", "The ECO wordmark must retain its sound-wave mark");
   assert.equal(await page.locator("header.site-header .brand-mark").evaluate(el => getComputedStyle(el).opacity), "0", "The standalone E badge must not duplicate the official ECO wordmark");
   assert.ok((await page.locator(".artist-photo").first().evaluate(el => getComputedStyle(el, "::before").content)).startsWith('"ARCHIVO_0'), "Artist cards must use three-digit archive IDs");
