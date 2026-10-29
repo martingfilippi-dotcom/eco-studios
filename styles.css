@@ -1456,3 +1456,20 @@ h1 span, h2 span,
   }
   .contact .official-contact strong { gap: 12px !important; }
 }
+/* Keep the music catalog inside the viewport on compact screens. */
+@media (max-width: 680px) {
+  #musica { width: 100%; max-width: 100%; min-width: 0; }
+  #musica .release-grid {
+    display: grid;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #musica .release-card {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+}
