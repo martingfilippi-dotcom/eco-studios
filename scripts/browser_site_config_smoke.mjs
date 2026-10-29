@@ -158,7 +158,7 @@ try {
   assert.equal(await page.locator(".hero-actions .text-link").getAttribute("href"), "#musica", "untrusted external hosts must fall back to a safe in-site anchor");
   assert.equal((await page.locator(".hero-actions .button-orange").innerText()).replace(/\s+/g, " ").trim(), "Probar principal ↘");
   assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue("--orange")), "", "invalid CSS values must not override the brand accent");
-  assert.match(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange")), /#ff6a00/i, "invalid CSS must leave the original accent unchanged");
+  assert.match(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange")), /#d9c9b5/i, "invalid CSS must leave the current warm-sand accent unchanged");
   assert.equal(await page.locator(".main-nav a[href='#artistas']").evaluate(el => getComputedStyle(el).display), "none", "A hidden navigation item must actually be hidden");
   assert.equal(await page.locator(".main-nav a[href='#historia']").innerText(), "Proyecto QA");
   assert.equal(await page.locator(".menu-toggle b").innerText(), "Navegación QA");
@@ -178,7 +178,7 @@ try {
   assert.deepEqual(unexpectedDialogs, [], "Hostile configuration must not trigger browser dialogs");
   assert.match(await page.evaluate(() => getComputedStyle(document.body).fontFamily), /Inter/);
   assert.match(await page.locator(".hero-copy h1").evaluate(el => getComputedStyle(el).fontFamily), /Manrope/);
-  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange").trim()), "#ff6a00", "invalid injected CSS must preserve the original accent");
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange").trim()), "#d9c9b5", "invalid injected CSS must preserve the current warm-sand accent");
 
   const desktop = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
   assert.ok(desktop.document <= desktop.viewport, "Desktop layout must not overflow horizontally: " + JSON.stringify(desktop));
