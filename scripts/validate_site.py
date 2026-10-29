@@ -166,7 +166,7 @@ def check_html_files() -> None:
         if expected_config_script is None:
             depth = len(rel.parts) - 1
             expected_config_script = "../" * depth + "site-config.js"
-        config_script_targets = [url for attr, url in parser.links if attr == "src" and url.endswith("site-config.js")]
+        config_script_targets = [urlsplit(url).path for attr, url in parser.links if attr == "src" and urlsplit(url).path.endswith("site-config.js")]
         if expected_config_script not in config_script_targets:
             fail(f"{rel}: debe cargar la configuración visual común desde {expected_config_script!r}.")
 

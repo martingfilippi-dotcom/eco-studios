@@ -167,7 +167,8 @@ try {
   }
   await text(".menu-toggle b", config.navigation.mobileLabel);
   const returnBar = page.locator(".community-return-bar");
-  assert.equal((await returnBar.evaluate(el => getComputedStyle(el).display) !== "none"), config.communityReturn.visible);
+  const returnBarVisible = (await returnBar.count()) > 0 && await returnBar.first().evaluate(el => getComputedStyle(el).display !== "none");
+  assert.equal(returnBarVisible, config.communityReturn.visible);
   if (config.communityReturn.visible) {
     await text(".community-return-bar a", config.communityReturn.label);
     assert.equal(new URL(await returnBar.locator("a").getAttribute("href"), base).href, new URL(config.communityReturn.url, base).href);

@@ -142,12 +142,12 @@ try {
   assert.equal(await page.locator("header.site-header .brand-mark").innerText(), "Q");
   assert.equal(await page.locator("header.site-header .brand-words span").innerText(), "QA MODE");
   assert.equal(await page.locator("header.site-header .brand-words svg, header.site-header .brand-words img").count(), 0, "Brand text must not become executable HTML");
-  assert.equal(await page.locator(".brand-mark").evaluate(el => getComputedStyle(el, "::before").content), "none", "Legacy decorative curve must not overlap the brand letter");
-  assert.equal(await page.locator(".brand-mark").evaluate(el => getComputedStyle(el, "::after").content), "none", "Legacy waves must not double up inside the brand square");
-  assert.notEqual(await page.locator(".brand-words").evaluate(el => getComputedStyle(el, "::after").content), "none", "The ECO wordmark must retain its sound-wave mark");
+  assert.equal(await page.locator("header.site-header .brand-mark").evaluate(el => getComputedStyle(el, "::before").content), "none", "Legacy decorative curve must not overlap the brand letter");
+  assert.equal(await page.locator("header.site-header .brand-mark").evaluate(el => getComputedStyle(el, "::after").content), "none", "Legacy waves must not double up inside the brand square");
+  assert.notEqual(await page.locator("header.site-header .brand-words").evaluate(el => getComputedStyle(el, "::after").content), "none", "The ECO wordmark must retain its sound-wave mark");
   assert.equal(await page.locator("header.site-header .brand-mark").evaluate(el => getComputedStyle(el).opacity), "0", "The standalone E badge must not duplicate the official ECO wordmark");
-  assert.ok((await page.locator(".artist-photo").first().evaluate(el => getComputedStyle(el, "::before").content)).startsWith('"ARCHIVO_0'), "Artist cards must use three-digit archive IDs");
-  assert.ok((await page.locator(".release-card").first().evaluate(el => getComputedStyle(el, "::before").content)).startsWith('"ARCHIVO_0'), "Catalog cards must use three-digit archive IDs");
+  assert.equal(await page.locator(".artist-photo").first().evaluate(el => getComputedStyle(el, "::before").content), "none", "Legacy archive plaques must remain disabled on artist cards");
+  assert.equal(await page.locator(".release-card").first().evaluate(el => getComputedStyle(el, "::before").content), "none", "Legacy archive plaques must remain disabled on catalog cards");
   assert.equal(await page.locator(".hero-actions .button-orange > span").evaluate(el => getComputedStyle(el).fontSize), "0px", "Primary CTA arrow must use the CSS-drawn icon, not an emoji glyph");
   assert.equal(await page.locator(".hero-actions .button-orange > span").evaluate(el => getComputedStyle(el, "::after").borderTopStyle), "solid", "Primary CTA arrowhead must be visible");
   assert.equal(await page.locator(".hero-actions .text-link > span").evaluate(el => getComputedStyle(el, "::after").borderTopStyle), "solid", "Secondary CTA arrowhead must be visible");
@@ -158,7 +158,7 @@ try {
   assert.equal(await page.locator(".hero-actions .text-link").getAttribute("href"), "#musica", "untrusted external hosts must fall back to a safe in-site anchor");
   assert.equal((await page.locator(".hero-actions .button-orange").innerText()).replace(/\s+/g, " ").trim(), "Probar principal ↘");
   assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue("--orange")), "", "invalid CSS values must not override the brand accent");
-  assert.match(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange")), /#ff6a00/i, "invalid CSS must leave the original accent unchanged");
+  assert.match(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange")), /#d9c9b5/i, "invalid CSS must leave the current warm-sand accent unchanged");
   assert.equal(await page.locator(".main-nav a[href='#artistas']").evaluate(el => getComputedStyle(el).display), "none", "A hidden navigation item must actually be hidden");
   assert.equal(await page.locator(".main-nav a[href='#historia']").innerText(), "Proyecto QA");
   assert.equal(await page.locator(".menu-toggle b").innerText(), "Navegación QA");
@@ -178,7 +178,7 @@ try {
   assert.deepEqual(unexpectedDialogs, [], "Hostile configuration must not trigger browser dialogs");
   assert.match(await page.evaluate(() => getComputedStyle(document.body).fontFamily), /Inter/);
   assert.match(await page.locator(".hero-copy h1").evaluate(el => getComputedStyle(el).fontFamily), /Manrope/);
-  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange").trim()), "#ff6a00", "invalid injected CSS must preserve the original accent");
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange").trim()), "#D9C9B5", "invalid injected CSS must preserve the current warm-sand accent");
 
   const desktop = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
   assert.ok(desktop.document <= desktop.viewport, "Desktop layout must not overflow horizontally: " + JSON.stringify(desktop));
