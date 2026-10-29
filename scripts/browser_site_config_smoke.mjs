@@ -178,7 +178,7 @@ try {
   assert.deepEqual(unexpectedDialogs, [], "Hostile configuration must not trigger browser dialogs");
   assert.match(await page.evaluate(() => getComputedStyle(document.body).fontFamily), /Inter/);
   assert.match(await page.locator(".hero-copy h1").evaluate(el => getComputedStyle(el).fontFamily), /Manrope/);
-  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange").trim()), "#d9c9b5", "invalid injected CSS must preserve the current warm-sand accent");
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--orange").trim()), "#D9C9B5", "invalid injected CSS must preserve the current warm-sand accent");
 
   const desktop = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
   assert.ok(desktop.document <= desktop.viewport, "Desktop layout must not overflow horizontally: " + JSON.stringify(desktop));
