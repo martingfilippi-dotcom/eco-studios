@@ -129,7 +129,27 @@ try {
   const desktop = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
   assert.ok(desktop.document <= desktop.viewport, "Live desktop page overflows horizontally: " + JSON.stringify(desktop));
   await page.setViewportSize({ width: 390, height: 844 });
-  const mobile = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
+  const mobile = await page.evaluate(() => {
+    const viewport = innerWidth;
+    const offenders = Array.from(document.querySelectorAll("body *")).map(el => {
+      const rect = el.getBoundingClientRect();
+      const style = getComputedStyle(el);
+      return {
+        tag: el.tagName.toLowerCase(),
+        id: el.id,
+        className: typeof el.className === "string" ? el.className : "",
+        left: Math.round(rect.left),
+        right: Math.round(rect.right),
+        width: Math.round(rect.width),
+        scrollWidth: el.scrollWidth,
+        position: style.position,
+        display: style.display,
+        visibility: style.visibility,
+        text: (el.innerText || "").replace(/\\s+/g, " ").slice(0, 70)
+      };
+    }).filter(el => el.display !== "none" && el.visibility !== "hidden" && el.right > viewport + 1 && el.position !== "fixed" && el.left > -100).slice(0, 20);
+    return { viewport, document: document.documentElement.scrollWidth, offenders };
+  });
   assert.ok(mobile.document <= mobile.viewport, "Live mobile page overflows horizontally: " + JSON.stringify(mobile));
 
   assert.deepEqual(failedResponses, [], "Live visual config request must not fail");
