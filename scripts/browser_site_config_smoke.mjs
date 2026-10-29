@@ -146,8 +146,8 @@ try {
   assert.equal(await page.locator("header.site-header .brand-mark").evaluate(el => getComputedStyle(el, "::after").content), "none", "Legacy waves must not double up inside the brand square");
   assert.notEqual(await page.locator("header.site-header .brand-words").evaluate(el => getComputedStyle(el, "::after").content), "none", "The ECO wordmark must retain its sound-wave mark");
   assert.equal(await page.locator("header.site-header .brand-mark").evaluate(el => getComputedStyle(el).opacity), "0", "The standalone E badge must not duplicate the official ECO wordmark");
-  assert.ok((await page.locator(".artist-photo").first().evaluate(el => getComputedStyle(el, "::before").content)).startsWith('"ARCHIVO_0'), "Artist cards must use three-digit archive IDs");
-  assert.ok((await page.locator(".release-card").first().evaluate(el => getComputedStyle(el, "::before").content)).startsWith('"ARCHIVO_0'), "Catalog cards must use three-digit archive IDs");
+  assert.equal(await page.locator(".artist-photo").first().evaluate(el => getComputedStyle(el, "::before").content), "none", "Legacy archive plaques must remain disabled on artist cards");
+  assert.equal(await page.locator(".release-card").first().evaluate(el => getComputedStyle(el, "::before").content), "none", "Legacy archive plaques must remain disabled on catalog cards");
   assert.equal(await page.locator(".hero-actions .button-orange > span").evaluate(el => getComputedStyle(el).fontSize), "0px", "Primary CTA arrow must use the CSS-drawn icon, not an emoji glyph");
   assert.equal(await page.locator(".hero-actions .button-orange > span").evaluate(el => getComputedStyle(el, "::after").borderTopStyle), "solid", "Primary CTA arrowhead must be visible");
   assert.equal(await page.locator(".hero-actions .text-link > span").evaluate(el => getComputedStyle(el, "::after").borderTopStyle), "solid", "Secondary CTA arrowhead must be visible");
