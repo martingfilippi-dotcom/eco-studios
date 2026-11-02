@@ -239,8 +239,11 @@ async function handleSubmission(request, env, ctx) {
       }
     }
   }
+  if (!env.RATE_LIMIT_SALT || env.RATE_LIMIT_SALT.length < 32) {
+    return json({ error: "El formulario no está disponible temporalmente. Escribinos por WhatsApp." }, 503);
+  }
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-  const ipHash = await sha256(ip + "|" + (env.RATE_LIMIT_SALT || "eco-intake-v2"));
+  const ipHash = await sha256(ip + "|" + env.RATE_LIMIT_SALT);
   const recent = await env.DB.prepare(
     "SELECT COUNT(*) AS n FROM rate_limits WHERE ip_hash=? AND julianday(created_at)>julianday('now','-1 hour')"
   ).bind(ipHash).first();
