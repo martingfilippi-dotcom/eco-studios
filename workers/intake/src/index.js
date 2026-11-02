@@ -204,6 +204,8 @@ async function handleSubmission(request, env, ctx) {
   } catch {
     return json({ error: "Solicitud inválida." }, 400);
   }
+  const websiteField = clean(body.companyWebsite, 200);
+  if (websiteField) return json({ error: "Solicitud inválida." }, 400);
   const name = clean(body.name, 120);
   const email = clean(body.email, 254).toLowerCase();
   const phone = clean(body.phone, 40);
