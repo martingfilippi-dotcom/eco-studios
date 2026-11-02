@@ -6,3 +6,6 @@ compatibility_date = "2026-11-02"
 binding = "DB"
 database_name = "eco-studios-intake"
 database_id = "72b5eaca-884c-4fb4-8dd4-ecd94751ffce"
+
+[triggers]
+crons = ["*/5 * * * *"]
