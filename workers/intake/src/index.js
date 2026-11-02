@@ -5,7 +5,7 @@ const cors = {
   "Access-Control-Max-Age": "86400"
 };
 const json = (data, status=200) => new Response(JSON.stringify(data), {status,headers:{"Content-Type":"application/json; charset=utf-8",...cors,"Cache-Control":"no-store"}});
-const clean = (v,n=2000) => typeof v==="string" ? v.trim().replace(/[\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]/g,"").slice(0,n) : "";
+const clean = (v,n=2000) => typeof v==="string" ? v.trim().replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g,"").slice(0,n) : "";
 const allowed = new Set(["Producción de beat","Producción completa de canción","Plan Esencial","Plan Pro","Plan Élite","Beat personalizado","Sesión de fotos","Hora de estudio","Videoclip / audiovisual","Booking / eventos","Otro"]);
 async function hash(value){const bytes=new TextEncoder().encode(value);const digest=await crypto.subtle.digest("SHA-256",bytes);return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,"0")).join("");}
 export default {
@@ -22,10 +22,10 @@ export default {
   const details=clean(body.details,3000), budget=clean(body.budget,100);
   const date=clean(body.preferredDate,10), time=clean(body.preferredTime,20);
   const references=Array.isArray(body.references)?body.references.slice(0,5).map(x=>clean(x,500)).filter(x=>/^https:\/\//i.test(x)): [];
-  if(!name || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || !body.consentData || !body.consentContact) return json({error:"Completá nombre, email y los consentimientos obligatorios."},422);
+  if(!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !body.consentData || !body.consentContact) return json({error:"Completá nombre, email y los consentimientos obligatorios."},422);
   if(requestType==="Servicio" && !allowed.has(service)) return json({error:"Seleccioná un servicio válido."},422);
-  if(date && !/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) return json({error:"La fecha no es válida."},422);
-  if(time && !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(time)) return json({error:"El horario no es válido."},422);
+  if(date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) return json({error:"La fecha no es válida."},422);
+  if(time && !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return json({error:"El horario no es válido."},422);
   const ip=request.headers.get("CF-Connecting-IP")||"unknown";
   const ipHash=await hash(ip+"|eco-intake-v1");
   const now=new Date().toISOString();
