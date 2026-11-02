@@ -33,7 +33,7 @@ export default {
   if((recent?.n||0)>=5) return json({error:"Alcanzaste el límite temporal. Escribinos por WhatsApp para continuar."},429);
   const id="ECO-"+now.slice(0,10).replaceAll("-","")+"-"+crypto.randomUUID().slice(0,8).toUpperCase();
   await env.DB.batch([
-   env.DB.prepare("INSERT INTO requests (id,name,email,phone,request_type,service,preferred_date,preferred_time,details,references_json,budget,contact_method,consent_contact,consent_data,status,email_status,notion_status,created_at,ip_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'Nuevo','pending','pending',?,?)").bind(id,name,email,phone,requestType,requestType==="Servicio"?service:null,date||null,time||null,details,JSON.stringify(references),budget,clean(body.contactMethod,20)||"email",1,1,now,ipHash),
+   env.DB.prepare("INSERT INTO requests (id,name,email,phone,request_type,service,preferred_date,preferred_time,details,references_json,budget,contact_method,consent_contact,consent_data,status,email_status,notion_status,created_at,ip_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,'Nuevo','pending','pending',?,?)").bind(id,name,email,phone,requestType,requestType==="Servicio"?service:null,date||null,time||null,details,JSON.stringify(references),budget,clean(body.contactMethod,20)||"email",1,1,now,ipHash),
    env.DB.prepare("INSERT INTO rate_limits (ip_hash,created_at) VALUES (?,?)").bind(ipHash,now),
    env.DB.prepare("DELETE FROM rate_limits WHERE created_at < datetime('now','-2 days')")
   ]);
