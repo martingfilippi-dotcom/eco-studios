@@ -337,6 +337,7 @@
         <div class="intake-field"><label for="eco-budget">PRESUPUESTO ESTIMADO</label><input id="eco-budget" name="budget" maxlength="100" placeholder="Opcional"></div>
         <div class="intake-field full"><label for="eco-details">DETALLES DEL PROYECTO</label><textarea id="eco-details" name="details" maxlength="3000" placeholder="Contanos brevemente qué querés producir, género, cantidad de canciones, idea o necesidad..."></textarea></div>
         <div class="intake-field full"><label for="eco-refs">ENLACES DE REFERENCIA</label><textarea id="eco-refs" name="references" maxlength="2500" placeholder="Pegá hasta 5 enlaces https://, uno por línea"></textarea><span class="intake-help">Por ahora aceptamos enlaces de Drive, YouTube, Spotify u otros sitios. La carga directa de archivos se habilitará al activar el almacenamiento seguro.</span></div>
+        <div class="intake-field" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"><label for="eco-company-website">No completar</label><input id="eco-company-website" name="companyWebsite" type="text" tabindex="-1" autocomplete="off"></div>
         <div class="intake-consents"><label><input type="checkbox" name="consentContact" required><span>Acepto que ECO Studios me contacte para responder esta solicitud. *</span></label><label><input type="checkbox" name="consentData" required><span>Autorizo el uso de mis datos únicamente para gestionar esta solicitud. Leí la <a href="privacidad.html" target="_blank" rel="noopener noreferrer">política de privacidad</a>. *</span></label></div>
         <div class="intake-submit"><button class="button button-orange" type="submit">Enviar solicitud <span aria-hidden="true">↗</span></button><span class="intake-help">Respuesta manual del equipo ECO Studios.</span></div>
         <p class="intake-feedback" id="eco-intake-feedback" role="status" aria-live="polite"></p>
@@ -755,7 +756,7 @@
   if(rawRefs.length>5){feedback.textContent='Podés incluir un máximo de cinco enlaces.';return;}
   const refs=[];
   for(const value of rawRefs){try{const u=new URL(value);if(u.protocol!=='https:')throw new Error();refs.push(u.toString());}catch{feedback.textContent='Cada referencia debe ser un enlace HTTPS válido.';return;}}
-  const payload={name:d.get('name'),email:d.get('email'),phone:d.get('phone'),requestType:d.get('requestType'),service:d.get('service'),preferredDate:d.get('preferredDate'),preferredTime:d.get('preferredTime'),budget:d.get('budget'),details:d.get('details'),references:refs,consentContact:d.get('consentContact')==='on',consentData:d.get('consentData')==='on'};
+  const payload={companyWebsite:d.get('companyWebsite'),name:d.get('name'),email:d.get('email'),phone:d.get('phone'),requestType:d.get('requestType'),service:d.get('service'),preferredDate:d.get('preferredDate'),preferredTime:d.get('preferredTime'),budget:d.get('budget'),details:d.get('details'),references:refs,consentContact:d.get('consentContact')==='on',consentData:d.get('consentData')==='on'};
   setBusy(true);feedback.textContent='Enviando solicitud…';
   try{
    const response=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
