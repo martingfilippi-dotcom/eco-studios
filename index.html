@@ -740,7 +740,7 @@
  const form=document.getElementById('eco-intake-form'); if(!form)return;
  const type=document.getElementById('eco-type'), wrap=document.getElementById('eco-service-wrap'), service=document.getElementById('eco-service');
  const feedback=document.getElementById('eco-intake-feedback'), success=document.getElementById('eco-intake-success');
- const API='https://eco-studios-intake-api.martingfilippi-dotcom.workers.dev/api/requests';
+ const API='https://eco-studios-intake-api.martingfilippi.workers.dev/api/requests';
  function toggle(){const isService=type.value==='service';wrap.hidden=!isService;service.required=isService;}
  type.addEventListener('change',toggle);toggle();
  const date=document.getElementById('eco-date');date.min=new Date().toISOString().slice(0,10);
