@@ -161,6 +161,24 @@
 }
 @media(prefers-reduced-motion:reduce){.ov-work img{transition:none}}
 
+
+/* Request / booking callout */
+.request-section{position:relative;overflow:hidden;background:#151411;border-top:1px solid rgba(245,242,235,.14);border-bottom:1px solid rgba(245,242,235,.14)}
+.request-section:before{content:"";position:absolute;width:420px;height:420px;border:1px solid rgba(255,106,0,.18);border-radius:50%;right:-150px;top:-220px;box-shadow:0 0 0 42px rgba(255,106,0,.025),0 0 0 84px rgba(255,106,0,.02);pointer-events:none}
+.request-section .request-layout{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:36px;align-items:center}
+.request-section .request-kicker{font-size:10px;letter-spacing:.18em;font-weight:800;color:var(--orange,#ff6a00);margin:0 0 17px}
+.request-section h2{font:600 clamp(36px,5.5vw,68px)/.98 "Space Grotesk",sans-serif;letter-spacing:-.065em;margin:0;max-width:760px}
+.request-section h2 span{color:var(--orange,#ff6a00)}
+.request-section .request-copy{max-width:610px;color:#b8b3aa;font-size:14px;line-height:1.8;margin:20px 0 0}
+.request-section .request-points{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px}
+.request-section .request-points span{font-size:10px;letter-spacing:.08em;color:#ded9d0}
+.request-section .request-points span:before{content:"↗";color:var(--orange,#ff6a00);margin-right:7px}
+.request-section .request-action{display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-width:190px}
+.request-section .request-button{display:inline-flex;align-items:center;justify-content:space-between;gap:30px;padding:17px 20px;background:var(--orange,#ff6a00);color:#111;font-size:11px;font-weight:800;letter-spacing:.08em;min-width:190px;transition:transform .2s,background .2s}
+.request-section .request-button:hover{transform:translateY(-3px);background:#ff8333}
+.request-section .request-action small{font-size:9px;color:#8f8a82;line-height:1.5;max-width:210px}
+@media(max-width:760px){.request-section .request-layout{grid-template-columns:1fr;gap:28px}.request-section .request-action{width:100%}.request-section .request-button{width:100%}.request-section:before{right:-260px;top:-260px}}
+
 </style>
 </head>
 <body>
@@ -295,6 +313,22 @@
 <section class="team section-pad" id="equipo">
   <div class="section-kicker"><span>EL EQUIPO</span><span>DETRÁS DE LA IDEA</span></div>
   <div class="team-grid"><div><h2>Un colectivo<br><span>se construye juntos.</span></h2><p>ECO crece gracias a artistas, productores y personas que aportan su oficio, su tiempo y su visión.</p></div><div class="team-member"><div class="team-avatar">A</div><div><h3>ASCARZA</h3><p>Fundador · Artista · Productor</p></div><a href="artistas/ascarza/" aria-label="Abrir página de Ascarza">↗</a></div><div class="team-member"><a class="team-avatar" href="https://www.instagram.com/ov.audiovisual/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de OV Audiovisual">G</a><div><h3>GASTÓN OV</h3><p>Equipo audiovisual · Fotografía · Videoclips</p><div class="artist-platforms" aria-label="Plataformas oficiales"></div></div><span class="team-role">AUDIOVISUAL</span></div></div>
+</section>
+
+
+<section class="request-section section-pad" id="solicitudes">
+  <div class="request-layout">
+    <div>
+      <p class="request-kicker">TU PRÓXIMO PROYECTO · EMPIEZA AQUÍ</p>
+      <h2>Tenés una idea.<br><span>Hagámosla realidad.</span></h2>
+      <p class="request-copy">Contanos qué querés crear. Producción musical, beats, sesiones de estudio, fotografía, videoclips o proyectos audiovisuales: queremos conocer tu propuesta y ayudarte a encontrar el camino adecuado.</p>
+      <div class="request-points"><span>Producción musical</span><span>Estudio y sesiones</span><span>Audiovisual y booking</span></div>
+    </div>
+    <div class="request-action">
+      <a class="request-button" href="solicitudes.html">INICIAR SOLICITUD <span aria-hidden="true">↗</span></a>
+      <small>Contanos tu idea y los detalles de tu proyecto. La fecha se coordina con el equipo.</small>
+    </div>
+  </div>
 </section>
 
 <section class="contact section-pad" id="contacto">
