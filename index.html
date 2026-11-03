@@ -161,7 +161,31 @@
 }
 @media(prefers-reduced-motion:reduce){.ov-work img{transition:none}}
 
-</style>
+/* ECO Studios intake */\n
+.intake-panel{margin-top:34px;padding:clamp(22px,4vw,42px);background:#171715;color:#f5f2eb;border:1px solid rgba(255,255,255,.16);max-width:900px}
+.intake-heading{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:24px}
+.intake-heading h3{font-size:clamp(26px,4vw,40px);letter-spacing:-.05em;margin:0 0 8px}
+.intake-heading p{color:#b8b0a4;font-size:13px;margin:0}
+.intake-tag{color:#ff8a43;font-size:9px;font-weight:800;letter-spacing:.14em;white-space:nowrap}
+.intake-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.intake-field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.intake-field.full{grid-column:1/-1}
+.intake-field label,.intake-legend{font-size:10px;font-weight:800;letter-spacing:.1em;color:#e8e2d8}
+.intake-field input,.intake-field select,.intake-field textarea{width:100%;min-height:48px;border:1px solid rgba(255,255,255,.2);border-radius:2px;padding:12px 13px;background:#0b0b0b;color:#f5f2eb;font:inherit;font-size:13px}
+.intake-field textarea{min-height:110px;resize:vertical}
+.intake-field input:focus,.intake-field select:focus,.intake-field textarea:focus{outline:2px solid #ff6a00;outline-offset:1px}
+.intake-help{font-size:11px;color:#a9a49b}
+.intake-consents{grid-column:1/-1;display:grid;gap:12px}
+.intake-consents label{display:flex;gap:10px;align-items:flex-start;color:#c9c3b9;font-size:11px;line-height:1.55}
+.intake-consents input{accent-color:#ff6a00;margin-top:2px}
+.intake-submit{grid-column:1/-1;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.intake-submit button{border:0;cursor:pointer}
+.intake-feedback{grid-column:1/-1;min-height:22px;font-size:12px;color:#ffb17d}
+.intake-success{padding:18px;border:1px solid rgba(255,106,0,.45);background:rgba(255,106,0,.08);color:#f5f2eb}
+@media(max-width:640px){.intake-form{grid-template-columns:1fr}.intake-field.full,.intake-consents,.intake-submit,.intake-feedback{grid-column:1}.intake-heading{flex-direction:column}.intake-tag{white-space:normal}}
+.footer-links{display:flex;gap:18px;flex-wrap:wrap}.footer-links a{color:inherit;text-decoration:none;font-size:11px}.footer-links a:hover{color:#ff6a00}
+@media(max-width:640px){.footer-links{gap:14px}}
+\n</style>
 </head>
 <body>
 <div id="eco-studios-site">
@@ -171,7 +195,7 @@
   <a class="brand" href="#inicio" aria-label="ECO Studios, inicio"><span class="brand-mark">E</span><span class="brand-words">ECO<span>STUDIOS</span></span></a>
   <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span><b>Menú</b></button>
   <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
-    <a href="#historia">El proyecto</a><a href="#artistas">Artistas</a><a href="#musica">Música</a><a href="#audiovisual">Audiovisual</a><a href="precios.html">Precios</a><a class="nav-cta" href="#contacto">Contacto ↗</a>
+    <a href="#historia">El proyecto</a><a href="#artistas">Artistas</a><a href="#musica">Música</a><a href="#audiovisual">Audiovisual</a><a href="precios.html">Precios</a><a href="solicitudes.html">Solicitudes</a><a class="nav-cta" href="#contacto">Contacto ↗</a>
   </nav>
 </header>
 <main id="contenido">
@@ -300,6 +324,26 @@
 <section class="contact section-pad" id="contacto">
   <div class="section-kicker"><span>CONTACTO</span><span>CANALES OFICIALES · ECO STUDIOS</span></div>
   <div class="contact-grid">
+    <div class="intake-panel" id="eco-intake">
+      <div class="intake-heading"><div><span class="intake-tag">SOLICITUDES · ECO STUDIOS</span><h3>Contanos qué tenés en mente.</h3><p>Completá el formulario y el equipo se pondrá en contacto para conversar los detalles. Enviar una solicitud no confirma una reserva.</p></div><span class="intake-tag">01 / 03</span></div>
+      <form class="intake-form" id="eco-intake-form">
+        <div class="intake-field"><label for="eco-name">NOMBRE COMPLETO *</label><input id="eco-name" name="name" autocomplete="name" maxlength="120" required></div>
+        <div class="intake-field"><label for="eco-email">EMAIL *</label><input id="eco-email" name="email" type="email" autocomplete="email" maxlength="254" required></div>
+        <div class="intake-field"><label for="eco-phone">TELÉFONO / WHATSAPP</label><input id="eco-phone" name="phone" autocomplete="tel" maxlength="40"></div>
+        <div class="intake-field"><label for="eco-type">¿QUÉ NECESITÁS? *</label><select id="eco-type" name="requestType"><option value="service">Solicitar un servicio</option><option value="contact">Solo quiero que me contacten</option></select></div>
+        <div class="intake-field" id="eco-service-wrap"><label for="eco-service">SERVICIO *</label><select id="eco-service" name="service"><option value="">Seleccionar servicio</option><option>Producción de beat</option><option>Producción completa de canción</option><option>Plan Esencial</option><option>Plan Pro</option><option>Plan Élite</option><option>Beat personalizado</option><option>Sesión de fotos</option><option>Hora de estudio</option><option>Videoclip / audiovisual</option><option>Booking / eventos</option><option>Otro</option></select></div>
+        <div class="intake-field"><label for="eco-date">FECHA PREFERIDA (OPCIONAL)</label><input id="eco-date" name="preferredDate" type="date"><span class="intake-help">Es una preferencia, no una reserva confirmada.</span></div>
+        <div class="intake-field"><label for="eco-time">HORARIO PREFERIDO (OPCIONAL)</label><input id="eco-time" name="preferredTime" type="time"></div>
+        <div class="intake-field"><label for="eco-budget">PRESUPUESTO ESTIMADO</label><input id="eco-budget" name="budget" maxlength="100" placeholder="Opcional"></div>
+        <div class="intake-field full"><label for="eco-details">DETALLES DEL PROYECTO</label><textarea id="eco-details" name="details" maxlength="3000" placeholder="Contanos brevemente qué querés producir, género, cantidad de canciones, idea o necesidad..."></textarea></div>
+        <div class="intake-field full"><label for="eco-refs">ENLACES DE REFERENCIA</label><textarea id="eco-refs" name="references" maxlength="2500" placeholder="Pegá hasta 5 enlaces https://, uno por línea"></textarea><span class="intake-help">Por ahora aceptamos enlaces de Drive, YouTube, Spotify u otros sitios. La carga directa de archivos se habilitará al activar el almacenamiento seguro.</span></div>
+        <div class="intake-field" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"><label for="eco-company-website">No completar</label><input id="eco-company-website" name="companyWebsite" type="text" tabindex="-1" autocomplete="off"></div>
+        <div class="intake-consents"><label><input type="checkbox" name="consentContact" required><span>Acepto que ECO Studios me contacte para responder esta solicitud. *</span></label><label><input type="checkbox" name="consentData" required><span>Autorizo el uso de mis datos únicamente para gestionar esta solicitud. Leí la <a href="privacidad.html" target="_blank" rel="noopener noreferrer">política de privacidad</a>. *</span></label></div>
+        <div class="intake-submit"><button class="button button-orange" type="submit">Enviar solicitud <span aria-hidden="true">↗</span></button><span class="intake-help">Respuesta manual del equipo ECO Studios.</span></div>
+        <p class="intake-feedback" id="eco-intake-feedback" role="status" aria-live="polite"></p>
+      </form>
+      <div id="eco-intake-success" class="intake-success" hidden></div>
+    </div>
     <div class="official-contact-list">
       <a class="official-contact" href="mailto:ecostudiosparaguay@gmail.com" aria-label="Enviar correo a ECO Studios">
         <span class="contact-label">CORREO OFICIAL</span>
@@ -318,7 +362,7 @@
   </div>
 </section>
 </main>
-<footer class="site-footer"><a class="brand" href="#inicio"><span class="brand-mark">E</span><span class="brand-words">ECO<span>STUDIOS</span></span></a><p>Independiente por naturaleza.</p><a href="#inicio" class="back-top">VOLVER ARRIBA ↑</a><span class="copyright">© ECO STUDIOS · ASUNCIÓN, PARAGUAY</span></footer>
+<footer class="site-footer"><a class="brand" href="#inicio"><span class="brand-mark">E</span><span class="brand-words">ECO<span>STUDIOS</span></span></a><p>Independiente por naturaleza.</p><nav class="footer-links" aria-label="Enlaces del sitio"><a href="precios.html">Precios</a><a href="privacidad.html">Privacidad</a><a href="mailto:ecostudiosparaguay@gmail.com">Contacto</a></nav><a href="#inicio" class="back-top">VOLVER ARRIBA ↑</a><span class="copyright">© ECO STUDIOS · ASUNCIÓN, PARAGUAY</span></footer>
 </div>
 <script>
 (function(){
@@ -694,5 +738,38 @@
 </script>
 
 <script src="site-config.js?v=20261026-contact-icons-v10" defer></script>
-</body>
+<script>
+(function(){
+ const form=document.getElementById('eco-intake-form'); if(!form)return;
+ const type=document.getElementById('eco-type'), wrap=document.getElementById('eco-service-wrap'), service=document.getElementById('eco-service');
+ const feedback=document.getElementById('eco-intake-feedback'), success=document.getElementById('eco-intake-success');
+ const submit=form.querySelector('button[type="submit"]'), date=document.getElementById('eco-date');
+ const API='https://eco-studios-intake-api.martingfilippi.workers.dev/api/requests';
+ function todayInAsuncion(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Asuncion'}).format(new Date());}
+ function toggle(){const isService=type.value==='service';wrap.hidden=!isService;service.required=isService;}
+ type.addEventListener('change',toggle);toggle();
+ date.min=todayInAsuncion();
+ function setBusy(busy){submit.disabled=busy;submit.setAttribute('aria-busy',String(busy));submit.textContent=busy?'Enviando…':'Enviar solicitud ↗';}
+ form.addEventListener('submit',async function(e){
+  e.preventDefault();feedback.textContent='';success.hidden=true;
+  const d=new FormData(form),rawRefs=String(d.get('references')||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  if(rawRefs.length>5){feedback.textContent='Podés incluir un máximo de cinco enlaces.';return;}
+  const refs=[];
+  for(const value of rawRefs){try{const u=new URL(value);if(u.protocol!=='https:')throw new Error();refs.push(u.toString());}catch{feedback.textContent='Cada referencia debe ser un enlace HTTPS válido.';return;}}
+  const payload={companyWebsite:d.get('companyWebsite'),name:d.get('name'),email:d.get('email'),phone:d.get('phone'),requestType:d.get('requestType'),service:d.get('service'),preferredDate:d.get('preferredDate'),preferredTime:d.get('preferredTime'),budget:d.get('budget'),details:d.get('details'),references:refs,consentContact:d.get('consentContact')==='on',consentData:d.get('consentData')==='on'};
+  setBusy(true);feedback.textContent='Enviando solicitud…';
+  try{
+   const response=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+   const result=await response.json();
+   if(!response.ok)throw new Error(result.error||'No se pudo enviar la solicitud.');
+   form.hidden=true;success.hidden=false;success.replaceChildren();
+   const heading=document.createElement('strong');heading.textContent='¡Gracias! Recibimos tu solicitud.';success.appendChild(heading);
+   const message=document.createElement('p');message.textContent='Tu código de seguimiento es '+result.id+'. El envío no confirma una reserva; el equipo de ECO Studios revisará la información y se pondrá en contacto.';success.appendChild(message);
+   const whatsapp=document.createElement('a');whatsapp.href='https://wa.me/595994562633?text='+encodeURIComponent('Hola ECO Studios, envié la solicitud '+result.id+' desde la web.');whatsapp.target='_blank';whatsapp.rel='noopener noreferrer';whatsapp.textContent='Continuar por WhatsApp ↗';success.appendChild(whatsapp);
+   feedback.textContent='';
+  }catch(err){feedback.textContent=err.message+' También podés escribirnos por WhatsApp.';setBusy(false);}
+ });
+})();
+</script>
+\n</body>
 </html>
