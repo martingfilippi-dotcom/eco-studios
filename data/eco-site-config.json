@@ -60,7 +60,7 @@
   },
   "artists": {
     "eyebrow": "EL ROSTER",
-    "kicker": "ARTISTAS DEL COLECTIVO",
+    "kicker": "",
     "titleLine1": "Distintas voces.",
     "titleLine2": "Un mismo eco.",
     "description": "Descubrí a las personas que forman parte de la escena ECO. Los enlaces de escucha llevan a páginas musicales verificadas o a lanzamientos colectivos donde participan.",
@@ -92,7 +92,7 @@
   },
   "news": {
     "eyebrow": "CONTENIDO DEL ESTUDIO",
-    "kicker": "ACTUALIZACIONES APROBADAS",
+    "kicker": "",
     "titleLine1": "Lo nuevo en",
     "titleLine2": "ECO Studios.",
     "description": "Artistas, lanzamientos, noticias y proyectos publicados por el equipo de ECO Studios."
