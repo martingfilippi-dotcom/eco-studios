@@ -222,7 +222,7 @@ def main():
         },
         "artists": {
             "eyebrow": safe_text(p.get("Artistas · etiqueta"), "EL ROSTER", 100),
-            "kicker": safe_text(p.get("Artistas · microetiqueta"), "ARTISTAS DEL COLECTIVO", 120),
+            "kicker": safe_text(p.get("Artistas · microetiqueta"), "", 120),
             "titleLine1": safe_text(p.get("Artistas · título primera línea"), "Distintas voces.", 180),
             "titleLine2": safe_text(p.get("Artistas · título segunda línea"), "Un mismo eco.", 180),
             "description": safe_text(p.get("Artistas · descripción"), "Descubrí a las personas que forman parte de la escena ECO. Los enlaces de escucha llevan a páginas musicales verificadas o a lanzamientos colectivos donde participan.", 650),
@@ -254,7 +254,7 @@ def main():
         },
         "news": {
             "eyebrow": safe_text(p.get("Novedades · etiqueta"), "CONTENIDO DEL ESTUDIO", 100),
-            "kicker": safe_text(p.get("Novedades · microetiqueta"), "ACTUALIZACIONES APROBADAS", 120),
+            "kicker": safe_text(p.get("Novedades · microetiqueta"), "", 120),
             "titleLine1": safe_text(p.get("Novedades · título primera línea"), "Lo nuevo en", 180),
             "titleLine2": safe_text(p.get("Novedades · título segunda línea"), "ECO Studios.", 180),
             "description": safe_text(p.get("Novedades · descripción"), "Artistas, lanzamientos, noticias y proyectos publicados por el equipo de ECO Studios.", 650),
