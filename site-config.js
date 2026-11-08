@@ -71,7 +71,7 @@
     if(!node || !cfg) return;
     var parts=node.querySelectorAll(':scope > span');
     setText(parts[0],cfg.eyebrow);
-    setText(parts[1],cfg.kicker);
+    if(parts[1] && typeof cfg.kicker==='string') parts[1].textContent=cfg.kicker.trim();
   }
 
   function setDescriptionWithLink(selector, description, label, href, fallbackHref){
